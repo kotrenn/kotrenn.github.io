@@ -712,22 +712,14 @@ function keyDown(e)
 
 function keyUp(e)
 {
-	if (e.keyCode == 39)
-	{
-		rightPressed = false;
-		puzzleData.activatePermutation(0, true);
-	}
-	else if (e.keyCode == 37)
-	{
-		leftPressed = false;
-		puzzleData.activatePermutation(1, true);
-	}
-	//if (37 <= e.keyCode && e.keyCode <= 40)
-	//	puzzleData.activatePermutation(e.keyCode - 37, true);
-	else if (e.keyCode == 38 && puzzleIndex + 1 < puzzleList.length)
-		puzzleData = puzzleList[++puzzleIndex];
-	else if (e.keyCode == 40 && puzzleIndex > 0)
+	if (e.keyCode == 37 && puzzleIndex > 0)
 		puzzleData = puzzleList[--puzzleIndex];
+	if (e.keyCode == 39 && puzzleIndex + 1 < puzzleList.length)
+		puzzleData = puzzleList[++puzzleIndex];
+	if (49 <= e.keyCode && e.keyCode <= 57)
+		puzzleData.activatePermutation(e.keyCode - 49, true);
+	if (e.keyCode == 48)
+		puzzleData.activatePermutation(10, true);
 }
 
 function update()
