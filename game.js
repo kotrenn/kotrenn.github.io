@@ -1,78 +1,4 @@
-// src/js/game.js
-function zeroArray(n)
-{
-	var ret = [];
-	for (var i = 0; i < n; i++)
-		ret.push(0);
-	return ret;
-}
-
-function linearArray(n)
-{
-	var ret = [];
-	for (var i = 0; i < n; i++)
-		ret.push(i);
-	return ret;
-}
-
-function linearStrArray(n)
-{
-	var ret = [];
-	for (var i = 0; i < n; i++)
-		ret.push(i.toString());
-	return ret;
-}
-
-
-var scaleConst = 100;
-var yConst = scaleConst;
-var xConst = 2 * yConst;
-
-function adjustPosX(t)
-{
-	return scaleConst * t + xConst;
-}
-
-function adjustPosY(t)
-{
-	return scaleConst * t + yConst;
-}
-
-function adjustLen(t)
-{
-	return scaleConst * t;
-}
-
-function fillRect(context, color, x, y, w, h)
-{
-	context.beginPath();
-	context.rect(adjustPosX(x), adjustPosY(y), adjustLen(w), adjustLenY(h));
-	context.fillStyle = color;
-	context.fill();
-	context.closePath();
-}
-
-function drawLine(context, color, x1, y1, x2, y2)
-{
-	context.beginPath();
-	context.moveTo(adjustPosX(x1), adjustPosY(y1));
-	context.lineTo(adjustPosX(x2), adjustPosY(y2));
-	context.strokeStyle = color;
-	context.stroke();
-	context.moveTo(0, 0);
-}
-
-function fillCircle(context, color, x, y, r)
-{
-	context.beginPath();
-	context.arc(adjustPosX(x), adjustPosY(y), r, 0, 2.0 * Math.PI);
-	context.fillStyle = color;
-	context.fill();
-	context.closePath();
-}
-
-
-
+// src/js/vec2f.js
 var EPSILON = 0.0001;
 
 class vec2f
@@ -132,6 +58,7 @@ class vec2f
 
 
 
+// src/js/sticker.js
 class Sticker
 {
 	constructor(color)
@@ -196,10 +123,192 @@ class Sticker
 
 
 
+// src/js/arc.js
+var ARC_LINE = 0;
+var ARC_CIRCLE = 1;
+
+function NewLineArc(permutation, slotU, slotV)
+{
+	return new Arc(permutation, slotU, slotV, ARC_LINE);
+}
+
+function NewCircleArc(permutation, slotU, slotV, circleRadius, circlePlus, circleInverted)
+{
+	var ret = new Arc(permutation, slotU, slotV, ARC_CIRCLE);
+	
+	ret.circleRadius = circleRadius;
+	ret.circlePlus = circlePlus;
+	ret.circleInverted = circleInverted;
+
+	ret.computeParameters();
+
+	ret.debugEnabled = true;
+
+	return ret;
+}
+
+class Arc
+{
+	constructor(permutation, slotU, slotV, shape)
+	{
+		this.permutation = permutation;
+		this.slotU = slotU;
+		this.slotV = slotV;
+		this.shape = shape;
+		this.startTime = 0;
+		this.debugEnabled = false;
+
+		// CircleArc vars
+		this.circleRadius = 0.0;
+		this.circlePlus = false;
+		this.circleInverted = false;
+		this.circleCenter = new vec2f(0.0, 0.0);
+		this.thetaU = 0.0;
+		this.thetaV = 0.0;
+		this.dTheta = 0.0;
+	}
+
+	draw(context)
+	{
+		var color = this.permutation.getColor();
+		
+		if (this.shape == ARC_LINE)
+		{
+			var v0 = this.slotU.getCenter();
+			var v1 = this.slotV.getCenter();
+
+			var color = this.permutation.getColor();
+
+			drawLine(context, color, v0.x, v0.y, v1.x, v1.y);
+		}
+		else if (this.shape == ARC_CIRCLE)
+		{
+			var numIntervals = 20;
+			if (this.debugEnabled) numIntervals = 5;
+			var dt = 1.0 / numIntervals;
+			
+			for (var i = 0; i < numIntervals; i++)
+			{
+				var t0 = i * dt;
+				var t1 = (i + 1) * dt;
+
+				var p0 = this.getPoint(t0);
+				var p1 = this.getPoint(t1);
+
+				drawLine(context, color, p0.x, p0.y, p1.x, p1.y);
+
+				if (this.debugEnabled)
+				{
+					var r = Math.floor(255 * t0).toString(16);
+					while (r.length < 2)
+						r = '0' + r;
+					var g = '00';
+					var b = Math.floor(255 * (1.0 - t0)).toString(16);
+					while (b.length < 2)
+						b = '0' + b;
+					var purple = '#' + r + g + b;
+					fillCircle(context, purple, p0.x, p0.y, 3);
+				}
+			}
+
+			if (this.debugEnabled)
+			{
+				var green = '#00FF00';
+				var x = this.circleCenter.x;
+				var y = this.circleCenter.y;
+				fillCircle(context, green, x, y, 3);
+			}
+		}
+	}
+
+	getPoint(t)
+	{
+		var ret = new vec2f(0.0, 0.0);
+		
+		if (this.shape == ARC_LINE)
+		{
+			var lhs = this.slotU.getCenter().scale(1.0 - t);
+			var rhs = this.slotV.getCenter().scale(t);
+			ret = lhs.add(rhs);
+		}
+		else if (this.shape == ARC_CIRCLE)
+		{
+			var theta = this.thetaU + t * this.dTheta;
+
+			var p = new vec2f(Math.cos(theta), Math.sin(theta));
+			p = p.scale(this.circleRadius).add(this.circleCenter);
+
+			return p;
+		}
+
+		return ret;
+	}
+
+	computeParameters()
+	{
+		if (this.shape == ARC_CIRCLE)
+		{
+			var v0 = this.slotU.getCenter();
+			var v1 = this.slotV.getCenter();
+
+			// Calculate the center of the circle;
+			var d = v0.sub(v1).norm();
+			var r2 = this.circleRadius * this.circleRadius;
+			var disc = r2 - d * d / 4.0;
+			var minDisc = EPSILON;
+			if (disc < minDisc) disc = minDisc;
+			var h = Math.sqrt(disc);
+			var midpoint = v0.add(v1).scale(0.5);
+			var disp = v1.sub(v0).unit();
+			var rot = new vec2f(disp.y, -disp.x);
+			if (this.circlePlus) rot = rot.scale(-1.0);
+			this.circleCenter = midpoint.add(rot.scale(h));
+
+			// Set up interval of angles to iterate along
+			var deltaU = v0.sub(this.circleCenter);
+			var deltaV = v1.sub(this.circleCenter);
+
+			this.thetaU = Math.atan2(deltaU.y, deltaU.x);
+			this.thetaV = Math.atan2(deltaV.y, deltaV.x);
+
+			this.dTheta = this.thetaV - this.thetaU;
+
+			// Put dTheta into the interval [0, 2pi]
+			while (this.dTheta < 0)             this.dTheta += 2.0 * Math.PI;
+			while (this.dTheta > 2.0 * Math.PI) this.dTheta -= 2.0 * Math.PI;
+
+			// Invert it?
+			if (this.circleInverted)
+			{
+				var tmp = this.thetaU;
+				this.thetaU = this.thetaV;
+				this.thetaV = tmp;
+				this.dTheta = 2.0 * Math.PI - this.dTheta;
+			}
+		}
+	}
+
+	adjustCenter(vec)
+	{
+	}
+
+	normalize(radius)
+	{
+		if (this.shape == ARC_CIRCLE)
+		{
+			this.circleRadius /= radius;
+		}
+	}
+}
+
+
+
+// src/js/slot.js
 class Slot
 {
-	constructor(sticker, center, color)
+	constructor(name, sticker, center, color)
 	{
+		this.name = name;
 		this.sticker = sticker;
 		this.center = center;
 		this.delta = (0, 0);
@@ -235,49 +344,78 @@ class Slot
 
 
 
-class Arc
+// src/js/game.js
+var leftPressed = false;
+var rightPressed = false;
+
+function testAAA()
 {
-	constructor(permutation, slotU, slotV)
+    var builder = new PuzzleBuilder('puzzles/AAA');
+
+    builder.addNode('lhs', '#ff0000', 1, 1);
+    builder.addNode('rhs', '#0000ff', 4, 1);
+    builder.addPermutation('#ff0000', [[0, 1]]);
+	builder.addCircleArc('#ff0000', 'lhs', 2.2, true, false);
+	builder.addCircleArc('#ff0000', 'rhs', 2.2, true, false);
+	
+	builder.recenter();
+	builder.normalize();
+
+    return builder.getPuzzleData();
+}
+
+function keyDown(e)
+{
+	if (e.keyCode == 39)
 	{
-		this.permutation = permutation;
-		this.slotU = slotU;
-		this.slotV = slotV;
-		this.startTime = 0;
+		rightPressed = true;
 	}
-
-	getPoint(t)
+	else if (e.keyCode == 37)
 	{
-		var lhs = this.slotU.getCenter().scale(1.0 - t);
-		var rhs = this.slotV.getCenter().scale(t);
-		return lhs.add(rhs);
-	}
-
-	draw(context)
-	{
-		var v0 = this.slotU.getCenter();
-		var v1 = this.slotV.getCenter();
-
-		var color = this.permutation.getColor();
-
-		drawLine(context, color, v0.x, v0.y, v1.x, v1.y);
-	}
-
-	// CircleArc
-	computeParameters()
-	{
-	}
-
-	adjustCenter(vec)
-	{
-	}
-
-	normalize(flt)
-	{
+		leftPressed = true;
 	}
 }
 
+function keyUp(e)
+{
+	if (e.keyCode == 37 && puzzleIndex > 0)
+		puzzleData = puzzleList[--puzzleIndex];
+	if (e.keyCode == 39 && puzzleIndex + 1 < puzzleList.length)
+		puzzleData = puzzleList[++puzzleIndex];
+	if (49 <= e.keyCode && e.keyCode <= 57)
+		puzzleData.activatePermutation(e.keyCode - 49, true);
+	if (e.keyCode == 48)
+		puzzleData.activatePermutation(10, true);
+}
+
+function update()
+{
+}
+
+function draw()
+{
+	context.clearRect(0, 0, canvas.width, canvas.height);
+
+	puzzleData.draw(context);
+}
+
+function loop()
+{
+	update();
+	draw();
+}
+
+var canvas = document.getElementById("gameCanvas");
+var context = canvas.getContext("2d");
+
+document.addEventListener("keydown", keyDown, false);
+document.addEventListener("keyup", keyUp, false);
+
+setInterval(loop, 10);
 
 
+
+// src/js/permutation.js
 class Permutation
 {
 	constructor(n, color, index)
@@ -399,6 +537,138 @@ class Permutation
 
 
 
+// src/js/puzzlebuilder.js
+class PuzzleBuilder
+{
+	constructor(name)
+	{
+		this.name = name;
+		this.puzzleData = new PuzzleData();
+		this.nodeList = [];
+		this.permutationMap = {};
+	}
+
+	getPuzzleData()
+	{
+		return this.puzzleData;
+	}
+
+	indexOf(nodeName)
+	{
+		for (var i = 0; i < this.puzzleData.getSlotListSize(); i++)
+			if (this.puzzleData.getSlot(i).name == nodeName)
+				return i;
+		
+		return -1;
+	}
+
+	addNode(nodeName, nodeColor, nodeX, nodeY)
+	{
+		var newSticker = new Sticker(nodeColor);
+		var newSlot = new Slot(nodeName, newSticker, new vec2f(nodeX, nodeY), nodeColor);
+		newSticker.moveToSlot(newSlot);
+		this.puzzleData.addSlot(newSlot);
+		this.puzzleData.addSticker(newSticker);
+		this.nodeList.push(nodeName);
+	}
+
+	addPermutation(color, cycleList)
+	{
+		var n = this.puzzleData.slotList.length;
+		var index = this.puzzleData.getPermutationListSize();
+		var newPermutation = new Permutation(n, color, index);
+		newPermutation.setCycles(cycleList);
+		this.puzzleData.addPermutation(newPermutation);
+		this.permutationMap[color] = newPermutation;
+	}
+
+	addCircleArc(arcColor, nodeName, circleR, circlePlus, circleInverted)
+	{
+		var permutation = this.permutationMap[arcColor];
+		var indexU = this.indexOf(nodeName);
+		var indexV = permutation.next(indexU);
+		var slotU = this.puzzleData.getSlot(indexU);
+		var slotV = this.puzzleData.getSlot(indexV);
+		var circleArc = NewCircleArc(permutation, slotU, slotV,
+									 circleR, circlePlus, circleInverted);
+		this.puzzleData.setArc(permutation, indexU, circleArc);
+	}
+	
+	recenter()
+	{
+		var centerSum = new vec2f(0.0, 0.0);
+
+		for (var i = 0; i < this.puzzleData.getSlotListSize(); i++)
+		{
+			var slot = this.puzzleData.getSlotList()[i];
+			
+			var slotCenter = slot.getCenter();
+			centerSum = centerSum.add(slotCenter);
+		}
+
+		centerSum = centerSum.scale(1.0 / this.puzzleData.getSlotListSize());
+
+		for (var i = 0; i < this.puzzleData.getSlotListSize(); i++)
+		{
+			var slot = this.puzzleData.getSlotList()[i];
+
+			var slotCenter = slot.getCenter();
+			slotCenter = slotCenter.sub(centerSum);
+			slot.setCenter(slotCenter);
+		}
+
+		for (var i = 0; i < this.puzzleData.getPermutationListSize(); i++)
+		{
+			var permutation = this.puzzleData.getPermutationList()[i];
+			var arcList = this.puzzleData.getArcList(permutation);
+			for (var j = 0; j < arcList.length; j++)
+			{
+				var arc = arcList[j];
+				arc.adjustCenter(centerSum);
+			}
+		}
+	}
+
+	normalize()
+	{
+		var maxRadius = -1.0;
+
+		for (var i = 0; i < this.puzzleData.getSlotListSize(); i++)
+		{
+			var slot = this.puzzleData.getSlotList()[i];
+
+			var slotCenter = slot.getCenter();
+			var radius = slotCenter.norm();
+			if (radius > maxRadius)
+				maxRadius = radius;
+		}
+
+		for (var i = 0; i < this.puzzleData.getSlotListSize(); i++)
+		{
+			var slot = this.puzzleData.getSlotList()[i];
+
+			var slotCenter = slot.getCenter();
+			slotCenter = slotCenter.scale(1.0 / maxRadius);
+			slot.setCenter(slotCenter);
+		}
+
+		for (var i = 0; i < this.puzzleData.getPermutationListSize(); i++)
+		{
+			var permutation = this.puzzleData.getPermutationList()[i];
+			var arcList = this.puzzleData.getArcList(permutation);
+			for (var j = 0; j < arcList.length; j++)
+			{
+				var arc = arcList[j];
+				arc.normalize(maxRadius);
+				arc.computeParameters();
+			}
+		}
+	}
+}
+
+
+
+// src/js/puzzledata.js
 class PuzzleData
 {
 	constructor(name)
@@ -443,7 +713,7 @@ class PuzzleData
 		{
 			var slotU = this.slotList[i];
 			var slotV = this.slotList[permutation.next(i)];
-			var lineArc = new Arc(permutation, slotU, slotV);
+			var lineArc = NewLineArc(permutation, slotU, slotV);
 			this.setArc(permutation, i, lineArc);
 		}
 	}
@@ -572,180 +842,80 @@ class PuzzleData
 
 
 
-class PuzzleBuilder
+// src/js/arrays.js
+function zeroArray(n)
 {
-	constructor(name)
-	{
-		this.name = name;
-		this.puzzleData = new PuzzleData();
-		this.nodeList = [];
-		this.permutationMap = {};
-	}
+	var ret = [];
+	for (var i = 0; i < n; i++)
+		ret.push(0);
+	return ret;
+}
 
-	getPuzzleData()
-	{
-		return this.puzzleData;
-	}
-	
-	addNode(nodeName, nodeColor, nodeX, nodeY)
-	{
-		var newSticker = new Sticker(nodeColor);
-		var newSlot = new Slot(newSticker, new vec2f(nodeX, nodeY), nodeColor);
-		newSticker.moveToSlot(newSlot);
-		this.puzzleData.addSlot(newSlot);
-		this.puzzleData.addSticker(newSticker);
-		this.nodeList.push(nodeName);
-	}
+function linearArray(n)
+{
+	var ret = [];
+	for (var i = 0; i < n; i++)
+		ret.push(i);
+	return ret;
+}
 
-	addPermutation(color, cycleList)
-	{
-		var n = this.puzzleData.slotList.length;
-		var index = this.puzzleData.getPermutationListSize();
-		var newPermutation = new Permutation(n, color, index);
-		newPermutation.setCycles(cycleList);
-		this.puzzleData.addPermutation(newPermutation);
-		this.permutationMap[color] = newPermutation;
-	}
-
-	recenter()
-	{
-		var centerSum = new vec2f(0.0, 0.0);
-
-		for (var i = 0; i < this.puzzleData.getSlotListSize(); i++)
-		{
-			var slot = this.puzzleData.getSlotList()[i];
-			
-			var slotCenter = slot.getCenter();
-			centerSum = centerSum.add(slotCenter);
-		}
-
-		centerSum = centerSum.scale(1.0 / this.puzzleData.getSlotListSize());
-
-		for (var i = 0; i < this.puzzleData.getSlotListSize(); i++)
-		{
-			var slot = this.puzzleData.getSlotList()[i];
-
-			var slotCenter = slot.getCenter();
-			slotCenter = slotCenter.sub(centerSum);
-			slot.setCenter(slotCenter);
-		}
-
-		for (var i = 0; i < this.puzzleData.getPermutationListSize(); i++)
-		{
-			var permutation = this.puzzleData.getPermutationList()[i];
-			var arcList = this.puzzleData.getArcList(permutation);
-			for (var j = 0; j < arcList.length; j++)
-			{
-				var arc = arcList[j];
-				arc.adjustCenter(centerSum);
-			}
-		}
-	}
-
-	normalize()
-	{
-		var maxRadius = -1.0;
-
-		for (var i = 0; i < this.puzzleData.getSlotListSize(); i++)
-		{
-			var slot = this.puzzleData.getSlotList()[i];
-
-			var slotCenter = slot.getCenter();
-			var radius = slotCenter.norm();
-			if (radius > maxRadius)
-				maxRadius = radius;
-		}
-
-		for (var i = 0; i < this.puzzleData.getSlotListSize(); i++)
-		{
-			var slot = this.puzzleData.getSlotList()[i];
-
-			var slotCenter = slot.getCenter();
-			slotCenter = slotCenter.scale(1.0 / maxRadius);
-			slot.setCenter(slotCenter);
-		}
-
-		for (var i = 0; i < this.puzzleData.getPermutationListSize(); i++)
-		{
-			var permutation = this.puzzleData.getPermutationList()[i];
-			var arcList = this.puzzleData.getArcList(permutation);
-			for (var j = 0; j < arcList.length; j++)
-			{
-				var arc = arcList[j];
-				arc.normalize(maxRadius);
-				arc.computeParameters();
-			}
-		}
-	}
+function linearStrArray(n)
+{
+	var ret = [];
+	for (var i = 0; i < n; i++)
+		ret.push(i.toString());
+	return ret;
 }
 
 
 
-var leftPressed = false;
-var rightPressed = false;
+// src/js/graphics.js
+var scaleConst = 100;
+var yConst = scaleConst;
+var xConst = 2 * yConst;
 
-function testAAA()
+function adjustPosX(t)
 {
-    var builder = new PuzzleBuilder('puzzles/AAA');
-
-    builder.addNode('lhs', '#ff0000', 1, 1);
-    builder.addNode('rhs', '#0000ff', 4, 1);
-    builder.addPermutation('#ff0000', [[0, 1]]);
-	
-	builder.recenter();
-	builder.normalize();
-
-    return builder.getPuzzleData();
+	return scaleConst * t + xConst;
 }
 
-function keyDown(e)
+function adjustPosY(t)
 {
-	if (e.keyCode == 39)
-	{
-		rightPressed = true;
-	}
-	else if (e.keyCode == 37)
-	{
-		leftPressed = true;
-	}
+	return scaleConst * t + yConst;
 }
 
-function keyUp(e)
+function adjustLen(t)
 {
-	if (e.keyCode == 37 && puzzleIndex > 0)
-		puzzleData = puzzleList[--puzzleIndex];
-	if (e.keyCode == 39 && puzzleIndex + 1 < puzzleList.length)
-		puzzleData = puzzleList[++puzzleIndex];
-	if (49 <= e.keyCode && e.keyCode <= 57)
-		puzzleData.activatePermutation(e.keyCode - 49, true);
-	if (e.keyCode == 48)
-		puzzleData.activatePermutation(10, true);
+	return scaleConst * t;
 }
 
-function update()
+function fillRect(context, color, x, y, w, h)
 {
+	context.beginPath();
+	context.rect(adjustPosX(x), adjustPosY(y), adjustLen(w), adjustLenY(h));
+	context.fillStyle = color;
+	context.fill();
+	context.closePath();
 }
 
-function draw()
+function drawLine(context, color, x1, y1, x2, y2)
 {
-	context.clearRect(0, 0, canvas.width, canvas.height);
-
-	puzzleData.draw(context);
+	context.beginPath();
+	context.moveTo(adjustPosX(x1), adjustPosY(y1));
+	context.lineTo(adjustPosX(x2), adjustPosY(y2));
+	context.strokeStyle = color;
+	context.stroke();
+	context.moveTo(0, 0);
 }
 
-function loop()
+function fillCircle(context, color, x, y, r)
 {
-	update();
-	draw();
+	context.beginPath();
+	context.arc(adjustPosX(x), adjustPosY(y), r, 0, 2.0 * Math.PI);
+	context.fillStyle = color;
+	context.fill();
+	context.closePath();
 }
-
-var canvas = document.getElementById("gameCanvas");
-var context = canvas.getContext("2d");
-
-document.addEventListener("keydown", keyDown, false);
-document.addEventListener("keyup", keyUp, false);
-
-setInterval(loop, 10);
 
 
 
@@ -765,6 +935,10 @@ function AAJ()
     builder.addPermutation('#ff0000', [[0, 1, 2]]);
     builder.addPermutation('#00ff00', [[0, 3]]);
     builder.addPermutation('#0000ff', [[3, 4, 5, 6, 7]]);
+    builder.addCircleArc('#ff0000', 'lhs3', 6.6, true, false);
+    builder.addCircleArc('#00ff00', 'lhs1', 2.2, true, false);
+    builder.addCircleArc('#00ff00', 'rhs1', 2.2, true, false);
+    builder.addCircleArc('#0000ff', 'rhs5', 11.0, false, true);
 
     builder.recenter();
     builder.normalize();
@@ -815,6 +989,14 @@ function AAS()
     builder.addPermutation('#00ff00', [[1, 2]]);
     builder.addPermutation('#0000ff', [[2, 3]]);
     builder.addPermutation('#ffff00', [[3, 4]]);
+    builder.addCircleArc('#ff0000', 'coord11', 2.2, false, true);
+    builder.addCircleArc('#ff0000', 'coord21', 2.2, false, true);
+    builder.addCircleArc('#00ff00', 'coord21', 2.2, false, true);
+    builder.addCircleArc('#00ff00', 'coord22', 2.2, false, true);
+    builder.addCircleArc('#0000ff', 'coord22', 2.2, false, true);
+    builder.addCircleArc('#0000ff', 'coord32', 2.2, false, true);
+    builder.addCircleArc('#ffff00', 'coord32', 2.2, false, true);
+    builder.addCircleArc('#ffff00', 'coord33', 2.2, false, true);
 
     builder.recenter();
     builder.normalize();
@@ -837,6 +1019,8 @@ function AAT()
     builder.addNode('r3c3', '#7f007f', 7, 7);
     builder.addPermutation('#ff0000', [[4, 1, 2, 3, 5]]);
     builder.addPermutation('#0000ff', [[0, 2]]);
+    builder.addCircleArc('#0000ff', 'r1c2', 2.2, false, true);
+    builder.addCircleArc('#0000ff', 'r2c2', 2.2, false, true);
 
     builder.recenter();
     builder.normalize();
@@ -875,6 +1059,42 @@ function ABR()
     builder.addPermutation('#ffff00', [[0, 4, 3], [12, 16, 15]]);
     builder.addPermutation('#00ffff', [[7, 8, 12], [9, 10, 14]]);
     builder.addPermutation('#7f007f', [[4, 8, 7], [9, 14, 13]]);
+    builder.addCircleArc('#ff0000', 'p3', 1.20185042515, false, true);
+    builder.addCircleArc('#ff0000', 'p7', 1.20185042515, false, true);
+    builder.addCircleArc('#ff0000', 'p6', 1.20185042515, false, true);
+    builder.addCircleArc('#ff0000', 'p14', 1.20185042515, false, true);
+    builder.addCircleArc('#ff0000', 'p18', 1.20185042515, false, true);
+    builder.addCircleArc('#ff0000', 'p17', 1.20185042515, false, true);
+    builder.addCircleArc('#00ff00', 'p4', 1.20185042515, false, true);
+    builder.addCircleArc('#00ff00', 'p8', 1.20185042515, false, true);
+    builder.addCircleArc('#00ff00', 'p7', 1.20185042515, false, true);
+    builder.addCircleArc('#00ff00', 'p9', 1.20185042515, false, true);
+    builder.addCircleArc('#00ff00', 'p14', 1.20185042515, false, true);
+    builder.addCircleArc('#00ff00', 'p13', 1.20185042515, false, true);
+    builder.addCircleArc('#0000ff', 'p1', 1.20185042515, false, true);
+    builder.addCircleArc('#0000ff', 'p2', 1.20185042515, false, true);
+    builder.addCircleArc('#0000ff', 'p5', 1.20185042515, false, true);
+    builder.addCircleArc('#0000ff', 'p6', 1.20185042515, false, true);
+    builder.addCircleArc('#0000ff', 'p7', 1.20185042515, false, true);
+    builder.addCircleArc('#0000ff', 'p12', 1.20185042515, false, true);
+    builder.addCircleArc('#ffff00', 'p1', 1.20185042515, false, true);
+    builder.addCircleArc('#ffff00', 'p5', 1.20185042515, false, true);
+    builder.addCircleArc('#ffff00', 'p4', 1.20185042515, false, true);
+    builder.addCircleArc('#ffff00', 'p13', 1.20185042515, false, true);
+    builder.addCircleArc('#ffff00', 'p17', 1.20185042515, false, true);
+    builder.addCircleArc('#ffff00', 'p16', 1.20185042515, false, true);
+    builder.addCircleArc('#00ffff', 'p8', 1.20185042515, false, true);
+    builder.addCircleArc('#00ffff', 'p9', 1.20185042515, false, true);
+    builder.addCircleArc('#00ffff', 'p13', 1.20185042515, false, true);
+    builder.addCircleArc('#00ffff', 'p10', 1.20185042515, false, true);
+    builder.addCircleArc('#00ffff', 'p11', 1.20185042515, false, true);
+    builder.addCircleArc('#00ffff', 'p15', 1.20185042515, false, true);
+    builder.addCircleArc('#7f007f', 'p5', 1.20185042515, false, true);
+    builder.addCircleArc('#7f007f', 'p9', 1.20185042515, false, true);
+    builder.addCircleArc('#7f007f', 'p8', 1.20185042515, false, true);
+    builder.addCircleArc('#7f007f', 'p10', 1.20185042515, false, true);
+    builder.addCircleArc('#7f007f', 'p15', 1.20185042515, false, true);
+    builder.addCircleArc('#7f007f', 'p14', 1.20185042515, false, true);
 
     builder.recenter();
     builder.normalize();
@@ -923,6 +1143,22 @@ function AAW()
     builder.addPermutation('#ffff00', [[1, 2], [5, 6]]);
     builder.addPermutation('#00ff00', [[2, 3], [6, 7]]);
     builder.addPermutation('#0000ff', [[3, 4], [7, 8]]);
+    builder.addCircleArc('#ff0000', 'r2c1', 2.2, false, true);
+    builder.addCircleArc('#ff0000', 'r2c2', 2.2, false, true);
+    builder.addCircleArc('#ff0000', 'r1c4', 2.2, false, true);
+    builder.addCircleArc('#ff0000', 'r2c4', 2.2, false, true);
+    builder.addCircleArc('#ffff00', 'r2c2', 2.2, false, true);
+    builder.addCircleArc('#ffff00', 'r1c2', 2.2, false, true);
+    builder.addCircleArc('#ffff00', 'r2c4', 2.2, false, true);
+    builder.addCircleArc('#ffff00', 'r3c4', 2.2, false, true);
+    builder.addCircleArc('#00ff00', 'r1c2', 2.2, false, true);
+    builder.addCircleArc('#00ff00', 'r1c3', 2.2, false, true);
+    builder.addCircleArc('#00ff00', 'r3c4', 2.2, false, true);
+    builder.addCircleArc('#00ff00', 'r3c3', 2.2, false, true);
+    builder.addCircleArc('#0000ff', 'r1c3', 2.2, false, true);
+    builder.addCircleArc('#0000ff', 'r1c4', 2.2, false, true);
+    builder.addCircleArc('#0000ff', 'r3c3', 2.2, false, true);
+    builder.addCircleArc('#0000ff', 'r4c3', 2.2, false, true);
 
     builder.recenter();
     builder.normalize();
@@ -954,6 +1190,27 @@ function ABN()
     builder.addPermutation('#ff0000', [[0, 3, 2, 1]]);
     builder.addPermutation('#00ff00', [[0, 4], [1, 5], [2, 7], [3, 10]]);
     builder.addPermutation('#0000ff', [[5, 6], [7, 8, 9], [10, 11, 12, 13]]);
+    builder.addCircleArc('#ff0000', 'p1', 2.0, false, false);
+    builder.addCircleArc('#ff0000', 'p4', 2.0, false, false);
+    builder.addCircleArc('#ff0000', 'p3', 2.0, false, false);
+    builder.addCircleArc('#ff0000', 'p2', 2.0, false, false);
+    builder.addCircleArc('#00ff00', 'p1', 2.2, true, false);
+    builder.addCircleArc('#00ff00', 'p5', 2.2, true, false);
+    builder.addCircleArc('#00ff00', 'p2', 2.2, true, false);
+    builder.addCircleArc('#00ff00', 'p6', 2.2, true, false);
+    builder.addCircleArc('#00ff00', 'p3', 2.2, true, false);
+    builder.addCircleArc('#00ff00', 'p8', 2.2, true, false);
+    builder.addCircleArc('#00ff00', 'p4', 2.2, true, false);
+    builder.addCircleArc('#00ff00', 'p11', 2.2, true, false);
+    builder.addCircleArc('#0000ff', 'p6', 2.0, true, false);
+    builder.addCircleArc('#0000ff', 'p7', 2.0, true, false);
+    builder.addCircleArc('#0000ff', 'p8', 2.0, false, false);
+    builder.addCircleArc('#0000ff', 'p9', 2.0, false, false);
+    builder.addCircleArc('#0000ff', 'p10', 2.0, false, false);
+    builder.addCircleArc('#0000ff', 'p11', 2.0, false, false);
+    builder.addCircleArc('#0000ff', 'p12', 2.0, false, false);
+    builder.addCircleArc('#0000ff', 'p13', 2.0, false, false);
+    builder.addCircleArc('#0000ff', 'p14', 2.0, false, false);
 
     builder.recenter();
     builder.normalize();
@@ -1038,6 +1295,32 @@ function ABY()
     builder.addPermutation('#ff0000', [[16, 14, 19, 18, 17, 12], [6, 2, 7, 8, 9, 4]]);
     builder.addPermutation('#ffff00', [[10, 15, 14, 13, 12, 11], [0, 1, 2, 3, 4, 5]]);
     builder.addPermutation('#7f007f', [[8, 10]]);
+    builder.addCircleArc('#ff0000', 'p17', 3.0, false, true);
+    builder.addCircleArc('#ff0000', 'p15', 3.0, false, true);
+    builder.addCircleArc('#ff0000', 'p20', 3.0, false, true);
+    builder.addCircleArc('#ff0000', 'p19', 3.0, false, true);
+    builder.addCircleArc('#ff0000', 'p18', 3.0, false, true);
+    builder.addCircleArc('#ff0000', 'p13', 3.0, false, true);
+    builder.addCircleArc('#ffff00', 'p11', 3.0, false, true);
+    builder.addCircleArc('#ffff00', 'p16', 3.0, false, true);
+    builder.addCircleArc('#ffff00', 'p15', 3.0, false, true);
+    builder.addCircleArc('#ffff00', 'p14', 3.0, false, true);
+    builder.addCircleArc('#ffff00', 'p13', 3.0, false, true);
+    builder.addCircleArc('#ffff00', 'p12', 3.0, false, true);
+    builder.addCircleArc('#ff0000', 'p7', 3.0, true, false);
+    builder.addCircleArc('#ff0000', 'p3', 3.0, true, false);
+    builder.addCircleArc('#ff0000', 'p8', 3.0, true, false);
+    builder.addCircleArc('#ff0000', 'p9', 3.0, true, false);
+    builder.addCircleArc('#ff0000', 'p10', 3.0, true, false);
+    builder.addCircleArc('#ff0000', 'p5', 3.0, true, false);
+    builder.addCircleArc('#ffff00', 'p1', 3.0, true, false);
+    builder.addCircleArc('#ffff00', 'p2', 3.0, true, false);
+    builder.addCircleArc('#ffff00', 'p3', 3.0, true, false);
+    builder.addCircleArc('#ffff00', 'p4', 3.0, true, false);
+    builder.addCircleArc('#ffff00', 'p5', 3.0, true, false);
+    builder.addCircleArc('#ffff00', 'p6', 3.0, true, false);
+    builder.addCircleArc('#7f007f', 'p9', 3.0, false, true);
+    builder.addCircleArc('#7f007f', 'p11', 3.0, false, true);
 
     builder.recenter();
     builder.normalize();
@@ -1070,6 +1353,40 @@ function ABF()
     builder.addPermutation('#ffff00', [[3, 6], [4, 7], [5, 9], [11, 13]]);
     builder.addPermutation('#00ff00', [[0, 1], [2, 3], [7, 8], [10, 11]]);
     builder.addPermutation('#0000ff', [[3, 4], [6, 7], [8, 9], [11, 12]]);
+    builder.addCircleArc('#ff0000', 'r1c1', 2.2, false, true);
+    builder.addCircleArc('#ff0000', 'r2c1', 2.2, false, true);
+    builder.addCircleArc('#ff0000', 'r1c2', 2.2, false, true);
+    builder.addCircleArc('#ff0000', 'r2c2', 2.2, false, true);
+    builder.addCircleArc('#ff0000', 'r3c3', 2.2, false, true);
+    builder.addCircleArc('#ff0000', 'r4c3', 2.2, false, true);
+    builder.addCircleArc('#ff0000', 'r3c4', 2.2, false, true);
+    builder.addCircleArc('#ff0000', 'r4c4', 2.2, false, true);
+    builder.addCircleArc('#ff0000', 'r3c5', 2.2, false, true);
+    builder.addCircleArc('#ff0000', 'r4c5', 2.2, false, true);
+    builder.addCircleArc('#ffff00', 'r2c2', 2.2, false, true);
+    builder.addCircleArc('#ffff00', 'r3c2', 2.2, false, true);
+    builder.addCircleArc('#ffff00', 'r2c3', 2.2, false, true);
+    builder.addCircleArc('#ffff00', 'r3c3', 2.2, false, true);
+    builder.addCircleArc('#ffff00', 'r2c5', 2.2, false, true);
+    builder.addCircleArc('#ffff00', 'r3c5', 2.2, false, true);
+    builder.addCircleArc('#ffff00', 'r4c4', 2.2, false, true);
+    builder.addCircleArc('#ffff00', 'r5c4', 2.2, false, true);
+    builder.addCircleArc('#00ff00', 'r1c1', 2.2, false, true);
+    builder.addCircleArc('#00ff00', 'r1c2', 2.2, false, true);
+    builder.addCircleArc('#00ff00', 'r2c1', 2.2, false, true);
+    builder.addCircleArc('#00ff00', 'r2c2', 2.2, false, true);
+    builder.addCircleArc('#00ff00', 'r3c3', 2.2, false, true);
+    builder.addCircleArc('#00ff00', 'r3c4', 2.2, false, true);
+    builder.addCircleArc('#00ff00', 'r4c3', 2.2, false, true);
+    builder.addCircleArc('#00ff00', 'r4c4', 2.2, false, true);
+    builder.addCircleArc('#0000ff', 'r2c2', 2.2, false, true);
+    builder.addCircleArc('#0000ff', 'r2c3', 2.2, false, true);
+    builder.addCircleArc('#0000ff', 'r3c2', 2.2, false, true);
+    builder.addCircleArc('#0000ff', 'r3c3', 2.2, false, true);
+    builder.addCircleArc('#0000ff', 'r3c4', 2.2, false, true);
+    builder.addCircleArc('#0000ff', 'r3c5', 2.2, false, true);
+    builder.addCircleArc('#0000ff', 'r4c4', 2.2, false, true);
+    builder.addCircleArc('#0000ff', 'r4c5', 2.2, false, true);
 
     builder.recenter();
     builder.normalize();
@@ -1093,6 +1410,14 @@ function AAD()
     builder.addPermutation('#ffff00', [[1, 2]]);
     builder.addPermutation('#00ff00', [[2, 3]]);
     builder.addPermutation('#0000ff', [[1, 4]]);
+    builder.addCircleArc('#ff0000', 'lhs', 2.2, true, false);
+    builder.addCircleArc('#ff0000', 'mid', 2.2, true, false);
+    builder.addCircleArc('#ffff00', 'mid', 2.2, true, false);
+    builder.addCircleArc('#ffff00', 'rhs', 2.2, true, false);
+    builder.addCircleArc('#00ff00', 'rhs', 2.2, true, false);
+    builder.addCircleArc('#00ff00', 'top', 2.2, true, false);
+    builder.addCircleArc('#0000ff', 'mid', 2.2, true, false);
+    builder.addCircleArc('#0000ff', 'bot', 2.2, true, false);
 
     builder.recenter();
     builder.normalize();
@@ -1221,6 +1546,30 @@ function ACC()
     builder.addPermutation('#00ff00', [[4, 5], [6, 7]]);
     builder.addPermutation('#0000ff', [[8, 10], [9, 11]]);
     builder.addPermutation('#ffff00', [[0, 4, 8], [1, 5, 9], [2, 6, 10], [3, 7, 11]]);
+    builder.addCircleArc('#ff0000', 'p1', 3.46410161514, false, true);
+    builder.addCircleArc('#ff0000', 'p4', 3.46410161514, false, true);
+    builder.addCircleArc('#ff0000', 'p2', 3.46410161514, false, true);
+    builder.addCircleArc('#ff0000', 'p3', 3.46410161514, false, true);
+    builder.addCircleArc('#00ff00', 'p5', 2.0, false, true);
+    builder.addCircleArc('#00ff00', 'p6', 2.0, false, true);
+    builder.addCircleArc('#00ff00', 'p7', 2.0, false, true);
+    builder.addCircleArc('#00ff00', 'p8', 2.0, false, true);
+    builder.addCircleArc('#0000ff', 'p9', 4.0, false, true);
+    builder.addCircleArc('#0000ff', 'p11', 4.0, false, true);
+    builder.addCircleArc('#0000ff', 'p10', 4.0, false, true);
+    builder.addCircleArc('#0000ff', 'p12', 4.0, false, true);
+    builder.addCircleArc('#ffff00', 'p1', 1.73205080757, false, true);
+    builder.addCircleArc('#ffff00', 'p2', 3.60555127546, false, true);
+    builder.addCircleArc('#ffff00', 'p3', 5.56776436283, false, true);
+    builder.addCircleArc('#ffff00', 'p4', 4.58257569496, false, true);
+    builder.addCircleArc('#ffff00', 'p5', 1.73205080757, false, true);
+    builder.addCircleArc('#ffff00', 'p6', 3.60555127546, false, true);
+    builder.addCircleArc('#ffff00', 'p7', 5.56776436283, false, true);
+    builder.addCircleArc('#ffff00', 'p8', 4.58257569496, false, true);
+    builder.addCircleArc('#ffff00', 'p9', 1.73205080757, false, true);
+    builder.addCircleArc('#ffff00', 'p10', 3.60555127546, false, true);
+    builder.addCircleArc('#ffff00', 'p11', 5.56776436283, false, true);
+    builder.addCircleArc('#ffff00', 'p12', 4.58257569496, false, true);
 
     builder.recenter();
     builder.normalize();
@@ -1245,6 +1594,12 @@ function AAI()
     builder.addPermutation('#ffff00', [[5, 4]]);
     builder.addPermutation('#00ff00', [[2, 3]]);
     builder.addPermutation('#0000ff', [[0, 1, 2, 3, 4, 5]]);
+    builder.addCircleArc('#ff0000', 'ul', 2.2, true, false);
+    builder.addCircleArc('#ff0000', 'ur', 2.2, true, false);
+    builder.addCircleArc('#ffff00', 'lhs', 2.2, true, false);
+    builder.addCircleArc('#ffff00', 'bl', 2.2, true, false);
+    builder.addCircleArc('#00ff00', 'rhs', 2.2, true, false);
+    builder.addCircleArc('#00ff00', 'br', 2.2, true, false);
 
     builder.recenter();
     builder.normalize();
@@ -1370,6 +1725,10 @@ function AAK()
     builder.addNode('rhs5', '#7f007f', 4, 13);
     builder.addPermutation('#00ff00', [[0, 3]]);
     builder.addPermutation('#0000ff', [[0, 1, 2], [3, 4, 5, 6, 7]]);
+    builder.addCircleArc('#00ff00', 'lhs1', 2.2, true, false);
+    builder.addCircleArc('#00ff00', 'rhs1', 2.2, true, false);
+    builder.addCircleArc('#0000ff', 'lhs3', 6.6, true, false);
+    builder.addCircleArc('#0000ff', 'rhs5', 11.0, false, true);
 
     builder.recenter();
     builder.normalize();
@@ -1395,6 +1754,18 @@ function ABL()
     builder.addNode('p9', '#00ffff', -0.0000, -6.9282);
     builder.addPermutation('#ffff00', [[0, 5, 3], [4, 1, 2]]);
     builder.addPermutation('#00ffff', [[8, 3, 5], [4, 7, 6]]);
+    builder.addCircleArc('#ffff00', 'p1', 4.0, false, true);
+    builder.addCircleArc('#ffff00', 'p6', 4.0, false, true);
+    builder.addCircleArc('#ffff00', 'p4', 4.0, false, true);
+    builder.addCircleArc('#ffff00', 'p5', 1.2, false, true);
+    builder.addCircleArc('#ffff00', 'p2', 1.2, false, true);
+    builder.addCircleArc('#ffff00', 'p3', 1.2, false, true);
+    builder.addCircleArc('#00ffff', 'p9', 4.0, false, true);
+    builder.addCircleArc('#00ffff', 'p4', 4.0, false, true);
+    builder.addCircleArc('#00ffff', 'p6', 4.0, false, true);
+    builder.addCircleArc('#00ffff', 'p5', 1.2, false, true);
+    builder.addCircleArc('#00ffff', 'p8', 1.2, false, true);
+    builder.addCircleArc('#00ffff', 'p7', 1.2, false, true);
 
     builder.recenter();
     builder.normalize();
@@ -1474,6 +1845,10 @@ function ABP()
     builder.addPermutation('#0000ff', [[1, 2], [3, 4], [5, 6], [7, 8]]);
     builder.addPermutation('#ffff00', [[9, 7, 5, 3, 1]]);
     builder.addPermutation('#00ffff', [[0, 2, 4, 6, 8, 10]]);
+    builder.addCircleArc('#ffff00', 'p2', 5.19615242271, false, true);
+    builder.addCircleArc('#ffff00', 'p10', 5.19615242271, false, true);
+    builder.addCircleArc('#00ffff', 'p9', 6.92820323028, false, true);
+    builder.addCircleArc('#00ffff', 'p11', 6.92820323028, false, true);
 
     builder.recenter();
     builder.normalize();
@@ -1574,6 +1949,30 @@ function AAL()
     builder.addPermutation('#ffff00', [[1, 2], [4, 5], [6, 7], [9, 10]]);
     builder.addPermutation('#00ff00', [[2, 6], [10, 12]]);
     builder.addPermutation('#0000ff', [[2, 3], [5, 6], [7, 8], [10, 11]]);
+    builder.addCircleArc('#ff0000', 'coord13', 2.2, false, true);
+    builder.addCircleArc('#ff0000', 'coord23', 2.2, false, true);
+    builder.addCircleArc('#ff0000', 'coord33', 2.2, false, true);
+    builder.addCircleArc('#ff0000', 'coord43', 2.2, false, true);
+    builder.addCircleArc('#ffff00', 'coord22', 2.2, false, true);
+    builder.addCircleArc('#ffff00', 'coord23', 2.2, false, true);
+    builder.addCircleArc('#ffff00', 'coord31', 2.2, false, true);
+    builder.addCircleArc('#ffff00', 'coord32', 2.2, false, true);
+    builder.addCircleArc('#ffff00', 'coord33', 2.2, false, true);
+    builder.addCircleArc('#ffff00', 'coord34', 2.2, false, true);
+    builder.addCircleArc('#ffff00', 'coord42', 2.2, false, true);
+    builder.addCircleArc('#ffff00', 'coord43', 2.2, false, true);
+    builder.addCircleArc('#00ff00', 'coord23', 2.2, false, true);
+    builder.addCircleArc('#00ff00', 'coord33', 2.2, false, true);
+    builder.addCircleArc('#00ff00', 'coord43', 2.2, false, true);
+    builder.addCircleArc('#00ff00', 'coord53', 2.2, false, true);
+    builder.addCircleArc('#0000ff', 'coord23', 2.2, false, true);
+    builder.addCircleArc('#0000ff', 'coord24', 2.2, false, true);
+    builder.addCircleArc('#0000ff', 'coord32', 2.2, false, true);
+    builder.addCircleArc('#0000ff', 'coord33', 2.2, false, true);
+    builder.addCircleArc('#0000ff', 'coord34', 2.2, false, true);
+    builder.addCircleArc('#0000ff', 'coord35', 2.2, false, true);
+    builder.addCircleArc('#0000ff', 'coord43', 2.2, false, true);
+    builder.addCircleArc('#0000ff', 'coord44', 2.2, false, true);
 
     builder.recenter();
     builder.normalize();
@@ -1613,6 +2012,32 @@ function ABX()
     builder.addPermutation('#00ff00', [[6, 2, 7, 8, 9, 4]]);
     builder.addPermutation('#0000ff', [[0, 1, 2, 3, 4, 5]]);
     builder.addPermutation('#7f007f', [[8, 10]]);
+    builder.addCircleArc('#ff0000', 'p17', 3.0, false, true);
+    builder.addCircleArc('#ff0000', 'p15', 3.0, false, true);
+    builder.addCircleArc('#ff0000', 'p20', 3.0, false, true);
+    builder.addCircleArc('#ff0000', 'p19', 3.0, false, true);
+    builder.addCircleArc('#ff0000', 'p18', 3.0, false, true);
+    builder.addCircleArc('#ff0000', 'p13', 3.0, false, true);
+    builder.addCircleArc('#ffff00', 'p11', 3.0, false, true);
+    builder.addCircleArc('#ffff00', 'p16', 3.0, false, true);
+    builder.addCircleArc('#ffff00', 'p15', 3.0, false, true);
+    builder.addCircleArc('#ffff00', 'p14', 3.0, false, true);
+    builder.addCircleArc('#ffff00', 'p13', 3.0, false, true);
+    builder.addCircleArc('#ffff00', 'p12', 3.0, false, true);
+    builder.addCircleArc('#00ff00', 'p7', 3.0, true, false);
+    builder.addCircleArc('#00ff00', 'p3', 3.0, true, false);
+    builder.addCircleArc('#00ff00', 'p8', 3.0, true, false);
+    builder.addCircleArc('#00ff00', 'p9', 3.0, true, false);
+    builder.addCircleArc('#00ff00', 'p10', 3.0, true, false);
+    builder.addCircleArc('#00ff00', 'p5', 3.0, true, false);
+    builder.addCircleArc('#0000ff', 'p1', 3.0, true, false);
+    builder.addCircleArc('#0000ff', 'p2', 3.0, true, false);
+    builder.addCircleArc('#0000ff', 'p3', 3.0, true, false);
+    builder.addCircleArc('#0000ff', 'p4', 3.0, true, false);
+    builder.addCircleArc('#0000ff', 'p5', 3.0, true, false);
+    builder.addCircleArc('#0000ff', 'p6', 3.0, true, false);
+    builder.addCircleArc('#7f007f', 'p9', 3.0, false, true);
+    builder.addCircleArc('#7f007f', 'p11', 3.0, false, true);
 
     builder.recenter();
     builder.normalize();
@@ -1670,6 +2095,32 @@ function ABZ()
     builder.addPermutation('#ff0000', [[16, 14, 19, 18, 17, 12], [0, 1, 2, 3, 4, 5]]);
     builder.addPermutation('#ffff00', [[10, 15, 14, 13, 12, 11], [6, 2, 7, 8, 9, 4]]);
     builder.addPermutation('#7f007f', [[8, 10]]);
+    builder.addCircleArc('#ff0000', 'p17', 3.0, false, true);
+    builder.addCircleArc('#ff0000', 'p15', 3.0, false, true);
+    builder.addCircleArc('#ff0000', 'p20', 3.0, false, true);
+    builder.addCircleArc('#ff0000', 'p19', 3.0, false, true);
+    builder.addCircleArc('#ff0000', 'p18', 3.0, false, true);
+    builder.addCircleArc('#ff0000', 'p13', 3.0, false, true);
+    builder.addCircleArc('#ffff00', 'p11', 3.0, false, true);
+    builder.addCircleArc('#ffff00', 'p16', 3.0, false, true);
+    builder.addCircleArc('#ffff00', 'p15', 3.0, false, true);
+    builder.addCircleArc('#ffff00', 'p14', 3.0, false, true);
+    builder.addCircleArc('#ffff00', 'p13', 3.0, false, true);
+    builder.addCircleArc('#ffff00', 'p12', 3.0, false, true);
+    builder.addCircleArc('#ffff00', 'p7', 3.0, true, false);
+    builder.addCircleArc('#ffff00', 'p3', 3.0, true, false);
+    builder.addCircleArc('#ffff00', 'p8', 3.0, true, false);
+    builder.addCircleArc('#ffff00', 'p9', 3.0, true, false);
+    builder.addCircleArc('#ffff00', 'p10', 3.0, true, false);
+    builder.addCircleArc('#ffff00', 'p5', 3.0, true, false);
+    builder.addCircleArc('#ff0000', 'p1', 3.0, true, false);
+    builder.addCircleArc('#ff0000', 'p2', 3.0, true, false);
+    builder.addCircleArc('#ff0000', 'p3', 3.0, true, false);
+    builder.addCircleArc('#ff0000', 'p4', 3.0, true, false);
+    builder.addCircleArc('#ff0000', 'p5', 3.0, true, false);
+    builder.addCircleArc('#ff0000', 'p6', 3.0, true, false);
+    builder.addCircleArc('#7f007f', 'p9', 3.0, false, true);
+    builder.addCircleArc('#7f007f', 'p11', 3.0, false, true);
 
     builder.recenter();
     builder.normalize();
@@ -1726,6 +2177,60 @@ function ABM()
     builder.addPermutation('#ffff00', [[0, 1, 2], [3, 4, 5], [6, 7, 8]]);
     builder.addPermutation('#00ffff', [[11, 10, 33, 13, 14, 27, 16, 17, 18]]);
     builder.addPermutation('#7f007f', [[3, 33], [4, 27], [5, 18], [6, 30], [7, 24], [8, 21], [0, 12], [1, 15], [2, 9]]);
+    builder.addCircleArc('#ff0000', 'p22', 2.0, false, false);
+    builder.addCircleArc('#ff0000', 'p23', 2.0, false, false);
+    builder.addCircleArc('#ff0000', 'p24', 2.0, false, false);
+    builder.addCircleArc('#ff0000', 'p19', 3.46410161514, false, true);
+    builder.addCircleArc('#ff0000', 'p20', 3.46410161514, false, true);
+    builder.addCircleArc('#ff0000', 'p21', 3.46410161514, false, true);
+    builder.addCircleArc('#ff0000', 'p13', 1.0, false, false);
+    builder.addCircleArc('#ff0000', 'p14', 1.0, false, false);
+    builder.addCircleArc('#ff0000', 'p15', 1.0, false, false);
+    builder.addCircleArc('#00ff00', 'p31', 2.0, false, false);
+    builder.addCircleArc('#00ff00', 'p32', 2.0, false, false);
+    builder.addCircleArc('#00ff00', 'p33', 2.0, false, false);
+    builder.addCircleArc('#00ff00', 'p34', 3.46410161514, false, true);
+    builder.addCircleArc('#00ff00', 'p35', 3.46410161514, false, true);
+    builder.addCircleArc('#00ff00', 'p36', 3.46410161514, false, true);
+    builder.addCircleArc('#00ff00', 'p16', 1.0, false, false);
+    builder.addCircleArc('#00ff00', 'p17', 1.0, false, false);
+    builder.addCircleArc('#00ff00', 'p18', 1.0, false, false);
+    builder.addCircleArc('#0000ff', 'p25', 2.0, false, false);
+    builder.addCircleArc('#0000ff', 'p26', 2.0, false, false);
+    builder.addCircleArc('#0000ff', 'p27', 2.0, false, false);
+    builder.addCircleArc('#0000ff', 'p28', 3.46410161514, false, true);
+    builder.addCircleArc('#0000ff', 'p29', 3.46410161514, false, true);
+    builder.addCircleArc('#0000ff', 'p30', 3.46410161514, false, true);
+    builder.addCircleArc('#0000ff', 'p10', 1.0, true, false);
+    builder.addCircleArc('#0000ff', 'p11', 1.0, true, false);
+    builder.addCircleArc('#0000ff', 'p12', 1.0, true, false);
+    builder.addCircleArc('#ffff00', 'p1', 3.0, false, true);
+    builder.addCircleArc('#ffff00', 'p2', 3.0, false, true);
+    builder.addCircleArc('#ffff00', 'p3', 3.0, false, true);
+    builder.addCircleArc('#ffff00', 'p4', 5.0, false, true);
+    builder.addCircleArc('#ffff00', 'p5', 5.0, false, true);
+    builder.addCircleArc('#ffff00', 'p6', 5.0, false, true);
+    builder.addCircleArc('#ffff00', 'p7', 6.2449979984, false, true);
+    builder.addCircleArc('#ffff00', 'p8', 6.2449979984, false, true);
+    builder.addCircleArc('#ffff00', 'p9', 6.2449979984, false, true);
+    builder.addCircleArc('#7f007f', 'p4', 4.2, false, true);
+    builder.addCircleArc('#7f007f', 'p34', 4.2, false, true);
+    builder.addCircleArc('#7f007f', 'p5', 4.2, false, true);
+    builder.addCircleArc('#7f007f', 'p28', 4.2, false, true);
+    builder.addCircleArc('#7f007f', 'p6', 4.2, false, true);
+    builder.addCircleArc('#7f007f', 'p19', 4.2, false, true);
+    builder.addCircleArc('#7f007f', 'p7', 4.2, false, true);
+    builder.addCircleArc('#7f007f', 'p31', 4.2, false, true);
+    builder.addCircleArc('#7f007f', 'p8', 4.2, false, true);
+    builder.addCircleArc('#7f007f', 'p25', 4.2, false, true);
+    builder.addCircleArc('#7f007f', 'p9', 4.2, false, true);
+    builder.addCircleArc('#7f007f', 'p22', 4.2, false, true);
+    builder.addCircleArc('#7f007f', 'p1', 4.2, false, true);
+    builder.addCircleArc('#7f007f', 'p13', 4.2, false, true);
+    builder.addCircleArc('#7f007f', 'p2', 4.2, false, true);
+    builder.addCircleArc('#7f007f', 'p16', 4.2, false, true);
+    builder.addCircleArc('#7f007f', 'p3', 4.2, false, true);
+    builder.addCircleArc('#7f007f', 'p10', 4.2, false, true);
 
     builder.recenter();
     builder.normalize();
@@ -1749,6 +2254,10 @@ function AAH()
     builder.addPermutation('#ff0000', [[0, 1]]);
     builder.addPermutation('#00ff00', [[4, 3]]);
     builder.addPermutation('#0000ff', [[0, 1, 2, 3, 4, 5]]);
+    builder.addCircleArc('#ff0000', 'ul', 2.2, true, false);
+    builder.addCircleArc('#ff0000', 'ur', 2.2, true, false);
+    builder.addCircleArc('#00ff00', 'bl', 2.2, true, false);
+    builder.addCircleArc('#00ff00', 'br', 2.2, true, false);
 
     builder.recenter();
     builder.normalize();
@@ -1771,6 +2280,8 @@ function AAG()
     builder.addNode('lhs', '#7f007f', 1, 4);
     builder.addPermutation('#ff0000', [[0, 1]]);
     builder.addPermutation('#0000ff', [[0, 1, 2, 3, 4, 5]]);
+    builder.addCircleArc('#ff0000', 'ul', 2.2, true, false);
+    builder.addCircleArc('#ff0000', 'ur', 2.2, true, false);
 
     builder.recenter();
     builder.normalize();
@@ -1795,6 +2306,18 @@ function ABU()
     builder.addPermutation('#ff0000', [[0, 1, 2, 3]]);
     builder.addPermutation('#00ff00', [[0, 3, 4, 5]]);
     builder.addPermutation('#0000ff', [[0, 5, 6, 1]]);
+    builder.addCircleArc('#ff0000', 'p1', 5.19615242271, false, true);
+    builder.addCircleArc('#ff0000', 'p2', 5.19615242271, false, true);
+    builder.addCircleArc('#ff0000', 'p3', 5.19615242271, false, true);
+    builder.addCircleArc('#ff0000', 'p4', 5.19615242271, false, true);
+    builder.addCircleArc('#00ff00', 'p1', 5.19615242271, false, true);
+    builder.addCircleArc('#00ff00', 'p4', 5.19615242271, false, true);
+    builder.addCircleArc('#00ff00', 'p5', 5.19615242271, false, true);
+    builder.addCircleArc('#00ff00', 'p6', 5.19615242271, false, true);
+    builder.addCircleArc('#0000ff', 'p1', 5.19615242271, false, true);
+    builder.addCircleArc('#0000ff', 'p6', 5.19615242271, false, true);
+    builder.addCircleArc('#0000ff', 'p7', 5.19615242271, false, true);
+    builder.addCircleArc('#0000ff', 'p2', 5.19615242271, false, true);
 
     builder.recenter();
     builder.normalize();
@@ -1828,6 +2351,30 @@ function ABV()
     builder.addPermutation('#ff0000', [[0, 1, 2, 3], [7, 10, 11, 8]]);
     builder.addPermutation('#00ff00', [[0, 3, 4, 5], [8, 12, 13, 9]]);
     builder.addPermutation('#0000ff', [[0, 5, 6, 1], [9, 14, 15, 7]]);
+    builder.addCircleArc('#ff0000', 'p1', 5.19615242271, false, true);
+    builder.addCircleArc('#ff0000', 'p2', 5.19615242271, false, true);
+    builder.addCircleArc('#ff0000', 'p3', 5.19615242271, false, true);
+    builder.addCircleArc('#ff0000', 'p4', 5.19615242271, false, true);
+    builder.addCircleArc('#00ff00', 'p1', 5.19615242271, false, true);
+    builder.addCircleArc('#00ff00', 'p4', 5.19615242271, false, true);
+    builder.addCircleArc('#00ff00', 'p5', 5.19615242271, false, true);
+    builder.addCircleArc('#00ff00', 'p6', 5.19615242271, false, true);
+    builder.addCircleArc('#0000ff', 'p1', 5.19615242271, false, true);
+    builder.addCircleArc('#0000ff', 'p6', 5.19615242271, false, true);
+    builder.addCircleArc('#0000ff', 'p7', 5.19615242271, false, true);
+    builder.addCircleArc('#0000ff', 'p2', 5.19615242271, false, true);
+    builder.addCircleArc('#ff0000', 'p8', 2.59807621135, false, true);
+    builder.addCircleArc('#ff0000', 'p11', 4.5, false, true);
+    builder.addCircleArc('#ff0000', 'p12', 2.59807621135, false, true);
+    builder.addCircleArc('#ff0000', 'p9', 4.5, false, true);
+    builder.addCircleArc('#00ff00', 'p9', 2.59807621135, false, true);
+    builder.addCircleArc('#00ff00', 'p13', 4.5, false, true);
+    builder.addCircleArc('#00ff00', 'p14', 2.59807621135, false, true);
+    builder.addCircleArc('#00ff00', 'p10', 4.5, false, true);
+    builder.addCircleArc('#0000ff', 'p10', 2.59807621135, false, true);
+    builder.addCircleArc('#0000ff', 'p15', 4.5, false, true);
+    builder.addCircleArc('#0000ff', 'p16', 2.59807621135, false, true);
+    builder.addCircleArc('#0000ff', 'p8', 4.5, false, true);
 
     builder.recenter();
     builder.normalize();
@@ -1865,6 +2412,32 @@ function ACA()
     builder.addPermutation('#ff0000', [[16, 14, 19, 18, 17, 12], [0, 1, 2, 3, 4, 5]]);
     builder.addPermutation('#ffff00', [[11, 12, 13, 14, 15, 10], [6, 2, 7, 8, 9, 4]]);
     builder.addPermutation('#7f007f', [[8, 10]]);
+    builder.addCircleArc('#ff0000', 'p17', 3.0, false, true);
+    builder.addCircleArc('#ff0000', 'p15', 3.0, false, true);
+    builder.addCircleArc('#ff0000', 'p20', 3.0, false, true);
+    builder.addCircleArc('#ff0000', 'p19', 3.0, false, true);
+    builder.addCircleArc('#ff0000', 'p18', 3.0, false, true);
+    builder.addCircleArc('#ff0000', 'p13', 3.0, false, true);
+    builder.addCircleArc('#ffff00', 'p11', 3.0, true, false);
+    builder.addCircleArc('#ffff00', 'p16', 3.0, true, false);
+    builder.addCircleArc('#ffff00', 'p15', 3.0, true, false);
+    builder.addCircleArc('#ffff00', 'p14', 3.0, true, false);
+    builder.addCircleArc('#ffff00', 'p13', 3.0, true, false);
+    builder.addCircleArc('#ffff00', 'p12', 3.0, true, false);
+    builder.addCircleArc('#ffff00', 'p7', 3.0, true, false);
+    builder.addCircleArc('#ffff00', 'p3', 3.0, true, false);
+    builder.addCircleArc('#ffff00', 'p8', 3.0, true, false);
+    builder.addCircleArc('#ffff00', 'p9', 3.0, true, false);
+    builder.addCircleArc('#ffff00', 'p10', 3.0, true, false);
+    builder.addCircleArc('#ffff00', 'p5', 3.0, true, false);
+    builder.addCircleArc('#ff0000', 'p1', 3.0, true, false);
+    builder.addCircleArc('#ff0000', 'p2', 3.0, true, false);
+    builder.addCircleArc('#ff0000', 'p3', 3.0, true, false);
+    builder.addCircleArc('#ff0000', 'p4', 3.0, true, false);
+    builder.addCircleArc('#ff0000', 'p5', 3.0, true, false);
+    builder.addCircleArc('#ff0000', 'p6', 3.0, true, false);
+    builder.addCircleArc('#7f007f', 'p9', 3.0, false, true);
+    builder.addCircleArc('#7f007f', 'p11', 3.0, false, true);
 
     builder.recenter();
     builder.normalize();
@@ -1884,6 +2457,10 @@ function AAR()
     builder.addNode('coord22', '#0000ff', 4, 4);
     builder.addPermutation('#ff0000', [[0, 1]]);
     builder.addPermutation('#0000ff', [[1, 2]]);
+    builder.addCircleArc('#ff0000', 'coord11', 2.2, false, true);
+    builder.addCircleArc('#ff0000', 'coord12', 2.2, false, true);
+    builder.addCircleArc('#0000ff', 'coord12', 2.2, false, true);
+    builder.addCircleArc('#0000ff', 'coord22', 2.2, false, true);
 
     builder.recenter();
     builder.normalize();
@@ -1992,6 +2569,10 @@ function AAB()
     builder.addNode('bot', '#0000ff', 4, 4);
     builder.addPermutation('#ff0000', [[0, 1]]);
     builder.addPermutation('#0000ff', [[1, 2]]);
+    builder.addCircleArc('#ff0000', 'lhs', 2.2, true, false);
+    builder.addCircleArc('#ff0000', 'rhs', 2.2, true, false);
+    builder.addCircleArc('#0000ff', 'rhs', 2.2, false, true);
+    builder.addCircleArc('#0000ff', 'bot', 2.2, false, true);
 
     builder.recenter();
     builder.normalize();
@@ -2062,6 +2643,18 @@ function AAP()
     builder.addPermutation('#ffff00', [[1, 3], [4, 5]]);
     builder.addPermutation('#00ff00', [[1, 2], [5, 6]]);
     builder.addPermutation('#0000ff', [[0, 1], [3, 5]]);
+    builder.addCircleArc('#ffff00', 'coord12', 2.2, false, true);
+    builder.addCircleArc('#ffff00', 'coord22', 2.2, false, true);
+    builder.addCircleArc('#ffff00', 'coord31', 2.2, false, true);
+    builder.addCircleArc('#ffff00', 'coord32', 2.2, false, true);
+    builder.addCircleArc('#00ff00', 'coord12', 2.2, false, true);
+    builder.addCircleArc('#00ff00', 'coord13', 2.2, false, true);
+    builder.addCircleArc('#00ff00', 'coord32', 2.2, false, true);
+    builder.addCircleArc('#00ff00', 'coord33', 2.2, false, true);
+    builder.addCircleArc('#0000ff', 'coord11', 2.2, false, true);
+    builder.addCircleArc('#0000ff', 'coord12', 2.2, false, true);
+    builder.addCircleArc('#0000ff', 'coord22', 2.2, false, true);
+    builder.addCircleArc('#0000ff', 'coord32', 2.2, false, true);
 
     builder.recenter();
     builder.normalize();
@@ -2082,6 +2675,12 @@ function AAF()
     builder.addNode('br', '#00ff00', 4, 4);
     builder.addPermutation('#ff0000', [[0, 1, 2]]);
     builder.addPermutation('#0000ff', [[1, 3, 2]]);
+    builder.addCircleArc('#ff0000', 'ul', 2.2, true, false);
+    builder.addCircleArc('#ff0000', 'ur', 4.0, true, false);
+    builder.addCircleArc('#ff0000', 'bl', 2.2, true, false);
+    builder.addCircleArc('#0000ff', 'ur', 2.2, true, false);
+    builder.addCircleArc('#0000ff', 'br', 2.2, true, false);
+    builder.addCircleArc('#0000ff', 'bl', 4.0, true, false);
 
     builder.recenter();
     builder.normalize();
@@ -2112,6 +2711,27 @@ function ABO()
     builder.addNode('p14', '#0000ff', -7.0000, 2.0000);
     builder.addPermutation('#ff0000', [[0, 3, 2, 1], [5, 6], [7, 8, 9], [10, 11, 12, 13]]);
     builder.addPermutation('#00ff00', [[0, 4], [1, 5], [2, 7], [3, 10]]);
+    builder.addCircleArc('#ff0000', 'p1', 2.0, false, false);
+    builder.addCircleArc('#ff0000', 'p4', 2.0, false, false);
+    builder.addCircleArc('#ff0000', 'p3', 2.0, false, false);
+    builder.addCircleArc('#ff0000', 'p2', 2.0, false, false);
+    builder.addCircleArc('#00ff00', 'p1', 2.2, true, false);
+    builder.addCircleArc('#00ff00', 'p5', 2.2, true, false);
+    builder.addCircleArc('#00ff00', 'p2', 2.2, true, false);
+    builder.addCircleArc('#00ff00', 'p6', 2.2, true, false);
+    builder.addCircleArc('#00ff00', 'p3', 2.2, true, false);
+    builder.addCircleArc('#00ff00', 'p8', 2.2, true, false);
+    builder.addCircleArc('#00ff00', 'p4', 2.2, true, false);
+    builder.addCircleArc('#00ff00', 'p11', 2.2, true, false);
+    builder.addCircleArc('#ff0000', 'p6', 2.0, true, false);
+    builder.addCircleArc('#ff0000', 'p7', 2.0, true, false);
+    builder.addCircleArc('#ff0000', 'p8', 2.0, false, false);
+    builder.addCircleArc('#ff0000', 'p9', 2.0, false, false);
+    builder.addCircleArc('#ff0000', 'p10', 2.0, false, false);
+    builder.addCircleArc('#ff0000', 'p11', 2.0, false, false);
+    builder.addCircleArc('#ff0000', 'p12', 2.0, false, false);
+    builder.addCircleArc('#ff0000', 'p13', 2.0, false, false);
+    builder.addCircleArc('#ff0000', 'p14', 2.0, false, false);
 
     builder.recenter();
     builder.normalize();
@@ -2140,6 +2760,30 @@ function ACD()
     builder.addNode('p12', '#00ff00', -3.0000, -3.4641);
     builder.addPermutation('#0000ff', [[0, 3], [1, 2], [4, 5], [6, 7], [8, 10], [9, 11]]);
     builder.addPermutation('#ffff00', [[0, 4, 8], [1, 5, 9], [2, 6, 10], [3, 7, 11]]);
+    builder.addCircleArc('#0000ff', 'p1', 3.46410161514, false, true);
+    builder.addCircleArc('#0000ff', 'p4', 3.46410161514, false, true);
+    builder.addCircleArc('#0000ff', 'p2', 3.46410161514, false, true);
+    builder.addCircleArc('#0000ff', 'p3', 3.46410161514, false, true);
+    builder.addCircleArc('#0000ff', 'p5', 2.0, false, true);
+    builder.addCircleArc('#0000ff', 'p6', 2.0, false, true);
+    builder.addCircleArc('#0000ff', 'p7', 2.0, false, true);
+    builder.addCircleArc('#0000ff', 'p8', 2.0, false, true);
+    builder.addCircleArc('#0000ff', 'p9', 4.0, false, true);
+    builder.addCircleArc('#0000ff', 'p11', 4.0, false, true);
+    builder.addCircleArc('#0000ff', 'p10', 4.0, false, true);
+    builder.addCircleArc('#0000ff', 'p12', 4.0, false, true);
+    builder.addCircleArc('#ffff00', 'p1', 1.73205080757, false, true);
+    builder.addCircleArc('#ffff00', 'p2', 3.60555127546, false, true);
+    builder.addCircleArc('#ffff00', 'p3', 5.56776436283, false, true);
+    builder.addCircleArc('#ffff00', 'p4', 4.58257569496, false, true);
+    builder.addCircleArc('#ffff00', 'p5', 1.73205080757, false, true);
+    builder.addCircleArc('#ffff00', 'p6', 3.60555127546, false, true);
+    builder.addCircleArc('#ffff00', 'p7', 5.56776436283, false, true);
+    builder.addCircleArc('#ffff00', 'p8', 4.58257569496, false, true);
+    builder.addCircleArc('#ffff00', 'p9', 1.73205080757, false, true);
+    builder.addCircleArc('#ffff00', 'p10', 3.60555127546, false, true);
+    builder.addCircleArc('#ffff00', 'p11', 5.56776436283, false, true);
+    builder.addCircleArc('#ffff00', 'p12', 4.58257569496, false, true);
 
     builder.recenter();
     builder.normalize();
@@ -2164,6 +2808,18 @@ function ABT()
     builder.addPermutation('#ff0000', [[0, 2], [3, 6]]);
     builder.addPermutation('#00ff00', [[0, 3], [1, 4]]);
     builder.addPermutation('#0000ff', [[0, 1], [2, 5]]);
+    builder.addCircleArc('#ff0000', 'p1', 3.0, false, true);
+    builder.addCircleArc('#ff0000', 'p3', 3.0, false, true);
+    builder.addCircleArc('#ff0000', 'p4', 3.0, false, true);
+    builder.addCircleArc('#ff0000', 'p7', 3.0, false, true);
+    builder.addCircleArc('#00ff00', 'p1', 3.0, false, true);
+    builder.addCircleArc('#00ff00', 'p4', 3.0, false, true);
+    builder.addCircleArc('#00ff00', 'p2', 3.0, false, true);
+    builder.addCircleArc('#00ff00', 'p5', 3.0, false, true);
+    builder.addCircleArc('#0000ff', 'p1', 3.0, false, true);
+    builder.addCircleArc('#0000ff', 'p2', 3.0, false, true);
+    builder.addCircleArc('#0000ff', 'p3', 3.0, false, true);
+    builder.addCircleArc('#0000ff', 'p6', 3.0, false, true);
 
     builder.recenter();
     builder.normalize();
@@ -2189,6 +2845,18 @@ function ABK()
     builder.addNode('p9', '#ff0000', -3.0000, -1.7321);
     builder.addPermutation('#ff0000', [[0, 1, 2], [4, 6, 8]]);
     builder.addPermutation('#0000ff', [[0, 3, 1], [5, 7, 6]]);
+    builder.addCircleArc('#ff0000', 'p1', 3.0, false, false);
+    builder.addCircleArc('#ff0000', 'p2', 3.0, false, false);
+    builder.addCircleArc('#ff0000', 'p3', 3.0, false, false);
+    builder.addCircleArc('#ff0000', 'p5', 2.0, false, false);
+    builder.addCircleArc('#ff0000', 'p7', 2.0, false, false);
+    builder.addCircleArc('#ff0000', 'p9', 2.0, false, false);
+    builder.addCircleArc('#0000ff', 'p1', 3.0, false, false);
+    builder.addCircleArc('#0000ff', 'p4', 3.0, false, false);
+    builder.addCircleArc('#0000ff', 'p2', 3.0, false, false);
+    builder.addCircleArc('#0000ff', 'p6', 1.0, false, false);
+    builder.addCircleArc('#0000ff', 'p8', 1.0, false, false);
+    builder.addCircleArc('#0000ff', 'p7', 1.0, false, false);
 
     builder.recenter();
     builder.normalize();
@@ -2244,6 +2912,14 @@ function AAE()
     builder.addNode('br', '#00ff00', 4, 4);
     builder.addPermutation('#ff0000', [[0, 2], [1, 3]]);
     builder.addPermutation('#0000ff', [[0, 1], [2, 3]]);
+    builder.addCircleArc('#ff0000', 'ul', 2.2, true, false);
+    builder.addCircleArc('#ff0000', 'bl', 2.2, true, false);
+    builder.addCircleArc('#ff0000', 'ur', 2.2, true, false);
+    builder.addCircleArc('#ff0000', 'br', 2.2, true, false);
+    builder.addCircleArc('#0000ff', 'ul', 2.2, true, false);
+    builder.addCircleArc('#0000ff', 'ur', 2.2, true, false);
+    builder.addCircleArc('#0000ff', 'bl', 2.2, true, false);
+    builder.addCircleArc('#0000ff', 'br', 2.2, true, false);
 
     builder.recenter();
     builder.normalize();
@@ -2328,6 +3004,18 @@ function ABW()
     builder.addPermutation('#ff0000', [[0, 3, 4, 1]]);
     builder.addPermutation('#00ff00', [[1, 5, 6, 2]]);
     builder.addPermutation('#0000ff', [[2, 7, 8, 0]]);
+    builder.addCircleArc('#ff0000', 'p1', 2.59807621135, false, true);
+    builder.addCircleArc('#ff0000', 'p4', 4.5, false, true);
+    builder.addCircleArc('#ff0000', 'p5', 2.59807621135, false, true);
+    builder.addCircleArc('#ff0000', 'p2', 4.5, false, true);
+    builder.addCircleArc('#00ff00', 'p2', 2.59807621135, false, true);
+    builder.addCircleArc('#00ff00', 'p6', 4.5, false, true);
+    builder.addCircleArc('#00ff00', 'p7', 2.59807621135, false, true);
+    builder.addCircleArc('#00ff00', 'p3', 4.5, false, true);
+    builder.addCircleArc('#0000ff', 'p3', 2.59807621135, false, true);
+    builder.addCircleArc('#0000ff', 'p8', 4.5, false, true);
+    builder.addCircleArc('#0000ff', 'p9', 2.59807621135, false, true);
+    builder.addCircleArc('#0000ff', 'p1', 4.5, false, true);
 
     builder.recenter();
     builder.normalize();
@@ -2345,6 +3033,8 @@ function AAA()
     builder.addNode('lhs', '#ff0000', 1, 1);
     builder.addNode('rhs', '#0000ff', 4, 1);
     builder.addPermutation('#ff0000', [[0, 1]]);
+    builder.addCircleArc('#ff0000', 'lhs', 2.2, true, false);
+    builder.addCircleArc('#ff0000', 'rhs', 2.2, true, false);
 
     builder.recenter();
     builder.normalize();
@@ -2373,6 +3063,10 @@ function ABQ()
     builder.addPermutation('#ff0000', [[0, 1], [2, 3], [4, 5], [6, 7]]);
     builder.addPermutation('#0000ff', [[1, 2], [3, 4], [5, 6], [7, 8]]);
     builder.addPermutation('#7f007f', [[9, 7, 5, 3, 1], [0, 2, 4, 6, 8, 10]]);
+    builder.addCircleArc('#7f007f', 'p2', 5.19615242271, false, true);
+    builder.addCircleArc('#7f007f', 'p10', 5.19615242271, false, true);
+    builder.addCircleArc('#7f007f', 'p9', 6.92820323028, false, true);
+    builder.addCircleArc('#7f007f', 'p11', 6.92820323028, false, true);
 
     builder.recenter();
     builder.normalize();
@@ -2394,6 +3088,12 @@ function AAC()
     builder.addPermutation('#ff0000', [[0, 1]]);
     builder.addPermutation('#ffff00', [[1, 2]]);
     builder.addPermutation('#0000ff', [[1, 3]]);
+    builder.addCircleArc('#ff0000', 'lhs', 2.2, true, false);
+    builder.addCircleArc('#ff0000', 'mid', 2.2, true, false);
+    builder.addCircleArc('#ffff00', 'mid', 2.2, true, false);
+    builder.addCircleArc('#ffff00', 'rhs', 2.2, true, false);
+    builder.addCircleArc('#0000ff', 'mid', 2.2, true, false);
+    builder.addCircleArc('#0000ff', 'bot', 2.2, true, false);
 
     builder.recenter();
     builder.normalize();
@@ -2438,6 +3138,43 @@ function ABS()
     builder.addPermutation('#ff0000', [[0, 1, 2], [21, 22, 23], [24, 25, 26]]);
     builder.addPermutation('#00ff00', [[0, 3], [1, 9], [2, 15], [5, 21], [7, 24]]);
     builder.addPermutation('#0000ff', [[3, 4, 5, 6, 7, 8], [9, 10, 11, 12, 13, 14], [15, 16, 17, 18, 19, 20]]);
+    builder.addCircleArc('#ff0000', 'p1', 3.5, false, false);
+    builder.addCircleArc('#ff0000', 'p2', 3.5, false, false);
+    builder.addCircleArc('#ff0000', 'p3', 3.5, false, false);
+    builder.addCircleArc('#ff0000', 'p22', 3.5, false, false);
+    builder.addCircleArc('#ff0000', 'p23', 3.5, false, false);
+    builder.addCircleArc('#ff0000', 'p24', 3.5, false, false);
+    builder.addCircleArc('#ff0000', 'p25', 3.5, false, false);
+    builder.addCircleArc('#ff0000', 'p26', 3.5, false, false);
+    builder.addCircleArc('#ff0000', 'p27', 3.5, false, false);
+    builder.addCircleArc('#00ff00', 'p1', 1.8, false, true);
+    builder.addCircleArc('#00ff00', 'p4', 1.8, false, true);
+    builder.addCircleArc('#00ff00', 'p2', 1.8, false, true);
+    builder.addCircleArc('#00ff00', 'p10', 1.8, false, true);
+    builder.addCircleArc('#00ff00', 'p3', 1.8, false, true);
+    builder.addCircleArc('#00ff00', 'p16', 1.8, false, true);
+    builder.addCircleArc('#00ff00', 'p6', 1.8, false, true);
+    builder.addCircleArc('#00ff00', 'p22', 1.8, false, true);
+    builder.addCircleArc('#00ff00', 'p8', 1.8, false, true);
+    builder.addCircleArc('#00ff00', 'p25', 1.8, false, true);
+    builder.addCircleArc('#0000ff', 'p4', 5.0, false, true);
+    builder.addCircleArc('#0000ff', 'p5', 5.0, false, true);
+    builder.addCircleArc('#0000ff', 'p6', 5.0, false, true);
+    builder.addCircleArc('#0000ff', 'p7', 5.0, false, true);
+    builder.addCircleArc('#0000ff', 'p8', 5.0, false, true);
+    builder.addCircleArc('#0000ff', 'p9', 5.0, false, true);
+    builder.addCircleArc('#0000ff', 'p10', 5.0, false, true);
+    builder.addCircleArc('#0000ff', 'p11', 5.0, false, true);
+    builder.addCircleArc('#0000ff', 'p12', 5.0, false, true);
+    builder.addCircleArc('#0000ff', 'p13', 5.0, false, true);
+    builder.addCircleArc('#0000ff', 'p14', 5.0, false, true);
+    builder.addCircleArc('#0000ff', 'p15', 5.0, false, true);
+    builder.addCircleArc('#0000ff', 'p16', 5.0, false, true);
+    builder.addCircleArc('#0000ff', 'p17', 5.0, false, true);
+    builder.addCircleArc('#0000ff', 'p18', 5.0, false, true);
+    builder.addCircleArc('#0000ff', 'p19', 5.0, false, true);
+    builder.addCircleArc('#0000ff', 'p20', 5.0, false, true);
+    builder.addCircleArc('#0000ff', 'p21', 5.0, false, true);
 
     builder.recenter();
     builder.normalize();
@@ -2450,3 +3187,4 @@ function ABS()
 puzzleList = [AAA(), AAB(), AAC(), AAD(), AAE(), AAF(), AAG(), AAH(), AAI(), AAJ(), AAK(), AAL(), AAM(), AAN(), AAO(), AAP(), AAQ(), AAR(), AAS(), AAT(), AAU(), AAV(), AAW(), AAX(), AAY(), AAZ(), ABA(), ABB(), ABC(), ABD(), ABE(), ABF(), ABG(), ABH(), ABI(), ABJ(), ABK(), ABL(), ABM(), ABN(), ABO(), ABP(), ABQ(), ABR(), ABS(), ABT(), ABU(), ABV(), ABW(), ABX(), ABY(), ABZ(), ACA(), ACB(), ACC(), ACD(), ACE(), E1()];
 puzzleIndex = 0;
 puzzleData = puzzleList[puzzleIndex];
+puzzleData = testAAA();
