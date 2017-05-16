@@ -59,6 +59,9 @@ class vec2f
 
 
 // src/js/sticker.js
+var MOVE_DURATION = 1200; // 1.2 seconds
+var STICKER_RADIUS = 5;
+
 class Sticker
 {
 	constructor(color)
@@ -71,9 +74,8 @@ class Sticker
 
 	moveToSlot(slot, arc, inverted)
 	{
-		this.prevTime = 0;
+		this.prevTime = (new Date()).getTime();
 		this.prevArc = arc;
-		this.prevArc = null;
 		this.prevInverted = inverted;
 		this.slot = slot;
 	}
@@ -85,13 +87,10 @@ class Sticker
 
 	getTimeRatio()
 	{
-		/*
-		currentTime = SDL_GetTicks();
-		float ret = (currentTime - this.prevTime) / sc_MOVE_DURATION;
+		var currentTime = (new Date()).getTime();
+		var ret = (currentTime - this.prevTime) / MOVE_DURATION;
 		if (ret > 1.0) ret = 1.0;
 		return ret;
-		*/
-		return 0.0;
 	}
 
 	getCenter()
@@ -117,7 +116,7 @@ class Sticker
 	draw(context)
 	{
 		var center = this.getCenter();
-		fillCircle(context, this.color, center.x, center.y, 4);
+		fillCircle(context, this.color, center.x, center.y, STICKER_RADIUS);
 	}
 }
 
@@ -302,6 +301,8 @@ class Arc
 
 
 // src/js/slot.js
+var SLOT_RADIUS = 8;
+
 class Slot
 {
 	constructor(name, sticker, center, color)
@@ -316,7 +317,7 @@ class Slot
 
 	draw(context)
 	{
-		fillCircle(context, this.color, this.center.x, this.center.y, 5)
+		fillCircle(context, this.color, this.center.x, this.center.y, SLOT_RADIUS)
 	}
 
 	setSticker(sticker)
@@ -392,9 +393,9 @@ function update()
 
 function draw()
 {
-	context.clearRect(0, 0, canvas.width, canvas.height);
+	gameContext.clearRect(0, 0, g_gameCanvas.width, g_gameCanvas.height);
 
-	puzzleData.draw(context);
+	puzzleData.draw(gameContext);
 }
 
 function loop()
@@ -402,9 +403,6 @@ function loop()
 	update();
 	draw();
 }
-
-var canvas = document.getElementById("gameCanvas");
-var context = canvas.getContext("2d");
 
 document.addEventListener("keydown", keyDown, false);
 document.addEventListener("keyup", keyUp, false);
@@ -868,23 +866,33 @@ function linearStrArray(n)
 
 
 // src/js/graphics.js
-var scaleConst = 100;
-var yConst = scaleConst;
-var xConst = 2 * yConst;
+var g_gameCanvas = document.getElementById("gameCanvas");
+var windowWidth = window.innerWidth;
+var windowHeight = window.innerHeight;
+gameCanvas.width = 0.95 * Math.min(windowWidth, windowHeight);
+gameCanvas.height = g_gameCanvas.width;
+
+var gameContext = g_gameCanvas.getContext("2d");
+
+var GRAPHICS_SCALE = 0.45 * Math.min(g_gameCanvas.width, g_gameCanvas.height);
+var X_OFFSET = 0.5 * g_gameCanvas.width;
+var Y_OFFSET = 0.5 * g_gameCanvas.height;
+var RADIUS_SCALE = 2.0;
+var LINE_WIDTH = 4.0;
 
 function adjustPosX(t)
 {
-	return scaleConst * t + xConst;
+	return GRAPHICS_SCALE * t + X_OFFSET;
 }
 
 function adjustPosY(t)
 {
-	return scaleConst * t + yConst;
+	return GRAPHICS_SCALE * t + Y_OFFSET;
 }
 
 function adjustLen(t)
 {
-	return scaleConst * t;
+	return GRAPHICS_SCALE * t;
 }
 
 function fillRect(context, color, x, y, w, h)
@@ -902,14 +910,16 @@ function drawLine(context, color, x1, y1, x2, y2)
 	context.moveTo(adjustPosX(x1), adjustPosY(y1));
 	context.lineTo(adjustPosX(x2), adjustPosY(y2));
 	context.strokeStyle = color;
+	context.lineWidth = LINE_WIDTH;
 	context.stroke();
 	context.moveTo(0, 0);
 }
 
 function fillCircle(context, color, x, y, r)
 {
+	var radius = RADIUS_SCALE * r;
 	context.beginPath();
-	context.arc(adjustPosX(x), adjustPosY(y), r, 0, 2.0 * Math.PI);
+	context.arc(adjustPosX(x), adjustPosY(y), radius, 0, 2.0 * Math.PI);
 	context.fillStyle = color;
 	context.fill();
 	context.closePath();
