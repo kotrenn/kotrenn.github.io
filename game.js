@@ -72,6 +72,11 @@ class Sticker
 		this.prevInverted = false;
 	}
 
+	getSlot()
+	{
+		return this.slot;
+	}
+
 	moveToSlot(slot, arc, inverted)
 	{
 		this.prevTime = (new Date()).getTime();
@@ -344,8 +349,8 @@ class Slot
 
 
 // src/js/game.js
-var leftPressed = false;
-var rightPressed = false;
+var g_shiftPressed = false;
+var g_showHelp = false;
 
 function testAAA()
 {
@@ -365,26 +370,29 @@ function testAAA()
 
 function keyDown(e)
 {
-	if (e.keyCode == 39)
-	{
-		rightPressed = true;
-	}
-	else if (e.keyCode == 37)
-	{
-		leftPressed = true;
-	}
+	if (e.keyCode == 16) // SHIFT
+		shiftPressed = true;
 }
 
 function keyUp(e)
 {
-	if (e.keyCode == 37 && puzzleIndex > 0)
+	var inverted = g_shiftPressed == true;
+	if (e.keyCode == 16) // SHIFT
+		g_shiftPressed = false;
+	if (e.keyCode == 37 && puzzleIndex > 0) // LEFT
 		puzzleData = puzzleList[--puzzleIndex];
-	if (e.keyCode == 39 && puzzleIndex + 1 < puzzleList.length)
+	if (e.keyCode == 39 && puzzleIndex + 1 < puzzleList.length) // RIGHT
 		puzzleData = puzzleList[++puzzleIndex];
-	if (49 <= e.keyCode && e.keyCode <= 57)
-		puzzleData.activatePermutation(e.keyCode - 49, true);
-	if (e.keyCode == 48)
-		puzzleData.activatePermutation(10, true);
+	if (49 <= e.keyCode && e.keyCode <= 57) // 1, 2, 3, 4, 5, 6, 7, 8, 9
+		puzzleData.activatePermutation(e.keyCode - 49, inverted);
+	if (e.keyCode == 48) // 0
+		puzzleData.activatePermutation(10, inverted);
+	if (e.keyCode == 72) // H
+		g_showHelp = g_showHelp == false;
+	if (e.keyCode == 82) // R
+		puzzleData.randomize();
+	if (e.keyCode == 83) // S
+		puzzleData.solve();
 }
 
 function update()
@@ -393,9 +401,22 @@ function update()
 
 function draw()
 {
-	gameContext.clearRect(0, 0, g_gameCanvas.width, g_gameCanvas.height);
+	g_gameContext.clearRect(0, 0, g_gameCanvas.width, g_gameCanvas.height);
 
-	puzzleData.draw(gameContext);
+	puzzleData.draw(g_gameContext);
+
+	var controls = ['         Left - Previous Puzzle',
+					'        Right - Next Puzzle',
+					'1, 2, 3, 4, 5',
+					'6, 7, 8, 9, 0 - Activate Permutation',
+					'            R - Randomize Puzzle',
+					'            S - Solve Puzzle'];
+	var helpMsg  = 'H - Show Help';
+	var startY = g_gameCanvas.height - 130;
+	if (g_showHelp)
+		for (var i = 0; i < controls.length; i++)
+			drawString(g_gameContext, '#000000', controls[i], 5, startY + 20 * i);
+	drawString(g_gameContext, '#000000', helpMsg, 5, startY + 20 * controls.length);
 }
 
 function loop()
@@ -539,7 +560,7 @@ class PuzzleBuilder
 	constructor(name)
 	{
 		this.name = name;
-		this.puzzleData = new PuzzleData();
+		this.puzzleData = new PuzzleData(name);
 		this.nodeList = [];
 		this.permutationMap = {};
 	}
@@ -677,6 +698,26 @@ class PuzzleData
 		this.center = new vec2f(0.0, 0.0);
 	}
 
+	solve()
+	{
+		for (var i = 0; i < this.stickerList.length; i++)
+		{
+			var sticker = this.stickerList[i];
+			sticker.setColor(sticker.getSlot().getColor());
+		}
+	}
+
+	randomize()
+	{
+		var numPermutations = this.getPermutationListSize();
+		for (var i = 0; i < 1000; i++)
+		{
+			var randomIndex = randInt(1, numPermutations) - 1;
+			var randomInverted = randInt(1, 2) == 1;
+			this.activatePermutation(randomIndex, randomInverted);
+		}
+	}
+
 	activatePermutation(index, inverted)
 	{
 		if (index >= this.permutationList.length) return;
@@ -687,6 +728,8 @@ class PuzzleData
 
 	draw(context)
 	{
+		drawString(context, '#000000', this.name, 5, 20);
+		
 		for (var i = 0; i < this.permutationList.length; i++)
 		{
 			var permutation = this.permutationList[i];
@@ -865,6 +908,15 @@ function linearStrArray(n)
 
 
 
+// src/js/utils.js
+// http://stackoverflow.com/questions/1527803/generating-random-whole-numbers-in-javascript-in-a-specific-range
+function randInt(min, max)
+{
+	return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+
+
 // src/js/graphics.js
 var g_gameCanvas = document.getElementById("gameCanvas");
 var windowWidth = window.innerWidth;
@@ -872,7 +924,8 @@ var windowHeight = window.innerHeight;
 gameCanvas.width = 0.95 * Math.min(windowWidth, windowHeight);
 gameCanvas.height = g_gameCanvas.width;
 
-var gameContext = g_gameCanvas.getContext("2d");
+var g_gameContext = g_gameCanvas.getContext("2d");
+g_gameContext.font="20px Courier";
 
 var GRAPHICS_SCALE = 0.45 * Math.min(g_gameCanvas.width, g_gameCanvas.height);
 var X_OFFSET = 0.5 * g_gameCanvas.width;
@@ -923,6 +976,12 @@ function fillCircle(context, color, x, y, r)
 	context.fillStyle = color;
 	context.fill();
 	context.closePath();
+}
+
+function drawString(context, color, msg, x, y)
+{
+	context.fillStyle = color;
+	context.fillText(msg, x, y);
 }
 
 
