@@ -349,6 +349,7 @@ class Slot
 
 
 // src/js/game.js
+
 var g_shiftPressed = false;
 var g_showHelp = false;
 
@@ -407,12 +408,13 @@ function draw()
 
 	var controls = ['         Left - Previous Puzzle',
 					'        Right - Next Puzzle',
-					'1, 2, 3, 4, 5',
-					'6, 7, 8, 9, 0 - Activate Permutation',
+					'1, 2, 3, 4, 5 - Activate Permutation',
+					'6, 7, 8, 9, 0',
+					' [Hold] Shift - Reverse Permutation',
 					'            R - Randomize Puzzle',
 					'            S - Solve Puzzle'];
 	var helpMsg  = 'H - Show Help';
-	var startY = g_gameCanvas.height - 130;
+	var startY = g_gameCanvas.height - 20 * controls.length - 10;
 	if (g_showHelp)
 		for (var i = 0; i < controls.length; i++)
 			drawString(g_gameContext, '#000000', controls[i], 5, startY + 20 * i);
