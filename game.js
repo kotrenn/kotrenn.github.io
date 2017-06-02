@@ -427,6 +427,7 @@ function draw()
 	g_gameContext.clearRect(0, 0, g_gameCanvas.width, g_gameCanvas.height);
 
 	puzzleData.draw(g_gameContext);
+	puzzleData.drawUI(g_gameContext);
 
 	var controls = ['         Left - Previous Puzzle',
 					'        Right - Next Puzzle',
@@ -465,16 +466,37 @@ class Permutation
 		this.labels = linearStrArray(n);
 		this.color = color;
 		this.index = index;
+		this.reverseIndex = -1;
 	}
 
 	draw(context, arcList)
 	{
+		// Draw arcs
 		for (var i = 0; i < arcList.length; i++)
 		{
 			var arc = arcList[i];
 			if (arc == null) continue;
 			arc.draw(context);
 		}
+	}
+
+	drawUI(context)
+	{
+		// Draw button
+		var buttonPos = this.reverseIndex + 1;
+		var buttonSkip = 10;
+		var buttonW = 25;
+		var buttonH = buttonW;
+		var buttonX = g_gameCanvas.width - buttonPos * (buttonW + buttonSkip);
+		var buttonY = buttonSkip;
+		fillRectUI(context, this.color, buttonX, buttonY, buttonW, buttonH);
+
+		// Draw number
+		var visibleIndex = (this.index + 1) % 10;
+		var numStr = visibleIndex.toString();
+		var numX = buttonX + 0.5 * buttonW - 0.25 * FONT_SIZE;
+		var numY = buttonY + buttonH + 1.15 * FONT_SIZE;
+		drawString(context, '#000000', numStr, numX, numY);
 	}
 
 	getColor()
@@ -490,6 +512,11 @@ class Permutation
 	getIndex()
 	{
 		return this.index;
+	}
+
+	setReverseIndex(reverseIndex)
+	{
+		this.reverseIndex = reverseIndex;
 	}
 
 	setCycles(cycles)
@@ -591,7 +618,17 @@ class PuzzleBuilder
 
 	getPuzzleData()
 	{
+		this.reverseIndexList();
 		return this.puzzleData;
+	}
+
+	reverseIndexList()
+	{
+		for (var i = 0; i < this.puzzleData.getPermutationListSize(); i++)
+		{
+			var j = this.puzzleData.getPermutationListSize() - i - 1;
+			this.puzzleData.getPermutation(i).setReverseIndex(j);
+		}
 	}
 
 	indexOf(nodeName)
@@ -767,6 +804,12 @@ class PuzzleData
 
 		for (var i = 0; i < this.stickerList.length; i++)
 			this.stickerList[i].draw(context);
+	}
+	
+	drawUI(context)
+	{
+		for (var i = 0; i < this.permutationList.length; i++)
+			this.permutationList[i].drawUI(context);
 	}
 
 	addPermutation(permutation)
@@ -951,7 +994,8 @@ gameCanvas.width = 0.95 * Math.min(windowWidth, windowHeight);
 gameCanvas.height = g_gameCanvas.width;
 
 var g_gameContext = g_gameCanvas.getContext("2d");
-g_gameContext.font="20px Courier";
+var FONT_SIZE = 20;
+g_gameContext.font = FONT_SIZE.toString() + 'px Courier';
 
 var GRAPHICS_SCALE = 0.45 * Math.min(g_gameCanvas.width, g_gameCanvas.height);
 var X_OFFSET = 0.5 * g_gameCanvas.width;
@@ -976,8 +1020,18 @@ function adjustLen(t)
 
 function fillRect(context, color, x, y, w, h)
 {
+	fillRectUI(context,
+			   color,
+			   adjustPosX(x),
+			   adjustPosY(y),
+			   adjustLen(w),
+			   adjustLenY(h));
+}
+
+function fillRectUI(context, color, x, y, w, h)
+{
 	context.beginPath();
-	context.rect(adjustPosX(x), adjustPosY(y), adjustLen(w), adjustLenY(h));
+	context.rect(x, y, w, h);
 	context.fillStyle = color;
 	context.fill();
 	context.closePath();
