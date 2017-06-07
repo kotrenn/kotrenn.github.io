@@ -439,6 +439,9 @@ function testAAA()
 
 function refreshPuzzle()
 {
+	if (puzzleIndex <                  0) puzzleIndex = 0;
+	if (puzzleIndex >= puzzleList.length) puzzleIndex = puzzleList.length - 1;
+	
 	puzzleData = puzzleList[puzzleIndex];
 	g_buttonPanel.setPuzzleData(puzzleData);
 }
@@ -466,16 +469,14 @@ function keyUp(e)
 	var inverted = g_shiftPressed == true;
 	if (e.keyCode == 16) // SHIFT
 		g_shiftPressed = false;
-	if (e.keyCode == 37) // LEFT
-		if (puzzleIndex > 0)
-			previousPuzzle();
-	if (e.keyCode == 39) // RIGHT
-		if (puzzleIndex + 1 < puzzleList.length)
-			nextPuzzle();
 	if (49 <= e.keyCode && e.keyCode <= 57) // 1, 2, 3, 4, 5, 6, 7, 8, 9
 		puzzleData.activatePermutation(e.keyCode - 49, inverted);
 	if (e.keyCode == 48) // 0
 		puzzleData.activatePermutation(10, inverted);
+	if (e.keyCode == 90) // Z
+		previousPuzzle();
+	if (e.keyCode == 88) // X
+		nextPuzzle();
 	if (e.keyCode == 72) // H
 		g_showHelp = g_showHelp == false;
 	if (e.keyCode == 82) // R
@@ -503,16 +504,19 @@ function draw()
 	puzzleData.draw(g_gameContext);
 	g_buttonPanel.drawUI(g_gameContext);
 
-	var controls = ['         Left - Previous Puzzle',
-					'        Right - Next Puzzle',
+	var controls = [
 					'1, 2, 3, 4, 5 - Activate Permutation',
 					'6, 7, 8, 9, 0',
 					' [Hold] Shift - Reverse Permutation',
+		            '            Z - Previous Puzzle',
+					'            X - Next Puzzle',
 					'            R - Randomize Puzzle',
 					'            S - Solve Puzzle',
 					'            J - Previous Button',
 					'            L - Next Button',
-					'          I/K - Activate Button'];
+                    '            I - Activate Button',
+             		'            K - Activate Button (R)'
+	               ];
 	var helpMsg  = 'H - Show Help';
 	var startY = g_gameCanvas.height - 20 * controls.length - 10;
 	if (g_showHelp)
