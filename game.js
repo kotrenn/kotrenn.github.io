@@ -329,16 +329,18 @@ class Arc
 // src/js/button.js
 class Button
 {
-	constructor(permutation)
+	constructor(permutation, depth, pos)
 	{
 		this.permutation = permutation;
-		this.buttonPos   = this.permutation.getReverseIndex() + 1;
+		this.depth       = depth;
+		this.pos         = pos;
 		this.buttonSkip  = 10;
 		this.buttonW     = 25;
 		this.buttonH     = this.buttonW;
 		this.buttonX     = g_gameCanvas.width;
-		this.buttonX    -= this.buttonPos * (this.buttonW + this.buttonSkip);
+		this.buttonX    -= this.pos * (this.buttonW + this.buttonSkip);
 		this.buttonY     = this.buttonSkip;
+		this.buttonY    += this.depth * (this.buttonH + this.buttonSkip);
 		
 		var visibleIndex = (this.permutation.getIndex() + 1) % 10;
 		this.numStr      = visibleIndex.toString();
@@ -360,13 +362,26 @@ class Button
 				   this.buttonY,
 				   this.buttonW,
 				   this.buttonH);
+	}
 
-		// Draw number
-		drawString(context,
-				   '#000000',
-				   this.numStr,
-				   this.numX,
-				   this.numY);
+	getMinX()
+	{
+		return this.buttonX;
+	}
+
+	getMinY()
+	{
+		return this.buttonY;
+	}
+
+	getMaxX()
+	{
+		return this.buttonX + this.buttonW;
+	}
+
+	getMaxY()
+	{
+		return this.buttonY + this.buttonH;
 	}
 }
 
@@ -419,7 +434,7 @@ class Slot
 var g_shiftPressed = false;
 var g_showHelp = false;
 
-var g_buttonPanel = null;
+var g_actionPanel = null;
 
 function testAAA()
 {
@@ -443,7 +458,7 @@ function refreshPuzzle()
 	if (puzzleIndex >= puzzleList.length) puzzleIndex = puzzleList.length - 1;
 	
 	puzzleData = puzzleList[puzzleIndex];
-	g_buttonPanel.setPuzzleData(puzzleData);
+	g_actionPanel.setPuzzleData(puzzleData);
 }
 
 function previousPuzzle()
@@ -484,13 +499,13 @@ function keyUp(e)
 	if (e.keyCode == 83) // S
 		puzzleData.solve();
 	if (e.keyCode == 74) // J
-		g_buttonPanel.prevButton();
+		g_actionPanel.prevAction();
 	if (e.keyCode == 76) // L
-		g_buttonPanel.nextButton();
+		g_actionPanel.nextAction();
 	if (e.keyCode == 73) // I
-		g_buttonPanel.activateButton(false);
+		g_actionPanel.activateAction(false);
 	if (e.keyCode == 75) // K
-		g_buttonPanel.activateButton(true);
+		g_actionPanel.activateAction(true);
 }
 
 function update()
@@ -502,7 +517,7 @@ function draw()
 	g_gameContext.clearRect(0, 0, g_gameCanvas.width, g_gameCanvas.height);
 
 	puzzleData.draw(g_gameContext);
-	g_buttonPanel.drawUI(g_gameContext);
+	g_actionPanel.drawUI(g_gameContext);
 
 	var controls = [
 					'1, 2, 3, 4, 5 - Activate Permutation',
@@ -512,10 +527,10 @@ function draw()
 					'            X - Next Puzzle',
 					'            R - Randomize Puzzle',
 					'            S - Solve Puzzle',
-					'            J - Previous Button',
-					'            L - Next Button',
-                    '            I - Activate Button',
-             		'            K - Activate Button (R)'
+					'            J - Previous Action',
+					'            L - Next Action',
+                    '            I - Activate Action',
+             		'            K - Activate Action (R)'
 	               ];
 	var helpMsg  = 'H - Show Help';
 	var startY = g_gameCanvas.height - 20 * controls.length - 10;
@@ -533,13 +548,132 @@ function loop()
 
 function main()
 {
-	g_buttonPanel = new ButtonPanel();
+	g_actionPanel = new ActionPanel();
 	refreshPuzzle();
 	
 	document.addEventListener("keydown", keyDown, false);
 	document.addEventListener("keyup", keyUp, false);
 
 	setInterval(loop, 10);
+}
+
+
+
+// src/js/action.js
+class Action
+{
+	constructor()
+	{
+		this.buttonList = [];
+	}
+
+	addPermutation(permutation, depth, pos)
+	{
+		if (this.buttonList.length == 0)
+		{
+			var n                   = permutation.getSize();
+			var color               = permutation.getColor();
+			var identityPermutation = new Permutation(n, color, -1);
+			var identityButton      = new Button(identityPermutation, 0, pos);
+			this.buttonList.push(identityButton);
+		}
+		
+		var button = new Button(permutation, depth, pos);
+		this.buttonList.push(button);
+	}
+
+	apply(puzzleData, inverted)
+	{
+		for (var i = 1; i < this.buttonList.length; i++)
+		{
+			var button = this.buttonList[i];
+			var permutation = button.getPermutation();
+			permutation.apply(puzzleData, inverted);
+		}
+	}
+
+	startIndex()
+	{
+		var ret = 0;
+		if (this.buttonList.length == 2)
+			ret = 1;
+
+		return ret;
+	}
+
+	drawUI(context)
+	{
+		for (var i = this.startIndex(); i < this.buttonList.length; i++)
+			this.buttonList[i].drawUI(context);
+
+		// Draw number
+		if (this.buttonList.length == 2)
+			drawString(context,
+				      '#000000',
+				      this.buttonList[1].numStr,
+				      this.buttonList[1].numX,
+				      this.buttonList[1].numY);
+	}
+
+	getMinX()
+	{
+		var ret = g_gameCanvas.width;
+		
+		for (var i = this.startIndex(); i < this.buttonList.length; i++)
+		{
+			var button = this.buttonList[i];
+			if (button == null) continue;
+			var buttonMinX = button.getMinX();
+			if (buttonMinX < ret) ret = buttonMinX;
+		}
+
+		return ret;
+	}
+	
+	getMinY()
+	{
+		var ret = g_gameCanvas.height;
+		
+		for (var i = this.startIndex(); i < this.buttonList.length; i++)
+		{
+			var button = this.buttonList[i];
+			if (button == null) continue;
+			var buttonMinY = button.getMinY();
+			if (buttonMinY < ret) ret = buttonMinY;
+		}
+
+		return ret;
+	}
+	
+	getMaxX()
+	{
+		var ret = -1;
+		
+		for (var i = this.startIndex(); i < this.buttonList.length; i++)
+		{
+			var button = this.buttonList[i];
+			if (button == null) continue;
+			var buttonMaxX = button.getMaxX();
+			if (buttonMaxX > ret) ret = buttonMaxX;
+		}
+
+		return ret;
+	}
+	
+	getMaxY()
+	{
+		var ret =-1;
+		
+		for (var i = this.startIndex(); i < this.buttonList.length; i++)
+		{
+			var button = this.buttonList[i];
+			if (button == null) continue;
+			var buttonMaxY = button.getMaxY();
+			if (buttonMaxY > ret) ret = buttonMaxY;
+		}
+
+		return ret;
+	}
 }
 
 
@@ -565,6 +699,11 @@ class Permutation
 			if (arc == null) continue;
 			arc.draw(context);
 		}
+	}
+
+	getSize()
+	{
+		return this.mapping.length;
 	}
 
 	getColor()
@@ -1053,156 +1192,6 @@ function randInt(min, max)
 
 
 
-// src/js/buttonpanel.js
-class ButtonPanel
-{
-	constructor()
-	{
-		this.buttonList = [];
-		this.puzzleData = null;
-
-		this.panelX = 0;
-		this.panelY = 0;
-		this.panelW = 0;
-		this.panelH = 0;
-
-		this.PANEL_COLOR   = '#aaaaaa';
-		this.BORDER_LEFT   = 10;
-		this.BORDER_RIGHT  = 10;
-		this.BORDER_TOP    = 10;
-		this.BORDER_BOTTOM = 2 * this.BORDER_TOP + FONT_SIZE;
-
-		this.selectionIndex = -1;
-
-		this.selectionX = 0;
-		this.selectionY = 0;
-		this.selectionW = 0;
-		this.selectionH = 0;
-
-		this.SELECTION_BORDER = 5;
-		this.SELECTION_COLOR  = '#000000';
-	}
-
-	setPuzzleData(puzzleData)
-	{
-		this.puzzleData = puzzleData;
-		this.buttonList = [];
-		this.selectionIndex = -1;
-		
-		if (this.puzzleData == null) return;
-		
-		for (var i = 0; i < this.puzzleData.getPermutationListSize(); i++)
-		{
-			var permutation = this.puzzleData.getPermutation(i);
-			this.buttonList.push(new Button(permutation));
-		}
-
-		if (this.buttonList.length > 0)
-			this.selectionIndex = 0;
-
-		this.refreshUI();
-	}
-
-	getSelectedButton()
-	{
-		if ((this.selectionIndex <  0) ||
-		    (this.selectionIndex >= this.buttonList.length))
-			return null;
-		
-		return this.buttonList[this.selectionIndex];
-	}
-
-	prevButton()
-	{
-		if (this.selectionIndex < 0) return;
-		
-		this.selectionIndex--;
-		this.selectionIndex += this.buttonList.length;
-		this.selectionIndex %= this.buttonList.length;
-		this.refreshUI();
-	}
-
-	nextButton()
-	{
-		if (this.selectionIndex < 0) return;
-		
-		this.selectionIndex++;
-		this.selectionIndex %= this.buttonList.length;
-		this.refreshUI();
-	}
-
-	activateButton(inverted)
-	{
-		var button = this.getSelectedButton();
-		var permutation = button.getPermutation();
-		permutation.apply(this.puzzleData, inverted);
-	}
-
-	refreshUI()
-	{
-		var minX = g_gameCanvas.width;
-		var minY = g_gameCanvas.height;
-		var maxX = -1;
-		var maxY = -1;
-		
-		for (var i = 0; i < this.buttonList.length; i++)
-		{
-			var button = this.buttonList[i];
-			
-			var buttonMinX = button.buttonX;
-			var buttonMinY = button.buttonY;
-			var buttonMaxX = button.buttonX + button.buttonW;
-			var buttonMaxY = button.buttonY + button.buttonH;
-			
-			if (buttonMinX < minX) minX = buttonMinX;
-			if (buttonMinY < minY) minY = buttonMinY;
-			if (buttonMaxX > maxX) maxX = buttonMaxX;
-			if (buttonMaxY > maxY) maxY = buttonMaxY;
-		}
-		
-		this.panelW = maxX - minX + this.BORDER_LEFT + this.BORDER_RIGHT;
-		this.panelH = maxY - minY + this.BORDER_TOP  + this.BORDER_BOTTOM;;
-		this.panelX = minX - this.BORDER_LEFT;
-		this.panelY = minY - this.BORDER_TOP;
-
-		var selectedButton = this.getSelectedButton();
-		if (selectedButton == null) return;
-
-		this.selectionX = selectedButton.buttonX -     this.SELECTION_BORDER;
-		this.selectionY = selectedButton.buttonY -     this.SELECTION_BORDER;
-		this.selectionW = selectedButton.buttonW + 2 * this.SELECTION_BORDER;
-		this.selectionH = selectedButton.buttonH + 2 * this.SELECTION_BORDER;
-	}
-
-	drawUI(context)
-	{
-		if (this.puzzleData == null) return;
-		if (this.buttonList.length == 0) return;
-
-		// Draw the background
-		fillRectUI(context,
-				   this.PANEL_COLOR,
-				   this.panelX,
-				   this.panelY,
-				   this.panelW,
-				   this.panelH);
-
-		// Highlight the selected button
-		fillRectUI(context,
-				   this.SELECTION_COLOR,
-				   this.selectionX,
-				   this.selectionY,
-				   this.selectionW,
-				   this.selectionH);
-
-		// Draw the buttons
-		for (var i = 0; i < this.buttonList.length; i++)
-			this.buttonList[i].drawUI(context);
-	}
-}
-
-
-
 // src/js/graphics.js
 var g_gameCanvas = document.getElementById("gameCanvas");
 var windowWidth = window.innerWidth;
@@ -1279,6 +1268,175 @@ function drawString(context, color, msg, x, y)
 {
 	context.fillStyle = color;
 	context.fillText(msg, x, y);
+}
+
+
+
+// src/js/actionpanel.js
+class ActionPanel
+{
+	constructor()
+	{
+		this.actionList = [];
+		this.puzzleData = null;
+
+		this.panelX = 0;
+		this.panelY = 0;
+		this.panelW = 0;
+		this.panelH = 0;
+
+		this.PANEL_COLOR   = '#aaaaaa';
+		this.BORDER_LEFT   = 10;
+		this.BORDER_RIGHT  = 10;
+		this.BORDER_TOP    = 10;
+		this.BORDER_BOTTOM = 2 * this.BORDER_TOP + FONT_SIZE;
+
+		this.selectionIndex = -1;
+
+		this.selectionX = 0;
+		this.selectionY = 0;
+		this.selectionW = 0;
+		this.selectionH = 0;
+
+		this.SELECTION_BORDER = 5;
+		this.SELECTION_COLOR  = '#000000';
+	}
+
+	setPuzzleData(puzzleData)
+	{
+		this.puzzleData = puzzleData;
+		this.actionList = [];
+		this.selectionIndex = -1;
+		
+		if (this.puzzleData == null) return;
+		
+		for (var i = 0; i < this.puzzleData.getPermutationListSize(); i++)
+		{
+			var permutation = this.puzzleData.getPermutation(i);
+			var action = new Action();
+			var pos = 0;
+			var depth = this.puzzleData.getPermutationListSize() - i;
+			action.addPermutation(permutation, pos, depth);
+			this.actionList.push(action);
+		}
+
+		if (this.actionList.length >= 2)
+		{
+			var comboAction = new Action();
+			var perm0 = this.puzzleData.getPermutation(0);
+			var perm1 = this.puzzleData.getPermutation(1);
+			var pos   = this.puzzleData.getPermutationListSize() + 1;
+			comboAction.addPermutation(perm0, 0, pos);
+			comboAction.addPermutation(perm1, 1, pos);
+			this.actionList.push(comboAction);
+		}
+
+		if (this.actionList.length > 0)
+			this.selectionIndex = 0;
+
+		this.refreshUI();
+	}
+
+	getSelectedAction()
+	{
+		if ((this.selectionIndex <  0) ||
+		    (this.selectionIndex >= this.actionList.length))
+			return null;
+		
+		return this.actionList[this.selectionIndex];
+	}
+
+	prevAction()
+	{
+		if (this.selectionIndex < 0) return;
+		
+		this.selectionIndex--;
+		this.selectionIndex += this.actionList.length;
+		this.selectionIndex %= this.actionList.length;
+		this.refreshUI();
+	}
+
+	nextAction()
+	{
+		if (this.selectionIndex < 0) return;
+		
+		this.selectionIndex++;
+		this.selectionIndex %= this.actionList.length;
+		this.refreshUI();
+	}
+
+	activateAction(inverted)
+	{
+		var action = this.getSelectedAction();
+		action.apply(this.puzzleData, inverted);
+	}
+
+	refreshUI()
+	{
+		var minX = g_gameCanvas.width;
+		var minY = g_gameCanvas.height;
+		var maxX = -1;
+		var maxY = -1;
+		
+		for (var i = 0; i < this.actionList.length; i++)
+		{
+			var action = this.actionList[i];
+			
+			var actionMinX = action.getMinX();
+			var actionMinY = action.getMinY();
+			var actionMaxX = action.getMaxX();
+			var actionMaxY = action.getMaxY();
+			
+			if (actionMinX < minX) minX = actionMinX;
+			if (actionMinY < minY) minY = actionMinY;
+			if (actionMaxX > maxX) maxX = actionMaxX;
+			if (actionMaxY > maxY) maxY = actionMaxY;
+		}
+		
+		this.panelW = maxX - minX + this.BORDER_LEFT + this.BORDER_RIGHT;
+		this.panelH = maxY - minY + this.BORDER_TOP  + this.BORDER_BOTTOM;;
+		this.panelX = minX - this.BORDER_LEFT;
+		this.panelY = minY - this.BORDER_TOP;
+
+		var selectedAction = this.getSelectedAction();
+		if (selectedAction == null) return;
+
+		var actionMinX = selectedAction.getMinX();
+		var actionMinY = selectedAction.getMinY();
+		var actionMaxX = selectedAction.getMaxX();
+		var actionMaxY = selectedAction.getMaxY();
+		
+		this.selectionX =              actionMinX -     this.SELECTION_BORDER;
+		this.selectionY =              actionMinY -     this.SELECTION_BORDER;
+		this.selectionW = actionMaxX - actionMinX + 2 * this.SELECTION_BORDER;
+		this.selectionH = actionMaxY - actionMinY + 2 * this.SELECTION_BORDER;
+	}
+
+	drawUI(context)
+	{
+		if (this.puzzleData == null) return;
+		if (this.actionList.length == 0) return;
+
+		// Draw the background
+		fillRectUI(context,
+				   this.PANEL_COLOR,
+				   this.panelX,
+				   this.panelY,
+				   this.panelW,
+				   this.panelH);
+
+		// Highlight the selected action
+		fillRectUI(context,
+				   this.SELECTION_COLOR,
+				   this.selectionX,
+				   this.selectionY,
+				   this.selectionW,
+				   this.selectionH);
+
+		// Draw the actions
+		for (var i = 0; i < this.actionList.length; i++)
+			this.actionList[i].drawUI(context);
+	}
 }
 
 
