@@ -435,6 +435,8 @@ var g_shiftPressed = false;
 var g_showHelp = false;
 
 var g_actionPanel = null;
+var g_puzzleData = null;
+var g_puzzleIndex = 0;
 
 function testAAA()
 {
@@ -454,22 +456,22 @@ function testAAA()
 
 function refreshPuzzle()
 {
-	if (puzzleIndex <                  0) puzzleIndex = 0;
-	if (puzzleIndex >= puzzleList.length) puzzleIndex = puzzleList.length - 1;
+	if (g_puzzleIndex <                    0) g_puzzleIndex = 0;
+	if (g_puzzleIndex >= g_puzzleList.length) g_puzzleIndex = g_puzzleList.length - 1;
 	
-	puzzleData = puzzleList[puzzleIndex];
-	g_actionPanel.setPuzzleData(puzzleData);
+	g_puzzleData = g_puzzleList[g_puzzleIndex];
+	g_actionPanel.setPuzzleData(g_puzzleData);
 }
 
 function previousPuzzle()
 {
-	--puzzleIndex;
+	--g_puzzleIndex;
 	refreshPuzzle();
 }
 
 function nextPuzzle()
 {
-	++puzzleIndex;
+	++g_puzzleIndex;
 	refreshPuzzle();
 }
 
@@ -485,9 +487,9 @@ function keyUp(e)
 	if (e.keyCode == 16) // SHIFT
 		g_shiftPressed = false;
 	if (49 <= e.keyCode && e.keyCode <= 57) // 1, 2, 3, 4, 5, 6, 7, 8, 9
-		puzzleData.activatePermutation(e.keyCode - 49, inverted);
+		g_puzzleData.activatePermutation(e.keyCode - 49, inverted);
 	if (e.keyCode == 48) // 0
-		puzzleData.activatePermutation(10, inverted);
+		g_puzzleData.activatePermutation(10, inverted);
 	if (e.keyCode == 90) // Z
 		previousPuzzle();
 	if (e.keyCode == 88) // X
@@ -495,9 +497,9 @@ function keyUp(e)
 	if (e.keyCode == 72) // H
 		g_showHelp = g_showHelp == false;
 	if (e.keyCode == 82) // R
-		puzzleData.randomize();
+		g_puzzleData.randomize();
 	if (e.keyCode == 83) // S
-		puzzleData.solve();
+		g_puzzleData.solve();
 	if (e.keyCode == 74) // J
 		g_actionPanel.prevAction();
 	if (e.keyCode == 76) // L
@@ -516,7 +518,7 @@ function draw()
 {
 	g_gameContext.clearRect(0, 0, g_gameCanvas.width, g_gameCanvas.height);
 
-	puzzleData.draw(g_gameContext);
+	g_puzzleData.draw(g_gameContext);
 	g_actionPanel.drawUI(g_gameContext);
 
 	var controls = [
@@ -549,6 +551,7 @@ function loop()
 function main()
 {
 	g_actionPanel = new ActionPanel();
+	getPuzzleFromQuery();
 	refreshPuzzle();
 	
 	document.addEventListener("keydown", keyDown, false);
@@ -673,6 +676,43 @@ class Action
 		}
 
 		return ret;
+	}
+}
+
+
+
+// src/js/query.js
+// https://stackoverflow.com/questions/901115/how-can-i-get-query-string-values-in-javascript
+
+function getParameterByName(name, url) {
+	if (!url) url = window.location.href;
+	name = name.replace(/[\[\]]/g, "\\$&");
+	var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+		results = regex.exec(url);
+	if (!results) return null;
+	if (!results[2]) return '';
+	return decodeURIComponent(results[2].replace(/\+/g, " "));
+}
+
+function getPuzzleFromQuery()
+{
+	var puzzleName = getParameterByName('puzzle');
+	
+	if (puzzleName == null)
+		return;
+
+	if (puzzleName.length == 0)
+		return;
+
+	g_puzzleIndex = 0;
+	for (var i = 0; i < g_puzzleList.length; i++)
+	{
+		var puzzle = g_puzzleList[i];
+		if (puzzle.name == puzzleName)
+		{
+			g_puzzleIndex = i;
+			return;
+		}
 	}
 }
 
@@ -1444,7 +1484,7 @@ class ActionPanel
 // puzzles/AAJ.puz
 function AAJ()
 {
-    var builder = new PuzzleBuilder('puzzles/AAJ');
+    var builder = new PuzzleBuilder('AAJ');
 
     builder.addNode('lhs1', '#ff0000', 1, 1);
     builder.addNode('lhs2', '#ff7f00', 1, 4);
@@ -1473,7 +1513,7 @@ function AAJ()
 // puzzles/AAZ.puz
 function AAZ()
 {
-    var builder = new PuzzleBuilder('puzzles/AAZ');
+    var builder = new PuzzleBuilder('AAZ');
 
     builder.addNode('r1c2', '#ff0000', 4, 1);
     builder.addNode('r2c1', '#ff7f00', 1, 4);
@@ -1500,7 +1540,7 @@ function AAZ()
 // puzzles/AAS.puz
 function AAS()
 {
-    var builder = new PuzzleBuilder('puzzles/AAS');
+    var builder = new PuzzleBuilder('AAS');
 
     builder.addNode('coord11', '#ff0000', 1, 1);
     builder.addNode('coord21', '#0000ff', 4, 1);
@@ -1531,7 +1571,7 @@ function AAS()
 // puzzles/AAT.puz
 function AAT()
 {
-    var builder = new PuzzleBuilder('puzzles/AAT');
+    var builder = new PuzzleBuilder('AAT');
 
     builder.addNode('r1c2', '#ff0000', 4, 1);
     builder.addNode('r2c1', '#ff7f00', 1, 4);
@@ -1555,7 +1595,7 @@ function AAT()
 // puzzles/ABR.puz
 function ABR()
 {
-    var builder = new PuzzleBuilder('puzzles/ABR');
+    var builder = new PuzzleBuilder('ABR');
 
     builder.addNode('p1', '#ff0000', -2.0000, 3.4641);
     builder.addNode('p2', '#ff0000', 0.0000, 3.4641);
@@ -1629,7 +1669,7 @@ function ABR()
 // puzzles/AAU.puz
 function AAU()
 {
-    var builder = new PuzzleBuilder('puzzles/AAU');
+    var builder = new PuzzleBuilder('AAU');
 
     builder.addNode('upperleft', '#ff0000', 3, 1);
     builder.addNode('upperright', '#ffff00', 7, 1);
@@ -1650,7 +1690,7 @@ function AAU()
 // puzzles/AAW.puz
 function AAW()
 {
-    var builder = new PuzzleBuilder('puzzles/AAW');
+    var builder = new PuzzleBuilder('AAW');
 
     builder.addNode('r2c1', '#ff0000', 1, 4);
     builder.addNode('r2c2', '#ff0000', 4, 4);
@@ -1693,7 +1733,7 @@ function AAW()
 // puzzles/ABN.puz
 function ABN()
 {
-    var builder = new PuzzleBuilder('puzzles/ABN');
+    var builder = new PuzzleBuilder('ABN');
 
     builder.addNode('p1', '#7f007f', -0.0000, -2.0000);
     builder.addNode('p2', '#7f007f', 2.0000, 0.0000);
@@ -1745,7 +1785,7 @@ function ABN()
 // puzzles/ABA.puz
 function ABA()
 {
-    var builder = new PuzzleBuilder('puzzles/ABA');
+    var builder = new PuzzleBuilder('ABA');
 
     builder.addNode('top', '#ffff00', 4, 1);
     builder.addNode('mid', '#ff0000', 4, 4);
@@ -1765,7 +1805,7 @@ function ABA()
 // puzzles/ABI.puz
 function ABI()
 {
-    var builder = new PuzzleBuilder('puzzles/ABI');
+    var builder = new PuzzleBuilder('ABI');
 
     builder.addNode('r1c2', '#ff0000', 4, 1);
     builder.addNode('r1c4', '#ff0000', 10, 1);
@@ -1792,7 +1832,7 @@ function ABI()
 // puzzles/ABY.puz
 function ABY()
 {
-    var builder = new PuzzleBuilder('puzzles/ABY');
+    var builder = new PuzzleBuilder('ABY');
 
     builder.addNode('p1', '#7f007f', 3.0000, 0.0000);
     builder.addNode('p2', '#7f007f', 1.5000, 2.5981);
@@ -1855,7 +1895,7 @@ function ABY()
 // puzzles/ABF.puz
 function ABF()
 {
-    var builder = new PuzzleBuilder('puzzles/ABF');
+    var builder = new PuzzleBuilder('ABF');
 
     builder.addNode('r1c1', '#ff0000', 1, 1);
     builder.addNode('r1c2', '#ffff00', 4, 1);
@@ -1921,7 +1961,7 @@ function ABF()
 // puzzles/AAD.puz
 function AAD()
 {
-    var builder = new PuzzleBuilder('puzzles/AAD');
+    var builder = new PuzzleBuilder('AAD');
 
     builder.addNode('lhs', '#ff0000', 1, 4);
     builder.addNode('mid', '#ffff00', 4, 4);
@@ -1952,7 +1992,7 @@ function AAD()
 // puzzles/ABG.puz
 function ABG()
 {
-    var builder = new PuzzleBuilder('puzzles/ABG');
+    var builder = new PuzzleBuilder('ABG');
 
     builder.addNode('r1c2', '#ff0000', 4, 1);
     builder.addNode('r1c6', '#00ff00', 16, 1);
@@ -1991,7 +2031,7 @@ function ABG()
 // puzzles/E1.puz
 function E1()
 {
-    var builder = new PuzzleBuilder('puzzles/E1');
+    var builder = new PuzzleBuilder('E1');
 
     builder.addNode('s1r1c1', '#ff0000', 1, 4);
     builder.addNode('s1r1c2', '#ff0000', 1, 5);
@@ -2050,7 +2090,7 @@ function E1()
 // puzzles/ACC.puz
 function ACC()
 {
-    var builder = new PuzzleBuilder('puzzles/ACC');
+    var builder = new PuzzleBuilder('ACC');
 
     builder.addNode('p1', '#ff0000', -1.5000, 0.8660);
     builder.addNode('p2', '#ffff00', -3.5000, 0.8660);
@@ -2104,7 +2144,7 @@ function ACC()
 // puzzles/AAI.puz
 function AAI()
 {
-    var builder = new PuzzleBuilder('puzzles/AAI');
+    var builder = new PuzzleBuilder('AAI');
 
     builder.addNode('ul', '#ff0000', 3, 1);
     builder.addNode('ur', '#ffff00', 6, 1);
@@ -2134,7 +2174,7 @@ function AAI()
 // puzzles/ACE.puz
 function ACE()
 {
-    var builder = new PuzzleBuilder('puzzles/ACE');
+    var builder = new PuzzleBuilder('ACE');
 
     builder.addNode('p1', '#ff0000', -5.0000, 5.1962);
     builder.addNode('p2', '#ff0000', -6.0000, 3.4641);
@@ -2179,7 +2219,7 @@ function ACE()
 // puzzles/ABE.puz
 function ABE()
 {
-    var builder = new PuzzleBuilder('puzzles/ABE');
+    var builder = new PuzzleBuilder('ABE');
 
     builder.addNode('r1c1', '#ff0000', 1, 1);
     builder.addNode('r1c3', '#ffff00', 5, 1);
@@ -2203,7 +2243,7 @@ function ABE()
 // puzzles/ABD.puz
 function ABD()
 {
-    var builder = new PuzzleBuilder('puzzles/ABD');
+    var builder = new PuzzleBuilder('ABD');
 
     builder.addNode('r1c2', '#ff0000', 3, 1);
     builder.addNode('r1c4', '#ff0000', 7, 1);
@@ -2235,7 +2275,7 @@ function ABD()
 // puzzles/AAK.puz
 function AAK()
 {
-    var builder = new PuzzleBuilder('puzzles/AAK');
+    var builder = new PuzzleBuilder('AAK');
 
     builder.addNode('lhs1', '#ff0000', 1, 1);
     builder.addNode('lhs2', '#ff7f00', 1, 4);
@@ -2263,7 +2303,7 @@ function AAK()
 // puzzles/ABL.puz
 function ABL()
 {
-    var builder = new PuzzleBuilder('puzzles/ABL');
+    var builder = new PuzzleBuilder('ABL');
 
     builder.addNode('p1', '#ffff00', 0.0000, 6.9282);
     builder.addNode('p2', '#ffff00', -1.0000, 1.7321);
@@ -2300,7 +2340,7 @@ function ABL()
 // puzzles/AAY.puz
 function AAY()
 {
-    var builder = new PuzzleBuilder('puzzles/AAY');
+    var builder = new PuzzleBuilder('AAY');
 
     builder.addNode('oul', '#ff0000', 4, 1);
     builder.addNode('our', '#ff7f00', 12, 1);
@@ -2327,7 +2367,7 @@ function AAY()
 // puzzles/AAQ.puz
 function AAQ()
 {
-    var builder = new PuzzleBuilder('puzzles/AAQ');
+    var builder = new PuzzleBuilder('AAQ');
 
     builder.addNode('coord12', '#ff0000', 1, 4);
     builder.addNode('coord13', '#ffff00', 1, 7);
@@ -2350,7 +2390,7 @@ function AAQ()
 // puzzles/ABP.puz
 function ABP()
 {
-    var builder = new PuzzleBuilder('puzzles/ABP');
+    var builder = new PuzzleBuilder('ABP');
 
     builder.addNode('p1', '#ff0000', -6.0000, -0.0000);
     builder.addNode('p2', '#0000ff', -4.5000, 2.5981);
@@ -2383,7 +2423,7 @@ function ABP()
 // puzzles/ABC.puz
 function ABC()
 {
-    var builder = new PuzzleBuilder('puzzles/ABC');
+    var builder = new PuzzleBuilder('ABC');
 
     builder.addNode('r1c2', '#ff0000', 4, 1);
     builder.addNode('r1c5', '#ffff00', 13, 1);
@@ -2417,7 +2457,7 @@ function ABC()
 // puzzles/AAV.puz
 function AAV()
 {
-    var builder = new PuzzleBuilder('puzzles/AAV');
+    var builder = new PuzzleBuilder('AAV');
 
     builder.addNode('ulul', '#ff0000', 1, 1);
     builder.addNode('ulur', '#ff0000', 4, 1);
@@ -2452,7 +2492,7 @@ function AAV()
 // puzzles/AAL.puz
 function AAL()
 {
-    var builder = new PuzzleBuilder('puzzles/AAL');
+    var builder = new PuzzleBuilder('AAL');
 
     builder.addNode('coord13', '#ff0000', 1, 7);
     builder.addNode('coord22', '#ffff00', 4, 4);
@@ -2507,7 +2547,7 @@ function AAL()
 // puzzles/ABX.puz
 function ABX()
 {
-    var builder = new PuzzleBuilder('puzzles/ABX');
+    var builder = new PuzzleBuilder('ABX');
 
     builder.addNode('p1', '#7f007f', 3.0000, 0.0000);
     builder.addNode('p2', '#7f007f', 1.5000, 2.5981);
@@ -2572,7 +2612,7 @@ function ABX()
 // puzzles/AAX.puz
 function AAX()
 {
-    var builder = new PuzzleBuilder('puzzles/AAX');
+    var builder = new PuzzleBuilder('AAX');
 
     builder.addNode('coord12', '#ff0000', 1, 4);
     builder.addNode('coord13', '#ffff00', 1, 7);
@@ -2592,7 +2632,7 @@ function AAX()
 // puzzles/ABZ.puz
 function ABZ()
 {
-    var builder = new PuzzleBuilder('puzzles/ABZ');
+    var builder = new PuzzleBuilder('ABZ');
 
     builder.addNode('p1', '#7f007f', 3.0000, 0.0000);
     builder.addNode('p2', '#7f007f', 1.5000, 2.5981);
@@ -2655,7 +2695,7 @@ function ABZ()
 // puzzles/ABM.puz
 function ABM()
 {
-    var builder = new PuzzleBuilder('puzzles/ABM');
+    var builder = new PuzzleBuilder('ABM');
 
     builder.addNode('p1', '#ffff00', 1.5000, 2.5981);
     builder.addNode('p2', '#ffff00', 1.5000, -2.5981);
@@ -2765,7 +2805,7 @@ function ABM()
 // puzzles/AAH.puz
 function AAH()
 {
-    var builder = new PuzzleBuilder('puzzles/AAH');
+    var builder = new PuzzleBuilder('AAH');
 
     builder.addNode('ul', '#ff0000', 3, 1);
     builder.addNode('ur', '#ffff00', 6, 1);
@@ -2792,7 +2832,7 @@ function AAH()
 // puzzles/AAG.puz
 function AAG()
 {
-    var builder = new PuzzleBuilder('puzzles/AAG');
+    var builder = new PuzzleBuilder('AAG');
 
     builder.addNode('ul', '#ff0000', 3, 1);
     builder.addNode('ur', '#ffff00', 6, 1);
@@ -2816,7 +2856,7 @@ function AAG()
 // puzzles/ABU.puz
 function ABU()
 {
-    var builder = new PuzzleBuilder('puzzles/ABU');
+    var builder = new PuzzleBuilder('ABU');
 
     builder.addNode('p1', '#ffffff', 0.0000, 0.0000);
     builder.addNode('p2', '#7f007f', -4.5000, 2.5981);
@@ -2852,7 +2892,7 @@ function ABU()
 // puzzles/ABV.puz
 function ABV()
 {
-    var builder = new PuzzleBuilder('puzzles/ABV');
+    var builder = new PuzzleBuilder('ABV');
 
     builder.addNode('p1', '#ffffff', 0.0000, 0.0000);
     builder.addNode('p2', '#7f007f', -4.5000, 2.5981);
@@ -2909,7 +2949,7 @@ function ABV()
 // puzzles/ACA.puz
 function ACA()
 {
-    var builder = new PuzzleBuilder('puzzles/ACA');
+    var builder = new PuzzleBuilder('ACA');
 
     builder.addNode('p1', '#7f007f', 3.0000, 0.0000);
     builder.addNode('p2', '#7f007f', 1.5000, 2.5981);
@@ -2972,7 +3012,7 @@ function ACA()
 // puzzles/AAR.puz
 function AAR()
 {
-    var builder = new PuzzleBuilder('puzzles/AAR');
+    var builder = new PuzzleBuilder('AAR');
 
     builder.addNode('coord11', '#ff0000', 1, 1);
     builder.addNode('coord12', '#ff0000', 1, 4);
@@ -2995,7 +3035,7 @@ function AAR()
 // puzzles/AAO.puz
 function AAO()
 {
-    var builder = new PuzzleBuilder('puzzles/AAO');
+    var builder = new PuzzleBuilder('AAO');
 
     builder.addNode('coord11', '#ff0000', 1, 1);
     builder.addNode('coord12', '#ff0000', 1, 4);
@@ -3023,7 +3063,7 @@ function AAO()
 // puzzles/ACB.puz
 function ACB()
 {
-    var builder = new PuzzleBuilder('puzzles/ACB');
+    var builder = new PuzzleBuilder('ACB');
 
     builder.addNode('p1', '#ff0000', 2.0000, 0.0000);
     builder.addNode('p2', '#ffff00', 1.0000, 1.7321);
@@ -3058,7 +3098,7 @@ function ACB()
 // puzzles/ABH.puz
 function ABH()
 {
-    var builder = new PuzzleBuilder('puzzles/ABH');
+    var builder = new PuzzleBuilder('ABH');
 
     builder.addNode('r1c2', '#ff0000', 4, 1);
     builder.addNode('r1c4', '#ff0000', 10, 1);
@@ -3084,7 +3124,7 @@ function ABH()
 // puzzles/AAB.puz
 function AAB()
 {
-    var builder = new PuzzleBuilder('puzzles/AAB');
+    var builder = new PuzzleBuilder('AAB');
 
     builder.addNode('lhs', '#ff0000', 1, 1);
     builder.addNode('rhs', '#00ff00', 4, 1);
@@ -3107,7 +3147,7 @@ function AAB()
 // puzzles/AAN.puz
 function AAN()
 {
-    var builder = new PuzzleBuilder('puzzles/AAN');
+    var builder = new PuzzleBuilder('AAN');
 
     builder.addNode('coord12', '#ff0000', 1, 4);
     builder.addNode('coord13', '#ffff00', 1, 7);
@@ -3132,7 +3172,7 @@ function AAN()
 // puzzles/AAM.puz
 function AAM()
 {
-    var builder = new PuzzleBuilder('puzzles/AAM');
+    var builder = new PuzzleBuilder('AAM');
 
     builder.addNode('top', '#ffff00', 4, 1);
     builder.addNode('mid', '#ff0000', 4, 4);
@@ -3153,7 +3193,7 @@ function AAM()
 // puzzles/AAP.puz
 function AAP()
 {
-    var builder = new PuzzleBuilder('puzzles/AAP');
+    var builder = new PuzzleBuilder('AAP');
 
     builder.addNode('coord11', '#ff0000', 1, 1);
     builder.addNode('coord12', '#ffff00', 1, 4);
@@ -3189,7 +3229,7 @@ function AAP()
 // puzzles/AAF.puz
 function AAF()
 {
-    var builder = new PuzzleBuilder('puzzles/AAF');
+    var builder = new PuzzleBuilder('AAF');
 
     builder.addNode('ul', '#ff0000', 1, 1);
     builder.addNode('ur', '#ffff00', 4, 1);
@@ -3215,7 +3255,7 @@ function AAF()
 // puzzles/ABO.puz
 function ABO()
 {
-    var builder = new PuzzleBuilder('puzzles/ABO');
+    var builder = new PuzzleBuilder('ABO');
 
     builder.addNode('p1', '#7f007f', -0.0000, -2.0000);
     builder.addNode('p2', '#7f007f', 2.0000, 0.0000);
@@ -3266,7 +3306,7 @@ function ABO()
 // puzzles/ACD.puz
 function ACD()
 {
-    var builder = new PuzzleBuilder('puzzles/ACD');
+    var builder = new PuzzleBuilder('ACD');
 
     builder.addNode('p1', '#ff0000', -1.5000, 0.8660);
     builder.addNode('p2', '#ffff00', -3.5000, 0.8660);
@@ -3318,7 +3358,7 @@ function ACD()
 // puzzles/ABT.puz
 function ABT()
 {
-    var builder = new PuzzleBuilder('puzzles/ABT');
+    var builder = new PuzzleBuilder('ABT');
 
     builder.addNode('p1', '#ffff00', 0.0000, 0.0000);
     builder.addNode('p2', '#ffff00', -3.0000, -0.0000);
@@ -3354,7 +3394,7 @@ function ABT()
 // puzzles/ABK.puz
 function ABK()
 {
-    var builder = new PuzzleBuilder('puzzles/ABK');
+    var builder = new PuzzleBuilder('ABK');
 
     builder.addNode('p1', '#7f007f', -0.5000, 2.5981);
     builder.addNode('p2', '#7f007f', -0.5000, -2.5981);
@@ -3391,7 +3431,7 @@ function ABK()
 // puzzles/ABJ.puz
 function ABJ()
 {
-    var builder = new PuzzleBuilder('puzzles/ABJ');
+    var builder = new PuzzleBuilder('ABJ');
 
     builder.addNode('r1c3', '#ff0000', 7, 1);
     builder.addNode('r1c6', '#ff0000', 16, 1);
@@ -3426,7 +3466,7 @@ function ABJ()
 // puzzles/AAE.puz
 function AAE()
 {
-    var builder = new PuzzleBuilder('puzzles/AAE');
+    var builder = new PuzzleBuilder('AAE');
 
     builder.addNode('ul', '#ff0000', 1, 1);
     builder.addNode('ur', '#ffff00', 4, 1);
@@ -3454,7 +3494,7 @@ function AAE()
 // puzzles/ABB.puz
 function ABB()
 {
-    var builder = new PuzzleBuilder('puzzles/ABB');
+    var builder = new PuzzleBuilder('ABB');
 
     builder.addNode('r1c2', '#7f7f7f', 1, 4);
     builder.addNode('r1c3', '#7f7f7f', 1, 7);
@@ -3512,7 +3552,7 @@ function ABB()
 // puzzles/ABW.puz
 function ABW()
 {
-    var builder = new PuzzleBuilder('puzzles/ABW');
+    var builder = new PuzzleBuilder('ABW');
 
     builder.addNode('p1', '#7f007f', -2.2500, 1.2990);
     builder.addNode('p2', '#ffff00', 2.2500, 1.2990);
@@ -3550,7 +3590,7 @@ function ABW()
 // puzzles/AAA.puz
 function AAA()
 {
-    var builder = new PuzzleBuilder('puzzles/AAA');
+    var builder = new PuzzleBuilder('AAA');
 
     builder.addNode('lhs', '#ff0000', 1, 1);
     builder.addNode('rhs', '#0000ff', 4, 1);
@@ -3569,7 +3609,7 @@ function AAA()
 // puzzles/ABQ.puz
 function ABQ()
 {
-    var builder = new PuzzleBuilder('puzzles/ABQ');
+    var builder = new PuzzleBuilder('ABQ');
 
     builder.addNode('p1', '#ff0000', -6.0000, -0.0000);
     builder.addNode('p2', '#0000ff', -4.5000, 2.5981);
@@ -3601,7 +3641,7 @@ function ABQ()
 // puzzles/AAC.puz
 function AAC()
 {
-    var builder = new PuzzleBuilder('puzzles/AAC');
+    var builder = new PuzzleBuilder('AAC');
 
     builder.addNode('lhs', '#ff0000', 1, 1);
     builder.addNode('mid', '#ffff00', 4, 1);
@@ -3628,7 +3668,7 @@ function AAC()
 // puzzles/ABS.puz
 function ABS()
 {
-    var builder = new PuzzleBuilder('puzzles/ABS');
+    var builder = new PuzzleBuilder('ABS');
 
     builder.addNode('p1', '#ff0000', -3.5000, 0.0000);
     builder.addNode('p2', '#ff0000', 1.7500, 3.0311);
@@ -3706,8 +3746,8 @@ function ABS()
 
 
 
-puzzleList = [AAA(), AAB(), AAC(), AAD(), AAE(), AAF(), AAG(), AAH(), AAI(), AAJ(), AAK(), AAL(), AAM(), AAN(), AAO(), AAP(), AAQ(), AAR(), AAS(), AAT(), AAU(), AAV(), AAW(), AAX(), AAY(), AAZ(), ABA(), ABB(), ABC(), ABD(), ABE(), ABF(), ABG(), ABH(), ABI(), ABJ(), ABK(), ABL(), ABM(), ABN(), ABO(), ABP(), ABQ(), ABR(), ABS(), ABT(), ABU(), ABV(), ABW(), ABX(), ABY(), ABZ(), ACA(), ACB(), ACC(), ACD(), ACE(), E1()];
-puzzleIndex = 0;
-puzzleData = puzzleList[puzzleIndex];
+g_puzzleList = [AAA(), AAB(), AAC(), AAD(), AAE(), AAF(), AAG(), AAH(), AAI(), AAJ(), AAK(), AAL(), AAM(), AAN(), AAO(), AAP(), AAQ(), AAR(), AAS(), AAT(), AAU(), AAV(), AAW(), AAX(), AAY(), AAZ(), ABA(), ABB(), ABC(), ABD(), ABE(), ABF(), ABG(), ABH(), ABI(), ABJ(), ABK(), ABL(), ABM(), ABN(), ABO(), ABP(), ABQ(), ABR(), ABS(), ABT(), ABU(), ABV(), ABW(), ABX(), ABY(), ABZ(), ACA(), ACB(), ACC(), ACD(), ACE(), E1()];
+g_puzzleIndex = 0;
+g_puzzleData = g_puzzleList[g_puzzleIndex];
 
 main();
