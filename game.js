@@ -60,7 +60,7 @@ class vec2f
 
 // src/js/sticker.js
 var MOVE_DURATION = 1200; // 1.2 seconds
-var STICKER_RADIUS = 5;
+var STICKER_RADIUS = 4.20;
 
 class Sticker
 {
@@ -388,7 +388,7 @@ class Button
 
 
 // src/js/slot.js
-var SLOT_RADIUS = 8;
+var SLOT_RADIUS = 7.40;
 
 class Slot
 {
@@ -404,7 +404,26 @@ class Slot
 
 	draw(context)
 	{
-		fillCircle(context, this.color, this.center.x, this.center.y, SLOT_RADIUS)
+		if (g_displayMode == 0)
+		{
+			fillCircle(context, this.color, this.center.x, this.center.y, SLOT_RADIUS);
+		}
+		else if (g_displayMode == 1)
+		{
+			drawCircle(context, this.color, this.center.x, this.center.y, SLOT_RADIUS);
+		}
+		else if (g_displayMode == 2)
+		{
+			var r = SLOT_RADIUS / GRAPHICS_SCALE * RADIUS_SCALE * 1.1;
+			var x0 = this.center.x - r;
+			var y0 = this.center.y - r;
+			var x1 = this.center.x + r;
+			var y1 = this.center.y + r;
+			drawLine(context, this.color, x0, this.center.y, this.center.x, y0);
+			drawLine(context, this.color, x0, this.center.y, this.center.x, y1);
+			drawLine(context, this.color, x1, this.center.y, this.center.x, y0);
+			drawLine(context, this.color, x1, this.center.y, this.center.x, y1);
+		}
 	}
 
 	setSticker(sticker)
@@ -437,6 +456,8 @@ var g_showHelp = false;
 var g_actionPanel = null;
 var g_puzzleData = null;
 var g_puzzleIndex = 0;
+
+var g_displayMode = 0;
 
 function testAAA()
 {
@@ -508,6 +529,12 @@ function keyUp(e)
 		g_actionPanel.activateAction(false);
 	if (e.keyCode == 75) // K
 		g_actionPanel.activateAction(true);
+	if (e.keyCode == 66) // B
+		g_displayMode = 0;
+	if (e.keyCode == 78) // N
+		g_displayMode = 1;
+	if (e.keyCode == 77) // M
+		g_displayMode = 2;
 }
 
 function update()
@@ -1301,6 +1328,17 @@ function fillCircle(context, color, x, y, r)
 	context.arc(adjustPosX(x), adjustPosY(y), radius, 0, 2.0 * Math.PI);
 	context.fillStyle = color;
 	context.fill();
+	context.closePath();
+}
+
+function drawCircle(context, color, x, y, r)
+{
+	var radius = RADIUS_SCALE * r;
+	context.beginPath();
+	context.arc(adjustPosX(x), adjustPosY(y), radius, 0, 2.0 * Math.PI);
+	context.strokeStyle = color;
+	context.lineWidth = LINE_WIDTH
+	context.stroke();
 	context.closePath();
 }
 
