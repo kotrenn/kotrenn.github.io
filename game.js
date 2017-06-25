@@ -1618,8 +1618,6 @@ function AAJ()
     builder.addPermutation('#00ff00', [[0, 3]]);
     builder.addPermutation('#0000ff', [[3, 4, 5, 6, 7]]);
     builder.addCircleArc('#ff0000', 'lhs3', 6.6, true, false, true);
-    builder.addCircleArc('#00ff00', 'lhs1', 2.2, true, false, false);
-    builder.addCircleArc('#00ff00', 'rhs1', 2.2, true, false, false);
     builder.addCircleArc('#0000ff', 'rhs5', 11.0, false, false, false);
 
     builder.recenter();
@@ -1663,22 +1661,14 @@ function AAS()
     var builder = new PuzzleBuilder('AAS');
 
     builder.addNode('coord11', '#ff0000', '13', 1, 1);
-    builder.addNode('coord21', '#0000ff', '6', 4, 1);
-    builder.addNode('coord22', '#ff0000', '13', 4, 4);
+    builder.addNode('coord21', '#ffff00', '0', 4, 1);
+    builder.addNode('coord22', '#00ff00', '22', 4, 4);
     builder.addNode('coord32', '#0000ff', '6', 7, 4);
-    builder.addNode('coord33', '#ff0000', '13', 7, 7);
+    builder.addNode('coord33', '#7f007f', '8', 7, 7);
     builder.addPermutation('#ff0000', [[0, 1]]);
     builder.addPermutation('#00ff00', [[1, 2]]);
     builder.addPermutation('#0000ff', [[2, 3]]);
     builder.addPermutation('#ffff00', [[3, 4]]);
-    builder.addCircleArc('#ff0000', 'coord11', 2.2, true, false, false);
-    builder.addCircleArc('#ff0000', 'coord21', 2.2, true, false, false);
-    builder.addCircleArc('#00ff00', 'coord21', 2.2, true, false, false);
-    builder.addCircleArc('#00ff00', 'coord22', 2.2, true, false, true);
-    builder.addCircleArc('#0000ff', 'coord22', 2.2, true, false, false);
-    builder.addCircleArc('#0000ff', 'coord32', 2.2, true, false, false);
-    builder.addCircleArc('#ffff00', 'coord32', 2.2, true, false, false);
-    builder.addCircleArc('#ffff00', 'coord33', 2.2, true, false, true);
 
     builder.recenter();
     builder.normalize();
@@ -1786,6 +1776,33 @@ function ABR()
 
 
 
+// puzzles/ADN.puz
+function ADN()
+{
+    var builder = new PuzzleBuilder('ADN');
+
+    builder.addNode('x0', '#7f007f', '8', 0, 0);
+    builder.addNode('x1', '#ff0000', '13', -1.5000, 0.8660);
+    builder.addNode('x2', '#ff0000', '13', -1.5000, -0.8660);
+    builder.addNode('y1', '#0000ff', '6', 1.5000, 0.8660);
+    builder.addNode('y2', '#0000ff', '6', 1.5000, -0.8660);
+    builder.addPermutation('#ff0000', [[0, 1, 2]]);
+    builder.addPermutation('#0000ff', [[0, 4, 3]]);
+    builder.addCircleArc('#ff0000', 'x0', 1, true, false, false);
+    builder.addCircleArc('#ff0000', 'x1', 1, true, false, true);
+    builder.addCircleArc('#ff0000', 'x2', 1, true, false, false);
+    builder.addCircleArc('#0000ff', 'x0', 1, true, false, false);
+    builder.addCircleArc('#0000ff', 'y1', 1, true, false, false);
+    builder.addCircleArc('#0000ff', 'y2', 1, true, false, false);
+
+    builder.recenter();
+    builder.normalize();
+
+    return builder.getPuzzleData();
+}
+
+
+
 // puzzles/AAU.puz
 function AAU()
 {
@@ -1825,22 +1842,6 @@ function AAW()
     builder.addPermutation('#ffff00', [[1, 2], [5, 6]]);
     builder.addPermutation('#00ff00', [[2, 3], [6, 7]]);
     builder.addPermutation('#0000ff', [[3, 4], [7, 8]]);
-    builder.addCircleArc('#ff0000', 'r2c1', 2.2, true, false, false);
-    builder.addCircleArc('#ff0000', 'r2c2', 2.2, true, false, false);
-    builder.addCircleArc('#ff0000', 'r1c4', 2.2, true, false, false);
-    builder.addCircleArc('#ff0000', 'r2c4', 2.2, true, false, true);
-    builder.addCircleArc('#ffff00', 'r2c2', 2.2, true, false, true);
-    builder.addCircleArc('#ffff00', 'r1c2', 2.2, true, false, false);
-    builder.addCircleArc('#ffff00', 'r2c4', 2.2, true, false, false);
-    builder.addCircleArc('#ffff00', 'r3c4', 2.2, true, false, true);
-    builder.addCircleArc('#00ff00', 'r1c2', 2.2, true, false, false);
-    builder.addCircleArc('#00ff00', 'r1c3', 2.2, true, false, false);
-    builder.addCircleArc('#00ff00', 'r3c4', 2.2, true, false, false);
-    builder.addCircleArc('#00ff00', 'r3c3', 2.2, true, false, false);
-    builder.addCircleArc('#0000ff', 'r1c3', 2.2, true, false, false);
-    builder.addCircleArc('#0000ff', 'r1c4', 2.2, true, false, false);
-    builder.addCircleArc('#0000ff', 'r3c3', 2.2, true, false, false);
-    builder.addCircleArc('#0000ff', 'r4c3', 2.2, true, false, true);
 
     builder.recenter();
     builder.normalize();
@@ -1876,14 +1877,6 @@ function ABN()
     builder.addCircleArc('#ff0000', 'p4', 2.0, false, false, false);
     builder.addCircleArc('#ff0000', 'p3', 2.0, false, false, false);
     builder.addCircleArc('#ff0000', 'p2', 2.0, false, false, false);
-    builder.addCircleArc('#00ff00', 'p1', 2.2, true, false, true);
-    builder.addCircleArc('#00ff00', 'p5', 2.2, true, false, false);
-    builder.addCircleArc('#00ff00', 'p2', 2.2, true, false, false);
-    builder.addCircleArc('#00ff00', 'p6', 2.2, true, false, false);
-    builder.addCircleArc('#00ff00', 'p3', 2.2, true, false, false);
-    builder.addCircleArc('#00ff00', 'p8', 2.2, true, false, true);
-    builder.addCircleArc('#00ff00', 'p4', 2.2, true, false, false);
-    builder.addCircleArc('#00ff00', 'p11', 2.2, true, false, false);
     builder.addCircleArc('#0000ff', 'p6', 2.0, false, false, false);
     builder.addCircleArc('#0000ff', 'p7', 2.0, false, false, false);
     builder.addCircleArc('#0000ff', 'p8', 2.0, false, true, false);
@@ -1913,6 +1906,8 @@ function ABA()
     builder.addNode('rhs', '#00ff00', '22', 7, 7);
     builder.addPermutation('#ff0000', [[0, 1]]);
     builder.addPermutation('#0000ff', [[2, 1, 3]]);
+    builder.addCircleArc('#ff0000', 'top', 2.2, false, true, false);
+    builder.addCircleArc('#ff0000', 'mid', 2.2, false, false, false);
 
     builder.recenter();
     builder.normalize();
@@ -1940,6 +1935,59 @@ function ABI()
     builder.addNode('r5c5', '#7f007f', '8', 13, 13);
     builder.addPermutation('#ff0000', [[2, 0, 3, 5], [7, 6, 8, 10, 9]]);
     builder.addPermutation('#0000ff', [[3, 1, 4, 6]]);
+
+    builder.recenter();
+    builder.normalize();
+
+    return builder.getPuzzleData();
+}
+
+
+
+// puzzles/ADG.puz
+function ADG()
+{
+    var builder = new PuzzleBuilder('ADG');
+
+    builder.addNode('p0', '#ff0000', '13', 1.0000, 0.0000);
+    builder.addNode('p1', '#ffff00', '0', 0.5000, 0.8660);
+    builder.addNode('p2', '#00ff00', '22', -0.5000, 0.8660);
+    builder.addNode('p3', '#00ffff', '17', -1.0000, 0.0000);
+    builder.addNode('p4', '#0000ff', '6', -0.5000, -0.8660);
+    builder.addNode('p5', '#7f007f', '8', 0.5000, -0.8660);
+    builder.addNode('p6', '#ff0000', '13', 2.0000, 0.0000);
+    builder.addNode('p8', '#00ff00', '22', -1.0000, 1.7321);
+    builder.addNode('p10', '#0000ff', '6', -1.0000, -1.7321);
+    builder.addPermutation('#ff0000', [[0, 5], [2, 3], [4, 8]]);
+    builder.addPermutation('#00ff00', [[0, 1], [3, 4], [2, 7]]);
+    builder.addPermutation('#0000ff', [[1, 2], [4, 5], [0, 6]]);
+
+    builder.recenter();
+    builder.normalize();
+
+    return builder.getPuzzleData();
+}
+
+
+
+// puzzles/AED.puz
+function AED()
+{
+    var builder = new PuzzleBuilder('AED');
+
+    builder.addNode('p0', '#ff0000', '13', 1.0000, 0.0000);
+    builder.addNode('p1', '#ffff00', '0', 0.5000, 0.8660);
+    builder.addNode('p2', '#00ff00', '22', -0.5000, 0.8660);
+    builder.addNode('p3', '#00ffff', '17', -1.0000, 0.0000);
+    builder.addNode('p4', '#0000ff', '6', -0.5000, -0.8660);
+    builder.addNode('p5', '#7f007f', '8', 0.5000, -0.8660);
+    builder.addNode('p7', '#ffff00', '0', 1.0000, 1.7321);
+    builder.addNode('p8', '#00ff00', '22', -1.0000, 1.7321);
+    builder.addNode('p10', '#0000ff', '6', -1.0000, -1.7321);
+    builder.addNode('p11', '#7f007f', '8', 1.0000, -1.7321);
+    builder.addPermutation('#ff0000', [[0, 5], [2, 3], [1, 6], [4, 8]]);
+    builder.addPermutation('#00ff00', [[0, 1], [3, 4], [2, 7], [5, 9]]);
+    builder.addPermutation('#0000ff', [[1, 2], [4, 5]]);
 
     builder.recenter();
     builder.normalize();
@@ -2035,40 +2083,6 @@ function ABF()
     builder.addPermutation('#ffff00', [[3, 6], [4, 7], [5, 9], [11, 13]]);
     builder.addPermutation('#00ff00', [[0, 1], [2, 3], [7, 8], [10, 11]]);
     builder.addPermutation('#0000ff', [[3, 4], [6, 7], [8, 9], [11, 12]]);
-    builder.addCircleArc('#ff0000', 'r1c1', 2.2, true, false, false);
-    builder.addCircleArc('#ff0000', 'r2c1', 2.2, true, false, true);
-    builder.addCircleArc('#ff0000', 'r1c2', 2.2, true, false, false);
-    builder.addCircleArc('#ff0000', 'r2c2', 2.2, true, false, true);
-    builder.addCircleArc('#ff0000', 'r3c3', 2.2, true, false, false);
-    builder.addCircleArc('#ff0000', 'r4c3', 2.2, true, false, true);
-    builder.addCircleArc('#ff0000', 'r3c4', 2.2, true, false, false);
-    builder.addCircleArc('#ff0000', 'r4c4', 2.2, true, false, true);
-    builder.addCircleArc('#ff0000', 'r3c5', 2.2, true, false, false);
-    builder.addCircleArc('#ff0000', 'r4c5', 2.2, true, false, true);
-    builder.addCircleArc('#ffff00', 'r2c2', 2.2, true, false, false);
-    builder.addCircleArc('#ffff00', 'r3c2', 2.2, true, false, true);
-    builder.addCircleArc('#ffff00', 'r2c3', 2.2, true, false, false);
-    builder.addCircleArc('#ffff00', 'r3c3', 2.2, true, false, true);
-    builder.addCircleArc('#ffff00', 'r2c5', 2.2, true, false, false);
-    builder.addCircleArc('#ffff00', 'r3c5', 2.2, true, false, true);
-    builder.addCircleArc('#ffff00', 'r4c4', 2.2, true, false, false);
-    builder.addCircleArc('#ffff00', 'r5c4', 2.2, true, false, true);
-    builder.addCircleArc('#00ff00', 'r1c1', 2.2, true, false, false);
-    builder.addCircleArc('#00ff00', 'r1c2', 2.2, true, false, false);
-    builder.addCircleArc('#00ff00', 'r2c1', 2.2, true, false, false);
-    builder.addCircleArc('#00ff00', 'r2c2', 2.2, true, false, false);
-    builder.addCircleArc('#00ff00', 'r3c3', 2.2, true, false, false);
-    builder.addCircleArc('#00ff00', 'r3c4', 2.2, true, false, false);
-    builder.addCircleArc('#00ff00', 'r4c3', 2.2, true, false, false);
-    builder.addCircleArc('#00ff00', 'r4c4', 2.2, true, false, false);
-    builder.addCircleArc('#0000ff', 'r2c2', 2.2, true, false, false);
-    builder.addCircleArc('#0000ff', 'r2c3', 2.2, true, false, false);
-    builder.addCircleArc('#0000ff', 'r3c2', 2.2, true, false, false);
-    builder.addCircleArc('#0000ff', 'r3c3', 2.2, true, false, false);
-    builder.addCircleArc('#0000ff', 'r3c4', 2.2, true, false, false);
-    builder.addCircleArc('#0000ff', 'r3c5', 2.2, true, false, false);
-    builder.addCircleArc('#0000ff', 'r4c4', 2.2, true, false, false);
-    builder.addCircleArc('#0000ff', 'r4c5', 2.2, true, false, false);
 
     builder.recenter();
     builder.normalize();
@@ -2092,14 +2106,6 @@ function AAD()
     builder.addPermutation('#ffff00', [[1, 2]]);
     builder.addPermutation('#00ff00', [[2, 3]]);
     builder.addPermutation('#0000ff', [[1, 4]]);
-    builder.addCircleArc('#ff0000', 'lhs', 2.2, true, false, false);
-    builder.addCircleArc('#ff0000', 'mid', 2.2, true, false, false);
-    builder.addCircleArc('#ffff00', 'mid', 2.2, true, false, false);
-    builder.addCircleArc('#ffff00', 'rhs', 2.2, true, false, false);
-    builder.addCircleArc('#00ff00', 'rhs', 2.2, true, false, true);
-    builder.addCircleArc('#00ff00', 'top', 2.2, true, false, false);
-    builder.addCircleArc('#0000ff', 'mid', 2.2, true, false, false);
-    builder.addCircleArc('#0000ff', 'bot', 2.2, true, false, true);
 
     builder.recenter();
     builder.normalize();
@@ -2161,6 +2167,29 @@ function ACR()
     builder.addPermutation('#ff0000', [[0, 1], [3, 4]]);
     builder.addPermutation('#00ff00', [[0, 3]]);
     builder.addPermutation('#0000ff', [[0, 2]]);
+
+    builder.recenter();
+    builder.normalize();
+
+    return builder.getPuzzleData();
+}
+
+
+
+// puzzles/AEC.puz
+function AEC()
+{
+    var builder = new PuzzleBuilder('AEC');
+
+    builder.addNode('p0', '#ff0000', '13', 0, 0);
+    builder.addNode('p1', '#ffff00', '0', 1, 0);
+    builder.addNode('p2', '#00ff00', '22', 1, 1);
+    builder.addNode('p3', '#00ffff', '17', 2, 1);
+    builder.addNode('p4', '#0000ff', '6', 2, 2);
+    builder.addNode('p5', '#7f007f', '8', 1, 2);
+    builder.addPermutation('#ff0000', [[0, 1], [2, 3], [4, 5]]);
+    builder.addPermutation('#00ff00', [[3, 4]]);
+    builder.addPermutation('#0000ff', [[1, 2]]);
 
     builder.recenter();
     builder.normalize();
@@ -2313,6 +2342,27 @@ function AAI()
 
 
 
+// puzzles/AEF.puz
+function AEF()
+{
+    var builder = new PuzzleBuilder('AEF');
+
+    builder.addNode('p0', '#ff0000', '13', 1.0000, 0.0000);
+    builder.addNode('p1', '#0000ff', '6', -0.5000, 0.8660);
+    builder.addNode('p2', '#0000ff', '6', -0.5000, -0.8660);
+    builder.addPermutation('#ff0000', [[0, 1, 2]]);
+    builder.addCircleArc('#ff0000', 'p0', 1, true, false, false);
+    builder.addCircleArc('#ff0000', 'p1', 1, true, false, true);
+    builder.addCircleArc('#ff0000', 'p2', 1, true, false, false);
+
+    builder.recenter();
+    builder.normalize();
+
+    return builder.getPuzzleData();
+}
+
+
+
 // puzzles/ACE.puz
 function ACE()
 {
@@ -2394,6 +2444,66 @@ function ACX()
     builder.addPermutation('#ff0000', [[0, 2], [1, 3]]);
     builder.addPermutation('#0000ff', [[0, 1]]);
     builder.addPermutation('#00ff00', [[2, 3]]);
+
+    builder.recenter();
+    builder.normalize();
+
+    return builder.getPuzzleData();
+}
+
+
+
+// puzzles/ADU.puz
+function ADU()
+{
+    var builder = new PuzzleBuilder('ADU');
+
+    builder.addNode('x0', '#ff0000', '13', 0.0000, 0.0000);
+    builder.addNode('x1', '#ff0000', '13', -1.5000, 0.8660);
+    builder.addNode('x2', '#ff0000', '13', -1.5000, -0.8660);
+    builder.addNode('y0', '#0000ff', '6', 1.0000, 0.0000);
+    builder.addNode('y1', '#0000ff', '6', 1.5000, 0.8660);
+    builder.addNode('y2', '#0000ff', '6', 2.5000, 0.8660);
+    builder.addNode('y3', '#0000ff', '6', 3.0000, 0.0000);
+    builder.addNode('y4', '#0000ff', '6', 2.5000, -0.8660);
+    builder.addNode('y5', '#0000ff', '6', 1.5000, -0.8660);
+    builder.addPermutation('#ff0000', [[0, 1, 2]]);
+    builder.addPermutation('#0000ff', [[3, 8, 7, 6, 5, 4]]);
+    builder.addPermutation('#00ff00', [[0, 3]]);
+    builder.addCircleArc('#ff0000', 'x0', 1, true, false, false);
+    builder.addCircleArc('#ff0000', 'x1', 1, true, false, true);
+    builder.addCircleArc('#ff0000', 'x2', 1, true, false, false);
+    builder.addCircleArc('#0000ff', 'y0', 1, true, false, false);
+    builder.addCircleArc('#0000ff', 'y1', 1, true, false, false);
+    builder.addCircleArc('#0000ff', 'y2', 1, true, false, false);
+    builder.addCircleArc('#0000ff', 'y3', 1, true, false, false);
+    builder.addCircleArc('#0000ff', 'y4', 1, true, false, false);
+    builder.addCircleArc('#0000ff', 'y5', 1, true, false, false);
+
+    builder.recenter();
+    builder.normalize();
+
+    return builder.getPuzzleData();
+}
+
+
+
+// puzzles/ADE.puz
+function ADE()
+{
+    var builder = new PuzzleBuilder('ADE');
+
+    builder.addNode('p0', '#ff0000', '13', 1.0000, 0.0000);
+    builder.addNode('p1', '#ffff00', '0', 0.5000, 0.8660);
+    builder.addNode('p2', '#00ff00', '22', -0.5000, 0.8660);
+    builder.addNode('p3', '#00ffff', '17', -1.0000, 0.0000);
+    builder.addNode('p4', '#0000ff', '6', -0.5000, -0.8660);
+    builder.addNode('p5', '#7f007f', '8', 0.5000, -0.8660);
+    builder.addNode('p8', '#00ff00', '22', -1.0000, 1.7321);
+    builder.addNode('p10', '#0000ff', '6', -1.0000, -1.7321);
+    builder.addPermutation('#ff0000', [[0, 5], [2, 3], [4, 7]]);
+    builder.addPermutation('#00ff00', [[0, 1], [3, 4], [2, 6]]);
+    builder.addPermutation('#0000ff', [[1, 2], [4, 5]]);
 
     builder.recenter();
     builder.normalize();
@@ -2577,8 +2687,6 @@ function AAK()
     builder.addNode('rhs5', '#7f007f', '8', 4, 13);
     builder.addPermutation('#00ff00', [[0, 3]]);
     builder.addPermutation('#0000ff', [[0, 1, 2], [3, 4, 5, 6, 7]]);
-    builder.addCircleArc('#00ff00', 'lhs1', 2.2, true, false, false);
-    builder.addCircleArc('#00ff00', 'rhs1', 2.2, true, false, false);
     builder.addCircleArc('#0000ff', 'lhs3', 6.6, true, false, true);
     builder.addCircleArc('#0000ff', 'rhs5', 11.0, false, false, false);
 
@@ -2707,6 +2815,27 @@ function AAQ()
 
 
 
+// puzzles/ADY.puz
+function ADY()
+{
+    var builder = new PuzzleBuilder('ADY');
+
+    builder.addNode('p0', '#ff0000', '13', 0, 0);
+    builder.addNode('p1', '#ffff00', '0', 1, 0);
+    builder.addNode('p2', '#00ff00', '22', 1, 1);
+    builder.addNode('p3', '#0000ff', '6', 2, 1);
+    builder.addNode('p4', '#7f007f', '8', 2, 2);
+    builder.addPermutation('#ff0000', [[0, 1], [2, 3]]);
+    builder.addPermutation('#0000ff', [[1, 2], [3, 4]]);
+
+    builder.recenter();
+    builder.normalize();
+
+    return builder.getPuzzleData();
+}
+
+
+
 // puzzles/ADB.puz
 function ADB()
 {
@@ -2715,10 +2844,49 @@ function ADB()
     builder.addNode('ul', '#ff0000', '13', 1, 1);
     builder.addNode('ur', '#ffff00', '0', 4, 1);
     builder.addNode('bl', '#0000ff', '6', 1, 4);
-    builder.addNode('br', '#00ff00', '22', 4, 4);
+    builder.addNode('br', '#00ff00', '22', 4, -2);
     builder.addPermutation('#ff0000', [[0, 2]]);
     builder.addPermutation('#00ff00', [[1, 3]]);
     builder.addPermutation('#0000ff', [[0, 1]]);
+    builder.addCircleArc('#ff0000', 'ul', 2.2, false, true, false);
+    builder.addCircleArc('#ff0000', 'bl', 2.2, false, false, false);
+    builder.addCircleArc('#00ff00', 'ur', 2.2, false, false, false);
+    builder.addCircleArc('#00ff00', 'br', 2.2, false, true, false);
+    builder.addCircleArc('#0000ff', 'ul', 2.2, false, false, false);
+    builder.addCircleArc('#0000ff', 'ur', 2.2, false, false, false);
+
+    builder.recenter();
+    builder.normalize();
+
+    return builder.getPuzzleData();
+}
+
+
+
+// puzzles/ADP.puz
+function ADP()
+{
+    var builder = new PuzzleBuilder('ADP');
+
+    builder.addNode('x0', '#ff0000', '13', 0.0000, 0.0000);
+    builder.addNode('x1', '#ff0000', '13', -1.0000, 1.0000);
+    builder.addNode('x2', '#ff0000', '13', -2.0000, 0.0000);
+    builder.addNode('x3', '#ff0000', '13', -1.0000, -1.0000);
+    builder.addNode('y0', '#0000ff', '6', 1.0000, 0.0000);
+    builder.addNode('y1', '#0000ff', '6', 2.0000, 1.0000);
+    builder.addNode('y2', '#0000ff', '6', 3.0000, 0.0000);
+    builder.addNode('y3', '#0000ff', '6', 2.0000, -1.0000);
+    builder.addPermutation('#ff0000', [[0, 1, 2, 3]]);
+    builder.addPermutation('#0000ff', [[4, 7, 6, 5]]);
+    builder.addPermutation('#00ff00', [[0, 4]]);
+    builder.addCircleArc('#ff0000', 'x0', 1, true, false, false);
+    builder.addCircleArc('#ff0000', 'x1', 1, true, false, true);
+    builder.addCircleArc('#ff0000', 'x2', 1, true, false, true);
+    builder.addCircleArc('#ff0000', 'x3', 1, true, false, false);
+    builder.addCircleArc('#0000ff', 'y0', 1, true, false, true);
+    builder.addCircleArc('#0000ff', 'y1', 1, true, false, false);
+    builder.addCircleArc('#0000ff', 'y2', 1, true, false, false);
+    builder.addCircleArc('#0000ff', 'y3', 1, true, false, false);
 
     builder.recenter();
     builder.normalize();
@@ -2761,6 +2929,32 @@ function ABP()
 
 
 
+// puzzles/ADI.puz
+function ADI()
+{
+    var builder = new PuzzleBuilder('ADI');
+
+    builder.addNode('p0', '#ff0000', '13', 1.0000, 0.0000);
+    builder.addNode('p1', '#ffff00', '0', 0.5000, 0.8660);
+    builder.addNode('p2', '#00ff00', '22', -0.5000, 0.8660);
+    builder.addNode('p3', '#00ffff', '17', -1.0000, 0.0000);
+    builder.addNode('p4', '#0000ff', '6', -0.5000, -0.8660);
+    builder.addNode('p5', '#7f007f', '8', 0.5000, -0.8660);
+    builder.addNode('p6', '#ff0000', '13', 2.0000, 0.0000);
+    builder.addNode('p9', '#00ffff', '17', -2.0000, 0.0000);
+    builder.addNode('p10', '#0000ff', '6', -1.0000, -1.7321);
+    builder.addPermutation('#ff0000', [[0, 5], [2, 3], [4, 8]]);
+    builder.addPermutation('#00ff00', [[0, 1], [3, 4]]);
+    builder.addPermutation('#0000ff', [[1, 2], [4, 5], [0, 6], [3, 7]]);
+
+    builder.recenter();
+    builder.normalize();
+
+    return builder.getPuzzleData();
+}
+
+
+
 // puzzles/ADA.puz
 function ADA()
 {
@@ -2773,6 +2967,64 @@ function ADA()
     builder.addCircleArc('#ff0000', 'p0', 1, true, false, false);
     builder.addCircleArc('#ff0000', 'p1', 1, true, false, true);
     builder.addCircleArc('#ff0000', 'p2', 1, true, false, false);
+
+    builder.recenter();
+    builder.normalize();
+
+    return builder.getPuzzleData();
+}
+
+
+
+// puzzles/AEK.puz
+function AEK()
+{
+    var builder = new PuzzleBuilder('AEK');
+
+    builder.addNode('x0', '#ff0000', '13', 0.0000, 0.0000);
+    builder.addNode('x1', '#ff0000', '13', -1.5000, 0.8660);
+    builder.addNode('x2', '#ff0000', '13', -1.5000, -0.8660);
+    builder.addNode('y0', '#0000ff', '6', 1.0000, 0.0000);
+    builder.addNode('y1', '#0000ff', '6', 2.5000, 0.8660);
+    builder.addNode('y2', '#0000ff', '6', 2.5000, -0.8660);
+    builder.addPermutation('#ff0000', [[0, 1, 2]]);
+    builder.addPermutation('#0000ff', [[3, 5, 4]]);
+    builder.addPermutation('#00ff00', [[0, 3]]);
+    builder.addCircleArc('#ff0000', 'x0', 1, true, false, false);
+    builder.addCircleArc('#ff0000', 'x1', 1, true, false, true);
+    builder.addCircleArc('#ff0000', 'x2', 1, true, false, false);
+    builder.addCircleArc('#0000ff', 'y0', 1, true, false, false);
+    builder.addCircleArc('#0000ff', 'y1', 1, true, false, false);
+    builder.addCircleArc('#0000ff', 'y2', 1, true, false, false);
+
+    builder.recenter();
+    builder.normalize();
+
+    return builder.getPuzzleData();
+}
+
+
+
+// puzzles/ADO.puz
+function ADO()
+{
+    var builder = new PuzzleBuilder('ADO');
+
+    builder.addNode('x0', '#7f007f', '8', 0, 0);
+    builder.addNode('x1', '#ff0000', '13', -1.5000, 0.8660);
+    builder.addNode('x2', '#ff0000', '13', -1.5000, -0.8660);
+    builder.addNode('y1', '#0000ff', '6', 1.0000, 1.0000);
+    builder.addNode('y2', '#0000ff', '6', 2.0000, 0.0000);
+    builder.addNode('y3', '#0000ff', '6', 1.0000, -1.0000);
+    builder.addPermutation('#ff0000', [[0, 1, 2]]);
+    builder.addPermutation('#0000ff', [[0, 5, 4, 3]]);
+    builder.addCircleArc('#ff0000', 'x0', 1, true, false, false);
+    builder.addCircleArc('#ff0000', 'x1', 1, true, false, true);
+    builder.addCircleArc('#ff0000', 'x2', 1, true, false, false);
+    builder.addCircleArc('#0000ff', 'x0', 1, true, false, false);
+    builder.addCircleArc('#0000ff', 'y1', 1, true, false, false);
+    builder.addCircleArc('#0000ff', 'y2', 1, true, false, false);
+    builder.addCircleArc('#0000ff', 'y3', 1, true, false, false);
 
     builder.recenter();
     builder.normalize();
@@ -2807,6 +3059,35 @@ function ABC()
     builder.addPermutation('#ffff00', [[3, 2, 0], [12, 13, 15]]);
     builder.addPermutation('#00ff00', [[4, 1, 5], [11, 14, 10]]);
     builder.addPermutation('#0000ff', [[3, 6, 8, 11], [4, 7, 9, 12]]);
+
+    builder.recenter();
+    builder.normalize();
+
+    return builder.getPuzzleData();
+}
+
+
+
+// puzzles/ADM.puz
+function ADM()
+{
+    var builder = new PuzzleBuilder('ADM');
+
+    builder.addNode('p0', '#ff0000', '13', 1.0000, 0.0000);
+    builder.addNode('p1', '#ffff00', '0', 0.5000, 0.8660);
+    builder.addNode('p2', '#00ff00', '22', -0.5000, 0.8660);
+    builder.addNode('p3', '#00ffff', '17', -1.0000, 0.0000);
+    builder.addNode('p4', '#0000ff', '6', -0.5000, -0.8660);
+    builder.addNode('p5', '#7f007f', '8', 0.5000, -0.8660);
+    builder.addNode('p6', '#ff0000', '13', 2.0000, 0.0000);
+    builder.addNode('p7', '#ffff00', '0', 1.0000, 1.7321);
+    builder.addNode('p8', '#00ff00', '22', -1.0000, 1.7321);
+    builder.addNode('p9', '#00ffff', '17', -2.0000, 0.0000);
+    builder.addNode('p10', '#0000ff', '6', -1.0000, -1.7321);
+    builder.addNode('p11', '#7f007f', '8', 1.0000, -1.7321);
+    builder.addPermutation('#ff0000', [[0, 5], [2, 3], [1, 7], [4, 10]]);
+    builder.addPermutation('#00ff00', [[0, 1], [3, 4], [2, 8], [5, 11]]);
+    builder.addPermutation('#0000ff', [[1, 2], [4, 5], [0, 6], [3, 9]]);
 
     builder.recenter();
     builder.normalize();
@@ -2888,9 +3169,15 @@ function ACP()
     builder.addNode('ul', '#ff0000', '13', 1, 1);
     builder.addNode('ur', '#ffff00', '0', 4, 1);
     builder.addNode('bl', '#0000ff', '6', 1, 4);
-    builder.addNode('br', '#00ff00', '22', 4, 4);
+    builder.addNode('br', '#00ff00', '22', 4, -2);
     builder.addPermutation('#ff0000', [[0, 2], [1, 3]]);
     builder.addPermutation('#0000ff', [[0, 1]]);
+    builder.addCircleArc('#ff0000', 'ul', 2.2, false, true, false);
+    builder.addCircleArc('#ff0000', 'bl', 2.2, false, false, false);
+    builder.addCircleArc('#ff0000', 'ur', 2.2, false, false, false);
+    builder.addCircleArc('#ff0000', 'br', 2.2, false, true, false);
+    builder.addCircleArc('#0000ff', 'ul', 2.2, false, false, false);
+    builder.addCircleArc('#0000ff', 'ur', 2.2, false, false, false);
 
     builder.recenter();
     builder.normalize();
@@ -3034,6 +3321,34 @@ function ACK()
 
 
 
+// puzzles/ADL.puz
+function ADL()
+{
+    var builder = new PuzzleBuilder('ADL');
+
+    builder.addNode('p0', '#ff0000', '13', 1.0000, 0.0000);
+    builder.addNode('p1', '#ffff00', '0', 0.5000, 0.8660);
+    builder.addNode('p2', '#00ff00', '22', -0.5000, 0.8660);
+    builder.addNode('p3', '#00ffff', '17', -1.0000, 0.0000);
+    builder.addNode('p4', '#0000ff', '6', -0.5000, -0.8660);
+    builder.addNode('p5', '#7f007f', '8', 0.5000, -0.8660);
+    builder.addNode('p6', '#ff0000', '13', 2.0000, 0.0000);
+    builder.addNode('p7', '#ffff00', '0', 1.0000, 1.7321);
+    builder.addNode('p8', '#00ff00', '22', -1.0000, 1.7321);
+    builder.addNode('p10', '#0000ff', '6', -1.0000, -1.7321);
+    builder.addNode('p11', '#7f007f', '8', 1.0000, -1.7321);
+    builder.addPermutation('#ff0000', [[0, 5], [2, 3], [1, 7], [4, 9]]);
+    builder.addPermutation('#00ff00', [[0, 1], [3, 4], [2, 8], [5, 10]]);
+    builder.addPermutation('#0000ff', [[1, 2], [4, 5], [0, 6]]);
+
+    builder.recenter();
+    builder.normalize();
+
+    return builder.getPuzzleData();
+}
+
+
+
 // puzzles/AAL.puz
 function AAL()
 {
@@ -3056,30 +3371,6 @@ function AAL()
     builder.addPermutation('#ffff00', [[1, 2], [4, 5], [6, 7], [9, 10]]);
     builder.addPermutation('#00ff00', [[2, 6], [10, 12]]);
     builder.addPermutation('#0000ff', [[2, 3], [5, 6], [7, 8], [10, 11]]);
-    builder.addCircleArc('#ff0000', 'coord13', 2.2, true, false, false);
-    builder.addCircleArc('#ff0000', 'coord23', 2.2, true, false, false);
-    builder.addCircleArc('#ff0000', 'coord33', 2.2, true, false, false);
-    builder.addCircleArc('#ff0000', 'coord43', 2.2, true, false, false);
-    builder.addCircleArc('#ffff00', 'coord22', 2.2, true, false, false);
-    builder.addCircleArc('#ffff00', 'coord23', 2.2, true, false, true);
-    builder.addCircleArc('#ffff00', 'coord31', 2.2, true, false, false);
-    builder.addCircleArc('#ffff00', 'coord32', 2.2, true, false, true);
-    builder.addCircleArc('#ffff00', 'coord33', 2.2, true, false, false);
-    builder.addCircleArc('#ffff00', 'coord34', 2.2, true, false, true);
-    builder.addCircleArc('#ffff00', 'coord42', 2.2, true, false, false);
-    builder.addCircleArc('#ffff00', 'coord43', 2.2, true, false, true);
-    builder.addCircleArc('#00ff00', 'coord23', 2.2, true, false, false);
-    builder.addCircleArc('#00ff00', 'coord33', 2.2, true, false, false);
-    builder.addCircleArc('#00ff00', 'coord43', 2.2, true, false, false);
-    builder.addCircleArc('#00ff00', 'coord53', 2.2, true, false, false);
-    builder.addCircleArc('#0000ff', 'coord23', 2.2, true, false, false);
-    builder.addCircleArc('#0000ff', 'coord24', 2.2, true, false, true);
-    builder.addCircleArc('#0000ff', 'coord32', 2.2, true, false, false);
-    builder.addCircleArc('#0000ff', 'coord33', 2.2, true, false, true);
-    builder.addCircleArc('#0000ff', 'coord34', 2.2, true, false, false);
-    builder.addCircleArc('#0000ff', 'coord35', 2.2, true, false, true);
-    builder.addCircleArc('#0000ff', 'coord43', 2.2, true, false, false);
-    builder.addCircleArc('#0000ff', 'coord44', 2.2, true, false, true);
 
     builder.recenter();
     builder.normalize();
@@ -3343,24 +3634,6 @@ function ABM()
     builder.addCircleArc('#ffff00', 'p7', 6.2449979984, false, false, false);
     builder.addCircleArc('#ffff00', 'p8', 6.2449979984, false, false, false);
     builder.addCircleArc('#ffff00', 'p9', 6.2449979984, false, true, false);
-    builder.addCircleArc('#7f007f', 'p4', 4.2, false, true, false);
-    builder.addCircleArc('#7f007f', 'p34', 4.2, false, false, false);
-    builder.addCircleArc('#7f007f', 'p5', 4.2, false, false, false);
-    builder.addCircleArc('#7f007f', 'p28', 4.2, false, false, false);
-    builder.addCircleArc('#7f007f', 'p6', 4.2, false, false, false);
-    builder.addCircleArc('#7f007f', 'p19', 4.2, false, true, false);
-    builder.addCircleArc('#7f007f', 'p7', 4.2, false, true, false);
-    builder.addCircleArc('#7f007f', 'p31', 4.2, false, false, false);
-    builder.addCircleArc('#7f007f', 'p8', 4.2, false, false, false);
-    builder.addCircleArc('#7f007f', 'p25', 4.2, false, false, false);
-    builder.addCircleArc('#7f007f', 'p9', 4.2, false, false, false);
-    builder.addCircleArc('#7f007f', 'p22', 4.2, false, true, false);
-    builder.addCircleArc('#7f007f', 'p1', 4.2, false, true, false);
-    builder.addCircleArc('#7f007f', 'p13', 4.2, false, false, false);
-    builder.addCircleArc('#7f007f', 'p2', 4.2, false, false, false);
-    builder.addCircleArc('#7f007f', 'p16', 4.2, false, true, false);
-    builder.addCircleArc('#7f007f', 'p3', 4.2, false, false, false);
-    builder.addCircleArc('#7f007f', 'p10', 4.2, false, false, false);
 
     builder.recenter();
     builder.normalize();
@@ -3388,6 +3661,33 @@ function AAH()
     builder.addCircleArc('#ff0000', 'ur', 2.2, true, false, false);
     builder.addCircleArc('#00ff00', 'bl', 2.2, true, false, false);
     builder.addCircleArc('#00ff00', 'br', 2.2, true, false, false);
+
+    builder.recenter();
+    builder.normalize();
+
+    return builder.getPuzzleData();
+}
+
+
+
+// puzzles/ADJ.puz
+function ADJ()
+{
+    var builder = new PuzzleBuilder('ADJ');
+
+    builder.addNode('p0', '#ff0000', '13', 1.0000, 0.0000);
+    builder.addNode('p1', '#ffff00', '0', 0.5000, 0.8660);
+    builder.addNode('p2', '#00ff00', '22', -0.5000, 0.8660);
+    builder.addNode('p3', '#00ffff', '17', -1.0000, 0.0000);
+    builder.addNode('p4', '#0000ff', '6', -0.5000, -0.8660);
+    builder.addNode('p5', '#7f007f', '8', 0.5000, -0.8660);
+    builder.addNode('p6', '#ff0000', '13', 2.0000, 0.0000);
+    builder.addNode('p9', '#00ffff', '17', -2.0000, 0.0000);
+    builder.addNode('p10', '#0000ff', '6', -1.0000, -1.7321);
+    builder.addNode('p11', '#7f007f', '8', 1.0000, -1.7321);
+    builder.addPermutation('#ff0000', [[0, 5], [2, 3], [4, 8]]);
+    builder.addPermutation('#00ff00', [[0, 1], [3, 4], [5, 9]]);
+    builder.addPermutation('#0000ff', [[1, 2], [4, 5], [0, 6], [3, 7]]);
 
     builder.recenter();
     builder.normalize();
@@ -3551,6 +3851,68 @@ function ABU()
 
 
 
+// puzzles/ADV.puz
+function ADV()
+{
+    var builder = new PuzzleBuilder('ADV');
+
+    builder.addNode('x0', '#ff0000', '13', 0.0000, 0.0000);
+    builder.addNode('x1', '#ff0000', '13', -1.0000, 1.0000);
+    builder.addNode('x2', '#ff0000', '13', -2.0000, 0.0000);
+    builder.addNode('x3', '#ff0000', '13', -1.0000, -1.0000);
+    builder.addNode('y0', '#0000ff', '6', 1.0000, 0.0000);
+    builder.addNode('y1', '#0000ff', '6', 1.5000, 0.8660);
+    builder.addNode('y2', '#0000ff', '6', 2.5000, 0.8660);
+    builder.addNode('y3', '#0000ff', '6', 3.0000, 0.0000);
+    builder.addNode('y4', '#0000ff', '6', 2.5000, -0.8660);
+    builder.addNode('y5', '#0000ff', '6', 1.5000, -0.8660);
+    builder.addPermutation('#ff0000', [[0, 1, 2, 3]]);
+    builder.addPermutation('#0000ff', [[4, 9, 8, 7, 6, 5]]);
+    builder.addPermutation('#00ff00', [[0, 4]]);
+    builder.addCircleArc('#ff0000', 'x0', 1, true, false, false);
+    builder.addCircleArc('#ff0000', 'x1', 1, true, false, false);
+    builder.addCircleArc('#ff0000', 'x2', 1, true, false, false);
+    builder.addCircleArc('#ff0000', 'x3', 1, true, false, false);
+    builder.addCircleArc('#0000ff', 'y0', 1, true, false, false);
+    builder.addCircleArc('#0000ff', 'y1', 1, true, false, false);
+    builder.addCircleArc('#0000ff', 'y2', 1, true, false, false);
+    builder.addCircleArc('#0000ff', 'y3', 1, true, false, false);
+    builder.addCircleArc('#0000ff', 'y4', 1, true, false, false);
+    builder.addCircleArc('#0000ff', 'y5', 1, true, false, false);
+
+    builder.recenter();
+    builder.normalize();
+
+    return builder.getPuzzleData();
+}
+
+
+
+// puzzles/ADT.puz
+function ADT()
+{
+    var builder = new PuzzleBuilder('ADT');
+
+    builder.addNode('p00', '#ff0000', '13', 7, 0.0);
+    builder.addNode('p10', '#ffff00', '0', 3, 3.0);
+    builder.addNode('p11', '#ffff00', '0', 11, 3.0);
+    builder.addNode('p20', '#00ff00', '22', 1, 6.0);
+    builder.addNode('p21', '#00ff00', '22', 5, 6.0);
+    builder.addNode('p22', '#00ff00', '22', 9, 6.0);
+    builder.addNode('p23', '#00ff00', '22', 13, 6.0);
+    builder.addPermutation('#ff0000', [[1, 3], [2, 5]]);
+    builder.addPermutation('#0000ff', [[1, 4], [2, 6]]);
+    builder.addPermutation('#00ff00', [[0, 1]]);
+    builder.addPermutation('#ffff00', [[0, 2]]);
+
+    builder.recenter();
+    builder.normalize();
+
+    return builder.getPuzzleData();
+}
+
+
+
 // puzzles/ACQ.puz
 function ACQ()
 {
@@ -3621,6 +3983,89 @@ function ABV()
     builder.addCircleArc('#0000ff', 'p15', 4.5, false, false, false);
     builder.addCircleArc('#0000ff', 'p16', 2.59807621135, false, false, false);
     builder.addCircleArc('#0000ff', 'p8', 4.5, false, false, false);
+
+    builder.recenter();
+    builder.normalize();
+
+    return builder.getPuzzleData();
+}
+
+
+
+// puzzles/ADQ.puz
+function ADQ()
+{
+    var builder = new PuzzleBuilder('ADQ');
+
+    builder.addNode('x0', '#7f007f', '8', 0, 0);
+    builder.addNode('x1', '#ff0000', '13', -1.5000, 0.8660);
+    builder.addNode('x2', '#ff0000', '13', -1.5000, -0.8660);
+    builder.addNode('y1', '#0000ff', '6', 0.6910, 0.9511);
+    builder.addNode('y2', '#0000ff', '6', 1.8090, 0.5878);
+    builder.addNode('y3', '#0000ff', '6', 1.8090, -0.5878);
+    builder.addNode('y4', '#0000ff', '6', 0.6910, -0.9511);
+    builder.addPermutation('#ff0000', [[0, 1, 2]]);
+    builder.addPermutation('#0000ff', [[0, 6, 5, 4, 3]]);
+    builder.addCircleArc('#ff0000', 'x0', 1, true, false, false);
+    builder.addCircleArc('#ff0000', 'x1', 1, true, false, true);
+    builder.addCircleArc('#ff0000', 'x2', 1, true, false, false);
+    builder.addCircleArc('#0000ff', 'x0', 1, true, false, true);
+    builder.addCircleArc('#0000ff', 'y1', 1, true, false, true);
+    builder.addCircleArc('#0000ff', 'y2', 1, true, false, false);
+    builder.addCircleArc('#0000ff', 'y3', 1, true, false, false);
+    builder.addCircleArc('#0000ff', 'y4', 1, true, false, false);
+
+    builder.recenter();
+    builder.normalize();
+
+    return builder.getPuzzleData();
+}
+
+
+
+// puzzles/ADH.puz
+function ADH()
+{
+    var builder = new PuzzleBuilder('ADH');
+
+    builder.addNode('p0', '#ff0000', '13', 1.0000, 0.0000);
+    builder.addNode('p1', '#ffff00', '0', 0.5000, 0.8660);
+    builder.addNode('p2', '#00ff00', '22', -0.5000, 0.8660);
+    builder.addNode('p3', '#00ffff', '17', -1.0000, 0.0000);
+    builder.addNode('p4', '#0000ff', '6', -0.5000, -0.8660);
+    builder.addNode('p5', '#7f007f', '8', 0.5000, -0.8660);
+    builder.addNode('p8', '#00ff00', '22', -1.0000, 1.7321);
+    builder.addNode('p9', '#00ffff', '17', -2.0000, 0.0000);
+    builder.addNode('p10', '#0000ff', '6', -1.0000, -1.7321);
+    builder.addPermutation('#ff0000', [[0, 5], [2, 3], [4, 8]]);
+    builder.addPermutation('#00ff00', [[0, 1], [3, 4], [2, 6]]);
+    builder.addPermutation('#0000ff', [[1, 2], [4, 5], [3, 7]]);
+
+    builder.recenter();
+    builder.normalize();
+
+    return builder.getPuzzleData();
+}
+
+
+
+// puzzles/AEJ.puz
+function AEJ()
+{
+    var builder = new PuzzleBuilder('AEJ');
+
+    builder.addNode('p12', '#ff0000', '13', 1, 4);
+    builder.addNode('p13', '#ffff00', '0', 1, 7);
+    builder.addNode('p21', '#00ff00', '22', 4, 1);
+    builder.addNode('p24', '#0000ff', '6', 4, 10);
+    builder.addNode('p31', '#7f007f', '8', 7, 1);
+    builder.addNode('p34', '#00ffff', '17', 7, 10);
+    builder.addNode('p42', '#d01f90', '12', 10, 4);
+    builder.addNode('p43', '#ff00ff', '4', 10, 7);
+    builder.addPermutation('#ff0000', [[2, 4], [6, 7], [5, 3], [1, 0]]);
+    builder.addPermutation('#0000ff', [[4, 6], [7, 5], [3, 1], [0, 2]]);
+    builder.addPermutation('#ffff00', [[0, 6], [1, 7]]);
+    builder.addPermutation('#00ff00', [[0, 5], [2, 7]]);
 
     builder.recenter();
     builder.normalize();
@@ -3722,14 +4167,6 @@ function ACN()
     builder.addCircleArc('#00ffff', 'p4', 2.0, true, false, true);
     builder.addCircleArc('#00ffff', 'p3', 2.0, true, false, false);
     builder.addCircleArc('#00ffff', 'p2', 2.0, true, false, false);
-    builder.addCircleArc('#7f007f', 'p1', 2.2, true, false, true);
-    builder.addCircleArc('#7f007f', 'p5', 2.2, true, false, false);
-    builder.addCircleArc('#7f007f', 'p2', 2.2, true, false, false);
-    builder.addCircleArc('#7f007f', 'p6', 2.2, true, false, false);
-    builder.addCircleArc('#7f007f', 'p3', 2.2, true, false, false);
-    builder.addCircleArc('#7f007f', 'p8', 2.2, true, false, true);
-    builder.addCircleArc('#7f007f', 'p4', 2.2, true, false, false);
-    builder.addCircleArc('#7f007f', 'p11', 2.2, true, false, false);
     builder.addCircleArc('#ffff00', 'p6', 2.0, false, false, false);
     builder.addCircleArc('#ffff00', 'p7', 2.0, false, false, false);
     builder.addCircleArc('#00ff00', 'p8', 2.0, false, true, false);
@@ -3860,6 +4297,29 @@ function ABH()
 
 
 
+// puzzles/AEB.puz
+function AEB()
+{
+    var builder = new PuzzleBuilder('AEB');
+
+    builder.addNode('p0', '#ff0000', '13', 0, 0);
+    builder.addNode('p1', '#ffff00', '0', 1, 0);
+    builder.addNode('p2', '#00ff00', '22', 1, 1);
+    builder.addNode('p3', '#00ffff', '17', 2, 1);
+    builder.addNode('p4', '#0000ff', '6', 2, 0);
+    builder.addNode('p5', '#7f007f', '8', 3, 0);
+    builder.addPermutation('#ff0000', [[0, 1], [4, 5]]);
+    builder.addPermutation('#00ff00', [[2, 3]]);
+    builder.addPermutation('#0000ff', [[1, 2], [3, 4]]);
+
+    builder.recenter();
+    builder.normalize();
+
+    return builder.getPuzzleData();
+}
+
+
+
 // puzzles/ACG.puz
 function ACG()
 {
@@ -3938,6 +4398,28 @@ function AAB()
     builder.addCircleArc('#ff0000', 'rhs', 2.2, true, false, false);
     builder.addCircleArc('#0000ff', 'rhs', 2.2, true, false, false);
     builder.addCircleArc('#0000ff', 'bot', 2.2, true, false, true);
+
+    builder.recenter();
+    builder.normalize();
+
+    return builder.getPuzzleData();
+}
+
+
+
+// puzzles/AEA.puz
+function AEA()
+{
+    var builder = new PuzzleBuilder('AEA');
+
+    builder.addNode('p0', '#ff0000', '13', 0, 0);
+    builder.addNode('p1', '#ffff00', '0', 1, 0);
+    builder.addNode('p2', '#00ff00', '22', 1, 1);
+    builder.addNode('p3', '#00ffff', '17', 0, 1);
+    builder.addNode('p4', '#0000ff', '6', 0, 2);
+    builder.addNode('p5', '#7f007f', '8', 1, 2);
+    builder.addPermutation('#ff0000', [[0, 1], [2, 3], [4, 5]]);
+    builder.addPermutation('#0000ff', [[1, 2], [3, 4]]);
 
     builder.recenter();
     builder.normalize();
@@ -4067,6 +4549,30 @@ function ACF()
 
 
 
+// puzzles/AEH.puz
+function AEH()
+{
+    var builder = new PuzzleBuilder('AEH');
+
+    builder.addNode('p12', '#ff0000', '13', 1, 4);
+    builder.addNode('p13', '#ffff00', '0', 1, 7);
+    builder.addNode('p21', '#00ff00', '22', 4, 1);
+    builder.addNode('p24', '#0000ff', '6', 4, 10);
+    builder.addNode('p31', '#7f007f', '8', 7, 1);
+    builder.addNode('p34', '#00ffff', '17', 7, 10);
+    builder.addNode('p42', '#d01f90', '12', 10, 4);
+    builder.addNode('p43', '#ff00ff', '4', 10, 7);
+    builder.addPermutation('#ff0000', [[2, 4], [6, 7], [5, 3], [1, 0]]);
+    builder.addPermutation('#0000ff', [[4, 6], [7, 5], [3, 1], [0, 2]]);
+
+    builder.recenter();
+    builder.normalize();
+
+    return builder.getPuzzleData();
+}
+
+
+
 // puzzles/AAM.puz
 function AAM()
 {
@@ -4103,18 +4609,6 @@ function AAP()
     builder.addPermutation('#ffff00', [[1, 3], [4, 5]]);
     builder.addPermutation('#00ff00', [[1, 2], [5, 6]]);
     builder.addPermutation('#0000ff', [[0, 1], [3, 5]]);
-    builder.addCircleArc('#ffff00', 'coord12', 2.2, true, false, false);
-    builder.addCircleArc('#ffff00', 'coord22', 2.2, true, false, false);
-    builder.addCircleArc('#ffff00', 'coord31', 2.2, true, false, false);
-    builder.addCircleArc('#ffff00', 'coord32', 2.2, true, false, true);
-    builder.addCircleArc('#00ff00', 'coord12', 2.2, true, false, false);
-    builder.addCircleArc('#00ff00', 'coord13', 2.2, true, false, true);
-    builder.addCircleArc('#00ff00', 'coord32', 2.2, true, false, false);
-    builder.addCircleArc('#00ff00', 'coord33', 2.2, true, false, true);
-    builder.addCircleArc('#0000ff', 'coord11', 2.2, true, false, false);
-    builder.addCircleArc('#0000ff', 'coord12', 2.2, true, false, true);
-    builder.addCircleArc('#0000ff', 'coord22', 2.2, true, false, false);
-    builder.addCircleArc('#0000ff', 'coord32', 2.2, true, false, false);
 
     builder.recenter();
     builder.normalize();
@@ -4141,6 +4635,63 @@ function AAF()
     builder.addCircleArc('#0000ff', 'ur', 2.2, true, false, false);
     builder.addCircleArc('#0000ff', 'br', 2.2, true, false, false);
     builder.addCircleArc('#0000ff', 'bl', 4.0, true, false, false);
+
+    builder.recenter();
+    builder.normalize();
+
+    return builder.getPuzzleData();
+}
+
+
+
+// puzzles/AEE.puz
+function AEE()
+{
+    var builder = new PuzzleBuilder('AEE');
+
+    builder.addNode('p0', '#ff0000', '13', 0, 0);
+    builder.addNode('p1', '#0000ff', '6', 1, 1);
+    builder.addNode('p2', '#ff0000', '13', 2, 0);
+    builder.addNode('p3', '#0000ff', '6', 3, 1);
+    builder.addNode('p4', '#ff0000', '13', 4, 0);
+    builder.addNode('p5', '#0000ff', '6', 5, 1);
+    builder.addPermutation('#ff0000', [[0, 1], [2, 3], [4, 5]]);
+    builder.addPermutation('#0000ff', [[1, 2], [3, 4]]);
+
+    builder.recenter();
+    builder.normalize();
+
+    return builder.getPuzzleData();
+}
+
+
+
+// puzzles/ADS.puz
+function ADS()
+{
+    var builder = new PuzzleBuilder('ADS');
+
+    builder.addNode('x0', '#7f007f', '8', 0, 0);
+    builder.addNode('x1', '#ff0000', '13', -1.0000, 1.0000);
+    builder.addNode('x2', '#ff0000', '13', -2.0000, 0.0000);
+    builder.addNode('x3', '#ff0000', '13', -1.0000, -1.0000);
+    builder.addNode('y1', '#0000ff', '6', 0.5000, 0.8660);
+    builder.addNode('y2', '#0000ff', '6', 1.5000, 0.8660);
+    builder.addNode('y3', '#0000ff', '6', 2.0000, 0.0000);
+    builder.addNode('y4', '#0000ff', '6', 1.5000, -0.8660);
+    builder.addNode('y5', '#0000ff', '6', 0.5000, -0.8660);
+    builder.addPermutation('#ff0000', [[0, 1, 2, 3]]);
+    builder.addPermutation('#0000ff', [[0, 8, 7, 6, 5, 4]]);
+    builder.addCircleArc('#ff0000', 'x0', 1, true, false, false);
+    builder.addCircleArc('#ff0000', 'x1', 1, true, false, true);
+    builder.addCircleArc('#ff0000', 'x2', 1, true, false, true);
+    builder.addCircleArc('#ff0000', 'x3', 1, true, false, false);
+    builder.addCircleArc('#0000ff', 'x0', 1, true, false, false);
+    builder.addCircleArc('#0000ff', 'y1', 1, true, false, false);
+    builder.addCircleArc('#0000ff', 'y2', 1, true, false, false);
+    builder.addCircleArc('#0000ff', 'y3', 1, true, false, false);
+    builder.addCircleArc('#0000ff', 'y4', 1, true, false, false);
+    builder.addCircleArc('#0000ff', 'y5', 1, true, false, false);
 
     builder.recenter();
     builder.normalize();
@@ -4206,14 +4757,6 @@ function ABO()
     builder.addCircleArc('#ff0000', 'p4', 2.0, false, false, false);
     builder.addCircleArc('#ff0000', 'p3', 2.0, false, false, false);
     builder.addCircleArc('#ff0000', 'p2', 2.0, false, false, false);
-    builder.addCircleArc('#00ff00', 'p1', 2.2, true, false, true);
-    builder.addCircleArc('#00ff00', 'p5', 2.2, true, false, false);
-    builder.addCircleArc('#00ff00', 'p2', 2.2, true, false, false);
-    builder.addCircleArc('#00ff00', 'p6', 2.2, true, false, false);
-    builder.addCircleArc('#00ff00', 'p3', 2.2, true, false, false);
-    builder.addCircleArc('#00ff00', 'p8', 2.2, true, false, true);
-    builder.addCircleArc('#00ff00', 'p4', 2.2, true, false, false);
-    builder.addCircleArc('#00ff00', 'p11', 2.2, true, false, false);
     builder.addCircleArc('#ff0000', 'p6', 2.0, false, false, false);
     builder.addCircleArc('#ff0000', 'p7', 2.0, false, false, false);
     builder.addCircleArc('#ff0000', 'p8', 2.0, false, true, false);
@@ -4332,18 +4875,6 @@ function ABT()
     builder.addPermutation('#ff0000', [[0, 2], [3, 6]]);
     builder.addPermutation('#00ff00', [[0, 3], [1, 4]]);
     builder.addPermutation('#0000ff', [[0, 1], [2, 5]]);
-    builder.addCircleArc('#ff0000', 'p1', 3.0, false, true, false);
-    builder.addCircleArc('#ff0000', 'p3', 3.0, false, false, false);
-    builder.addCircleArc('#ff0000', 'p4', 3.0, false, false, false);
-    builder.addCircleArc('#ff0000', 'p7', 3.0, false, true, false);
-    builder.addCircleArc('#00ff00', 'p1', 3.0, false, false, false);
-    builder.addCircleArc('#00ff00', 'p4', 3.0, false, true, false);
-    builder.addCircleArc('#00ff00', 'p2', 3.0, false, true, false);
-    builder.addCircleArc('#00ff00', 'p5', 3.0, false, false, false);
-    builder.addCircleArc('#0000ff', 'p1', 3.0, false, false, false);
-    builder.addCircleArc('#0000ff', 'p2', 3.0, false, false, false);
-    builder.addCircleArc('#0000ff', 'p3', 3.0, false, false, false);
-    builder.addCircleArc('#0000ff', 'p6', 3.0, false, false, false);
 
     builder.recenter();
     builder.normalize();
@@ -4448,6 +4979,45 @@ function ACV()
 
 
 
+// puzzles/ADX.puz
+function ADX()
+{
+    var builder = new PuzzleBuilder('ADX');
+
+    builder.addNode('x0', '#7f007f', '8', 0, 0);
+    builder.addNode('x1', '#ff0000', '13', -1.0000, 1.0000);
+    builder.addNode('x2', '#ffff00', '0', -2.0000, 0.0000);
+    builder.addNode('x3', '#ff0000', '13', -1.0000, -1.0000);
+    builder.addNode('y1', '#0000ff', '6', 1.5000, 0.8660);
+    builder.addNode('y2', '#0000ff', '6', 1.5000, -0.8660);
+    builder.addNode('z1', '#00ff00', '22', -2.6910, 0.9511);
+    builder.addNode('z2', '#00ff00', '22', -3.8090, 0.5878);
+    builder.addNode('z3', '#00ff00', '22', -3.8090, -0.5878);
+    builder.addNode('z4', '#00ff00', '22', -2.6910, -0.9511);
+    builder.addPermutation('#ff0000', [[0, 1, 2, 3]]);
+    builder.addPermutation('#0000ff', [[0, 5, 4]]);
+    builder.addPermutation('#00ff00', [[2, 6, 7, 8, 9]]);
+    builder.addCircleArc('#ff0000', 'x0', 1, true, false, false);
+    builder.addCircleArc('#ff0000', 'x1', 1, true, false, false);
+    builder.addCircleArc('#ff0000', 'x2', 1, true, false, true);
+    builder.addCircleArc('#ff0000', 'x3', 1, true, false, false);
+    builder.addCircleArc('#0000ff', 'x0', 1, true, false, false);
+    builder.addCircleArc('#0000ff', 'y1', 1, true, false, false);
+    builder.addCircleArc('#0000ff', 'y2', 1, true, false, false);
+    builder.addCircleArc('#00ff00', 'x2', 1, true, false, false);
+    builder.addCircleArc('#00ff00', 'z1', 1, true, false, false);
+    builder.addCircleArc('#00ff00', 'z2', 1, true, false, true);
+    builder.addCircleArc('#00ff00', 'z3', 1, true, false, false);
+    builder.addCircleArc('#00ff00', 'z4', 1, true, false, false);
+
+    builder.recenter();
+    builder.normalize();
+
+    return builder.getPuzzleData();
+}
+
+
+
 // puzzles/AAE.puz
 function AAE()
 {
@@ -4459,14 +5029,6 @@ function AAE()
     builder.addNode('br', '#00ff00', '22', 4, 4);
     builder.addPermutation('#ff0000', [[0, 2], [1, 3]]);
     builder.addPermutation('#0000ff', [[0, 1], [2, 3]]);
-    builder.addCircleArc('#ff0000', 'ul', 2.2, true, false, false);
-    builder.addCircleArc('#ff0000', 'bl', 2.2, true, false, true);
-    builder.addCircleArc('#ff0000', 'ur', 2.2, true, false, false);
-    builder.addCircleArc('#ff0000', 'br', 2.2, true, false, true);
-    builder.addCircleArc('#0000ff', 'ul', 2.2, true, false, false);
-    builder.addCircleArc('#0000ff', 'ur', 2.2, true, false, false);
-    builder.addCircleArc('#0000ff', 'bl', 2.2, true, false, false);
-    builder.addCircleArc('#0000ff', 'br', 2.2, true, false, false);
 
     builder.recenter();
     builder.normalize();
@@ -4525,6 +5087,63 @@ function ABB()
     builder.addPermutation('#7f007f', [[2, 3], [4, 5], [6, 7], [11, 12], [13, 14], [18, 19], [20, 21], [23, 24], [29, 30], [31, 32], [36, 37], [8, 15], [26, 33], [9, 16], [27, 34]]);
     builder.addPermutation('#00ff00', [[9, 10], [14, 15], [22, 23], [24, 25], [27, 28], [30, 31], [32, 33], [34, 35], [38, 39], [5, 12], [1, 6], [13, 19], [2, 8], [20, 26], [16, 21]]);
     builder.addPermutation('#0000ff', [[0, 1], [5, 6], [8, 9], [12, 13], [16, 17], [25, 26], [33, 34], [4, 11], [22, 29], [18, 23], [30, 36], [24, 31], [7, 14], [15, 20], [21, 27]]);
+
+    builder.recenter();
+    builder.normalize();
+
+    return builder.getPuzzleData();
+}
+
+
+
+// puzzles/ADR.puz
+function ADR()
+{
+    var builder = new PuzzleBuilder('ADR');
+
+    builder.addNode('x0', '#7f007f', '8', 0, 0);
+    builder.addNode('x1', '#ff0000', '13', -1.5000, 0.8660);
+    builder.addNode('x2', '#ff0000', '13', -1.5000, -0.8660);
+    builder.addNode('y1', '#0000ff', '6', 0.5000, 0.8660);
+    builder.addNode('y2', '#0000ff', '6', 1.5000, 0.8660);
+    builder.addNode('y3', '#0000ff', '6', 2.0000, 0.0000);
+    builder.addNode('y4', '#0000ff', '6', 1.5000, -0.8660);
+    builder.addNode('y5', '#0000ff', '6', 0.5000, -0.8660);
+    builder.addPermutation('#ff0000', [[0, 1, 2]]);
+    builder.addPermutation('#0000ff', [[0, 7, 6, 5, 4, 3]]);
+    builder.addCircleArc('#ff0000', 'x0', 1, true, false, false);
+    builder.addCircleArc('#ff0000', 'x1', 1, true, false, true);
+    builder.addCircleArc('#ff0000', 'x2', 1, true, false, false);
+    builder.addCircleArc('#0000ff', 'x0', 1, true, false, false);
+    builder.addCircleArc('#0000ff', 'y1', 1, true, false, false);
+    builder.addCircleArc('#0000ff', 'y2', 1, true, false, false);
+    builder.addCircleArc('#0000ff', 'y3', 1, true, false, false);
+    builder.addCircleArc('#0000ff', 'y4', 1, true, false, false);
+    builder.addCircleArc('#0000ff', 'y5', 1, true, false, false);
+
+    builder.recenter();
+    builder.normalize();
+
+    return builder.getPuzzleData();
+}
+
+
+
+// puzzles/ADC.puz
+function ADC()
+{
+    var builder = new PuzzleBuilder('ADC');
+
+    builder.addNode('p0', '#ff0000', '13', 1.0000, 0.0000);
+    builder.addNode('p1', '#ffff00', '0', 0.5000, 0.8660);
+    builder.addNode('p2', '#00ff00', '22', -0.5000, 0.8660);
+    builder.addNode('p3', '#00ffff', '17', -1.0000, 0.0000);
+    builder.addNode('p4', '#0000ff', '6', -0.5000, -0.8660);
+    builder.addNode('p5', '#7f007f', '8', 0.5000, -0.8660);
+    builder.addNode('p6', '#ff0000', '13', 2.0000, 0.0000);
+    builder.addPermutation('#ff0000', [[0, 5], [2, 3]]);
+    builder.addPermutation('#00ff00', [[0, 1], [3, 4]]);
+    builder.addPermutation('#0000ff', [[1, 2], [4, 5], [0, 6]]);
 
     builder.recenter();
     builder.normalize();
@@ -4623,6 +5242,134 @@ function ABQ()
 
 
 
+// puzzles/ADW.puz
+function ADW()
+{
+    var builder = new PuzzleBuilder('ADW');
+
+    builder.addNode('x0', '#7f007f', '8', 0, 0);
+    builder.addNode('x1', '#ff0000', '13', -1.5000, 0.8660);
+    builder.addNode('x2', '#ffff00', '0', -1.5000, -0.8660);
+    builder.addNode('y1', '#0000ff', '6', 1.5000, 0.8660);
+    builder.addNode('y2', '#0000ff', '6', 1.5000, -0.8660);
+    builder.addNode('z0', '#00ff00', '22', -3.0000, -1.7321);
+    builder.addNode('z2', '#00ff00', '22', -1.5000, -2.5981);
+    builder.addPermutation('#ff0000', [[0, 1, 2]]);
+    builder.addPermutation('#0000ff', [[0, 4, 3]]);
+    builder.addPermutation('#00ff00', [[2, 5, 6]]);
+    builder.addCircleArc('#ff0000', 'x0', 1, true, false, false);
+    builder.addCircleArc('#ff0000', 'x1', 1, true, false, true);
+    builder.addCircleArc('#ff0000', 'x2', 1, true, false, false);
+    builder.addCircleArc('#0000ff', 'x0', 1, true, false, false);
+    builder.addCircleArc('#0000ff', 'y1', 1, true, false, false);
+    builder.addCircleArc('#0000ff', 'y2', 1, true, false, false);
+    builder.addCircleArc('#00ff00', 'x2', 1, true, false, true);
+    builder.addCircleArc('#00ff00', 'z0', 1, true, false, false);
+    builder.addCircleArc('#00ff00', 'z2', 1, true, false, false);
+
+    builder.recenter();
+    builder.normalize();
+
+    return builder.getPuzzleData();
+}
+
+
+
+// puzzles/ADK.puz
+function ADK()
+{
+    var builder = new PuzzleBuilder('ADK');
+
+    builder.addNode('p0', '#ff0000', '13', 1.0000, 0.0000);
+    builder.addNode('p1', '#ffff00', '0', 0.5000, 0.8660);
+    builder.addNode('p2', '#00ff00', '22', -0.5000, 0.8660);
+    builder.addNode('p3', '#00ffff', '17', -1.0000, 0.0000);
+    builder.addNode('p4', '#0000ff', '6', -0.5000, -0.8660);
+    builder.addNode('p5', '#7f007f', '8', 0.5000, -0.8660);
+    builder.addNode('p6', '#ff0000', '13', 2.0000, 0.0000);
+    builder.addNode('p8', '#00ff00', '22', -1.0000, 1.7321);
+    builder.addNode('p9', '#00ffff', '17', -2.0000, 0.0000);
+    builder.addNode('p10', '#0000ff', '6', -1.0000, -1.7321);
+    builder.addPermutation('#ff0000', [[0, 5], [2, 3], [4, 9]]);
+    builder.addPermutation('#00ff00', [[0, 1], [3, 4], [2, 7]]);
+    builder.addPermutation('#0000ff', [[1, 2], [4, 5], [0, 6], [3, 8]]);
+
+    builder.recenter();
+    builder.normalize();
+
+    return builder.getPuzzleData();
+}
+
+
+
+// puzzles/AEG.puz
+function AEG()
+{
+    var builder = new PuzzleBuilder('AEG');
+
+    builder.addNode('p0', '#ff0000', '13', 0, 0);
+    builder.addNode('p1', '#0000ff', '6', 1, 1);
+    builder.addNode('p2', '#ff0000', '13', 2, 0);
+    builder.addNode('p3', '#0000ff', '6', 3, 1);
+    builder.addNode('p4', '#ff0000', '13', 4, 0);
+    builder.addPermutation('#ff0000', [[0, 1], [2, 3]]);
+    builder.addPermutation('#0000ff', [[1, 2], [3, 4]]);
+
+    builder.recenter();
+    builder.normalize();
+
+    return builder.getPuzzleData();
+}
+
+
+
+// puzzles/ADZ.puz
+function ADZ()
+{
+    var builder = new PuzzleBuilder('ADZ');
+
+    builder.addNode('p0', '#ff0000', '13', 0, 0);
+    builder.addNode('p1', '#ffff00', '0', 1, 0);
+    builder.addNode('p2', '#00ff00', '22', 2, 1);
+    builder.addNode('p3', '#0000ff', '6', 3, 1);
+    builder.addNode('p4', '#7f007f', '8', 4, 2);
+    builder.addPermutation('#ff0000', [[0, 1], [3, 4]]);
+    builder.addPermutation('#00ff00', [[1, 2]]);
+    builder.addPermutation('#0000ff', [[2, 3]]);
+
+    builder.recenter();
+    builder.normalize();
+
+    return builder.getPuzzleData();
+}
+
+
+
+// puzzles/AEI.puz
+function AEI()
+{
+    var builder = new PuzzleBuilder('AEI');
+
+    builder.addNode('p12', '#ff0000', '13', 1, 4);
+    builder.addNode('p13', '#ffff00', '0', 1, 7);
+    builder.addNode('p21', '#00ff00', '22', 4, 1);
+    builder.addNode('p24', '#0000ff', '6', 4, 10);
+    builder.addNode('p31', '#7f007f', '8', 7, 1);
+    builder.addNode('p34', '#00ffff', '17', 7, 10);
+    builder.addNode('p42', '#d01f90', '12', 10, 4);
+    builder.addNode('p43', '#ff00ff', '4', 10, 7);
+    builder.addPermutation('#ff0000', [[2, 4], [6, 7], [5, 3], [1, 0]]);
+    builder.addPermutation('#0000ff', [[4, 6], [7, 5], [3, 1], [0, 2]]);
+    builder.addPermutation('#ffff00', [[0, 6], [1, 7]]);
+
+    builder.recenter();
+    builder.normalize();
+
+    return builder.getPuzzleData();
+}
+
+
+
 // puzzles/ACU.puz
 function ACU()
 {
@@ -4663,6 +5410,56 @@ function AAC()
     builder.addCircleArc('#ffff00', 'rhs', 2.2, true, false, false);
     builder.addCircleArc('#0000ff', 'mid', 2.2, true, false, false);
     builder.addCircleArc('#0000ff', 'bot', 2.2, true, false, true);
+
+    builder.recenter();
+    builder.normalize();
+
+    return builder.getPuzzleData();
+}
+
+
+
+// puzzles/ADF.puz
+function ADF()
+{
+    var builder = new PuzzleBuilder('ADF');
+
+    builder.addNode('p0', '#ff0000', '13', 1.0000, 0.0000);
+    builder.addNode('p1', '#ffff00', '0', 0.5000, 0.8660);
+    builder.addNode('p2', '#00ff00', '22', -0.5000, 0.8660);
+    builder.addNode('p3', '#00ffff', '17', -1.0000, 0.0000);
+    builder.addNode('p4', '#0000ff', '6', -0.5000, -0.8660);
+    builder.addNode('p5', '#7f007f', '8', 0.5000, -0.8660);
+    builder.addNode('p10', '#0000ff', '6', -1.0000, -1.7321);
+    builder.addNode('p11', '#7f007f', '8', 1.0000, -1.7321);
+    builder.addPermutation('#ff0000', [[0, 5], [2, 3], [4, 6]]);
+    builder.addPermutation('#00ff00', [[0, 1], [3, 4], [5, 7]]);
+    builder.addPermutation('#0000ff', [[1, 2], [4, 5]]);
+
+    builder.recenter();
+    builder.normalize();
+
+    return builder.getPuzzleData();
+}
+
+
+
+// puzzles/ADD.puz
+function ADD()
+{
+    var builder = new PuzzleBuilder('ADD');
+
+    builder.addNode('p0', '#ff0000', '13', 1.0000, 0.0000);
+    builder.addNode('p1', '#ffff00', '0', 0.5000, 0.8660);
+    builder.addNode('p2', '#00ff00', '22', -0.5000, 0.8660);
+    builder.addNode('p3', '#00ffff', '17', -1.0000, 0.0000);
+    builder.addNode('p4', '#0000ff', '6', -0.5000, -0.8660);
+    builder.addNode('p5', '#7f007f', '8', 0.5000, -0.8660);
+    builder.addNode('p6', '#ff0000', '13', 2.0000, 0.0000);
+    builder.addNode('p9', '#00ffff', '17', -2.0000, 0.0000);
+    builder.addPermutation('#ff0000', [[0, 5], [2, 3]]);
+    builder.addPermutation('#00ff00', [[0, 1], [3, 4]]);
+    builder.addPermutation('#0000ff', [[1, 2], [4, 5], [0, 6], [3, 7]]);
 
     builder.recenter();
     builder.normalize();
@@ -4716,16 +5513,6 @@ function ABS()
     builder.addCircleArc('#ff0000', 'p25', 3.5, false, true, false);
     builder.addCircleArc('#ff0000', 'p26', 3.5, false, true, false);
     builder.addCircleArc('#ff0000', 'p27', 3.5, false, false, false);
-    builder.addCircleArc('#00ff00', 'p1', 1.8, false, false, false);
-    builder.addCircleArc('#00ff00', 'p4', 1.8, false, false, false);
-    builder.addCircleArc('#00ff00', 'p2', 1.8, false, true, false);
-    builder.addCircleArc('#00ff00', 'p10', 1.8, false, false, false);
-    builder.addCircleArc('#00ff00', 'p3', 1.8, false, false, false);
-    builder.addCircleArc('#00ff00', 'p16', 1.8, false, true, false);
-    builder.addCircleArc('#00ff00', 'p6', 1.8, false, false, false);
-    builder.addCircleArc('#00ff00', 'p22', 1.8, false, true, false);
-    builder.addCircleArc('#00ff00', 'p8', 1.8, false, true, false);
-    builder.addCircleArc('#00ff00', 'p25', 1.8, false, false, false);
     builder.addCircleArc('#0000ff', 'p4', 5.0, false, false, false);
     builder.addCircleArc('#0000ff', 'p5', 5.0, false, false, false);
     builder.addCircleArc('#0000ff', 'p6', 5.0, false, false, false);
@@ -4753,7 +5540,7 @@ function ABS()
 
 
 
-g_puzzleList = [AAA(), AAB(), AAC(), AAD(), AAE(), AAF(), AAG(), AAH(), AAI(), AAJ(), AAK(), AAL(), AAM(), AAN(), AAO(), AAP(), AAQ(), AAR(), AAS(), AAT(), AAU(), AAV(), AAW(), AAX(), AAY(), AAZ(), ABA(), ABB(), ABC(), ABD(), ABE(), ABF(), ABG(), ABH(), ABI(), ABJ(), ABK(), ABL(), ABM(), ABN(), ABO(), ABP(), ABQ(), ABR(), ABS(), ABT(), ABU(), ABV(), ABW(), ABX(), ABY(), ABZ(), ACA(), ACB(), ACC(), ACD(), ACE(), ACF(), ACG(), ACH(), ACI(), ACJ(), ACK(), ACL(), ACM(), ACN(), ACO(), ACP(), ACQ(), ACR(), ACS(), ACT(), ACU(), ACV(), ACW(), ACX(), ACY(), ACZ(), ADA(), ADB(), E1()];
+g_puzzleList = [AAA(), AAB(), AAC(), AAD(), AAE(), AAF(), AAG(), AAH(), AAI(), AAJ(), AAK(), AAL(), AAM(), AAN(), AAO(), AAP(), AAQ(), AAR(), AAS(), AAT(), AAU(), AAV(), AAW(), AAX(), AAY(), AAZ(), ABA(), ABB(), ABC(), ABD(), ABE(), ABF(), ABG(), ABH(), ABI(), ABJ(), ABK(), ABL(), ABM(), ABN(), ABO(), ABP(), ABQ(), ABR(), ABS(), ABT(), ABU(), ABV(), ABW(), ABX(), ABY(), ABZ(), ACA(), ACB(), ACC(), ACD(), ACE(), ACF(), ACG(), ACH(), ACI(), ACJ(), ACK(), ACL(), ACM(), ACN(), ACO(), ACP(), ACQ(), ACR(), ACS(), ACT(), ACU(), ACV(), ACW(), ACX(), ACY(), ACZ(), ADA(), ADB(), ADC(), ADD(), ADE(), ADF(), ADG(), ADH(), ADI(), ADJ(), ADK(), ADL(), ADM(), ADN(), ADO(), ADP(), ADQ(), ADR(), ADS(), ADT(), ADU(), ADV(), ADW(), ADX(), ADY(), ADZ(), AEA(), AEB(), AEC(), AED(), AEE(), AEF(), AEG(), AEH(), AEI(), AEJ(), AEK(), E1()];
 g_puzzleIndex = 0;
 g_puzzleData = g_puzzleList[g_puzzleIndex];
 
