@@ -156,7 +156,7 @@ class Sticker
 		}
 		else if (g_displayMode == 3)
 		{
-			drawShape(context, this.shape, this.color, center.x, center.y, STICKER_RADIUS * 1.1);
+			fillShape(context, this.shape, this.color, center.x, center.y, STICKER_RADIUS * 1.1);
 		}
 	}
 }
@@ -503,7 +503,7 @@ var g_actionPanel = null;
 var g_puzzleData = null;
 var g_puzzleIndex = 0;
 
-var g_displayMode = 0;
+var g_displayMode = 3;
 
 function testAAA()
 {
@@ -1399,7 +1399,10 @@ function drawCircle(context, color, x, y, r)
 function drawPolygon(context, color, n, x, y, r)
 {
 	var radius = (RADIUS_SCALE / GRAPHICS_SCALE) * r;
-	for (var i = 0; i < n; i++)
+	context.beginPath();
+	context.strokeStyle = color;
+	context.moveTo(adjustPosX(x + radius), adjustPosY(y));
+	for (var i = 1; i <= n; i++)
 	{
 		var t0 = (2.0 * Math.PI / n) * (i   );
 		var t1 = (2.0 * Math.PI / n) * (i + 1)
@@ -1407,8 +1410,30 @@ function drawPolygon(context, color, n, x, y, r)
 		var y0 = radius * Math.sin(t0) + y;
 		var x1 = radius * Math.cos(t1) + x;
 		var y1 = radius * Math.sin(t1) + y;
-		drawLine(context, color, x0, y0, x1, y1);
+		context.lineTo(adjustPosX(x0), adjustPosY(y0));
 	}
+	context.stroke();
+	context.closePath();
+}
+
+function fillPolygon(context, color, n, x, y, r)
+{
+	var radius = (RADIUS_SCALE / GRAPHICS_SCALE) * r;
+	context.beginPath();
+	context.fillStyle = color;
+	context.moveTo(adjustPosX(x + radius), adjustPosY(y));
+	for (var i = 1; i <= n; i++)
+	{
+		var t0 = (2.0 * Math.PI / n) * (i   );
+		var t1 = (2.0 * Math.PI / n) * (i + 1)
+		var x0 = radius * Math.cos(t0) + x;
+		var y0 = radius * Math.sin(t0) + y;
+		var x1 = radius * Math.cos(t1) + x;
+		var y1 = radius * Math.sin(t1) + y;
+		context.lineTo(adjustPosX(x0), adjustPosY(y0));
+	}
+	context.fill();
+	context.closePath();
 }
 
 var NUM_SHAPES = 0;
@@ -1427,6 +1452,18 @@ function drawShape(context, shape, color, x, y, r)
 		case SHAPE_SQUARE: drawPolygon(context, color, 4, x, y, r); break;
 		case SHAPE_PENTAGON: drawPolygon(context, color, 5, x, y, r); break;
 		case SHAPE_HEXAGON: drawPolygon(context, color, 6, x, y, r); break;
+	}
+}
+
+function fillShape(context, shape, color, x, y, r)
+{
+	switch (shape)
+	{
+		case SHAPE_CIRCLE: fillCircle(context, color, x, y, r); break;
+		case SHAPE_TRIANGLE: fillPolygon(context, color, 3, x, y, r); break;
+		case SHAPE_SQUARE: fillPolygon(context, color, 4, x, y, r); break;
+		case SHAPE_PENTAGON: fillPolygon(context, color, 5, x, y, r); break;
+		case SHAPE_HEXAGON: fillPolygon(context, color, 6, x, y, r); break;
 	}
 }
 
