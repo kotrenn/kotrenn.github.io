@@ -521,6 +521,19 @@ function testAAA()
     return builder.getPuzzleData();
 }
 
+function loadEasier()
+{
+	var easierList = g_puzzleData.getEasierList();
+	var easierStr = 'Easier:';
+	for (var i = 0; i < easierList.length; i++)
+	{
+		var easierPuzzle = easierList[i];
+		easierStr += ' <a href="index.html?puzzle=' + easierPuzzle + '">';
+		easierStr += easierPuzzle + '</a>';
+	}
+	document.getElementById("easier").innerHTML = easierStr;
+}
+
 function refreshPuzzle()
 {
 	if (g_puzzleIndex <                    0) g_puzzleIndex = 0;
@@ -528,6 +541,7 @@ function refreshPuzzle()
 	
 	g_puzzleData = g_puzzleList[g_puzzleIndex];
 	g_actionPanel.setPuzzleData(g_puzzleData);
+	loadEasier();
 }
 
 function previousPuzzle()
@@ -1080,6 +1094,11 @@ class PuzzleBuilder
 			}
 		}
 	}
+
+	addEasier(puzzleName)
+	{
+		this.puzzleData.addEasier(puzzleName);
+	}
 }
 
 
@@ -1095,6 +1114,7 @@ class PuzzleData
 		this.stickerList = [];
 		this.arcMap = [];
 		this.center = new vec2f(0.0, 0.0);
+		this.easierList = [];
 	}
 
 	solve()
@@ -1140,6 +1160,16 @@ class PuzzleData
 
 		for (var i = 0; i < this.stickerList.length; i++)
 			this.stickerList[i].draw(context);
+	}
+
+	addEasier(puzzleName)
+	{
+		this.easierList.push(puzzleName);
+	}
+
+	getEasierList()
+	{
+		return this.easierList;
 	}
 	
 	addPermutation(permutation)
@@ -1672,6 +1702,8 @@ function AGP()
     builder.recenter();
     builder.normalize();
 
+    builder.addEasier('AGM');
+
     return builder.getPuzzleData();
 }
 
@@ -1691,6 +1723,9 @@ function AHG()
 
     builder.recenter();
     builder.normalize();
+
+    builder.addEasier('AAE');
+    builder.addEasier('AAR');
 
     return builder.getPuzzleData();
 }
@@ -1722,6 +1757,8 @@ function AGJ()
     builder.recenter();
     builder.normalize();
 
+    builder.addEasier('AGH');
+
     return builder.getPuzzleData();
 }
 
@@ -1746,6 +1783,8 @@ function AFS()
     builder.recenter();
     builder.normalize();
 
+    builder.addEasier('AHG');
+
     return builder.getPuzzleData();
 }
 
@@ -1768,6 +1807,9 @@ function AES()
 
     builder.recenter();
     builder.normalize();
+
+    builder.addEasier('AER');
+    builder.addEasier('AFK');
 
     return builder.getPuzzleData();
 }
@@ -1796,6 +1838,8 @@ function AAJ()
     builder.recenter();
     builder.normalize();
 
+    builder.addEasier('AEK');
+
     return builder.getPuzzleData();
 }
 
@@ -1823,6 +1867,8 @@ function AAZ()
     builder.recenter();
     builder.normalize();
 
+    builder.addEasier('ADS');
+
     return builder.getPuzzleData();
 }
 
@@ -1845,6 +1891,8 @@ function AAS()
 
     builder.recenter();
     builder.normalize();
+
+    builder.addEasier('ADB');
 
     return builder.getPuzzleData();
 }
@@ -1869,6 +1917,8 @@ function AAT()
 
     builder.recenter();
     builder.normalize();
+
+    builder.addEasier('ABA');
 
     return builder.getPuzzleData();
 }
@@ -1944,6 +1994,8 @@ function ABR()
     builder.recenter();
     builder.normalize();
 
+    builder.addEasier('ABD');
+
     return builder.getPuzzleData();
 }
 
@@ -1970,6 +2022,10 @@ function ADN()
 
     builder.recenter();
     builder.normalize();
+
+    builder.addEasier('AAR');
+    builder.addEasier('ABA');
+    builder.addEasier('AEF');
 
     return builder.getPuzzleData();
 }
@@ -2000,6 +2056,8 @@ function AGN()
 
     builder.recenter();
     builder.normalize();
+
+    builder.addEasier('AGH');
 
     return builder.getPuzzleData();
 }
@@ -2032,6 +2090,8 @@ function AGA()
     builder.recenter();
     builder.normalize();
 
+    builder.addEasier('AFZ');
+
     return builder.getPuzzleData();
 }
 
@@ -2052,6 +2112,8 @@ function AAU()
 
     builder.recenter();
     builder.normalize();
+
+    builder.addEasier('AAT');
 
     return builder.getPuzzleData();
 }
@@ -2079,6 +2141,8 @@ function AAW()
 
     builder.recenter();
     builder.normalize();
+
+    builder.addEasier('AEA');
 
     return builder.getPuzzleData();
 }
@@ -2124,6 +2188,8 @@ function ABN()
     builder.recenter();
     builder.normalize();
 
+    builder.addEasier('ACN');
+
     return builder.getPuzzleData();
 }
 
@@ -2145,6 +2211,8 @@ function ABA()
 
     builder.recenter();
     builder.normalize();
+
+    builder.addEasier('ADA');
 
     return builder.getPuzzleData();
 }
@@ -2173,6 +2241,8 @@ function ABI()
     builder.recenter();
     builder.normalize();
 
+    builder.addEasier('ABH');
+
     return builder.getPuzzleData();
 }
 
@@ -2197,6 +2267,9 @@ function AEY()
 
     builder.recenter();
     builder.normalize();
+
+    builder.addEasier('AAD');
+    builder.addEasier('AAS');
 
     return builder.getPuzzleData();
 }
@@ -2223,6 +2296,8 @@ function ADG()
 
     builder.recenter();
     builder.normalize();
+
+    builder.addEasier('ADE');
 
     return builder.getPuzzleData();
 }
@@ -2254,6 +2329,8 @@ function AHB()
     builder.recenter();
     builder.normalize();
 
+    builder.addEasier('AHA');
+
     return builder.getPuzzleData();
 }
 
@@ -2277,6 +2354,8 @@ function AEZ()
 
     builder.recenter();
     builder.normalize();
+
+    builder.addEasier('AEY');
 
     return builder.getPuzzleData();
 }
@@ -2304,6 +2383,8 @@ function AED()
 
     builder.recenter();
     builder.normalize();
+
+    builder.addEasier('ADI');
 
     return builder.getPuzzleData();
 }
@@ -2335,6 +2416,8 @@ function AGI()
     builder.recenter();
     builder.normalize();
 
+    builder.addEasier('AGG');
+
     return builder.getPuzzleData();
 }
 
@@ -2360,6 +2443,8 @@ function AFR()
 
     builder.recenter();
     builder.normalize();
+
+    builder.addEasier('AFP');
 
     return builder.getPuzzleData();
 }
@@ -2424,6 +2509,8 @@ function ABY()
     builder.recenter();
     builder.normalize();
 
+    builder.addEasier('ABX');
+
     return builder.getPuzzleData();
 }
 
@@ -2456,6 +2543,8 @@ function ABF()
     builder.recenter();
     builder.normalize();
 
+    builder.addEasier('AHD');
+
     return builder.getPuzzleData();
 }
 
@@ -2480,6 +2569,8 @@ function AEV()
     builder.recenter();
     builder.normalize();
 
+    builder.addEasier('AFD');
+
     return builder.getPuzzleData();
 }
 
@@ -2502,6 +2593,9 @@ function AFL()
 
     builder.recenter();
     builder.normalize();
+
+    builder.addEasier('AER');
+    builder.addEasier('AFJ');
 
     return builder.getPuzzleData();
 }
@@ -2526,6 +2620,9 @@ function AET()
     builder.recenter();
     builder.normalize();
 
+    builder.addEasier('AEV');
+    builder.addEasier('AEX');
+
     return builder.getPuzzleData();
 }
 
@@ -2548,6 +2645,9 @@ function AAD()
 
     builder.recenter();
     builder.normalize();
+
+    builder.addEasier('AAC');
+    builder.addEasier('ADB');
 
     return builder.getPuzzleData();
 }
@@ -2588,6 +2688,8 @@ function ABG()
     builder.recenter();
     builder.normalize();
 
+    builder.addEasier('ABC');
+
     return builder.getPuzzleData();
 }
 
@@ -2609,6 +2711,9 @@ function ACR()
 
     builder.recenter();
     builder.normalize();
+
+    builder.addEasier('AAD');
+    builder.addEasier('ACP');
 
     return builder.getPuzzleData();
 }
@@ -2633,6 +2738,10 @@ function AEC()
     builder.recenter();
     builder.normalize();
 
+    builder.addEasier('ADY');
+    builder.addEasier('AEQ');
+    builder.addEasier('AER');
+
     return builder.getPuzzleData();
 }
 
@@ -2656,6 +2765,8 @@ function AEX()
 
     builder.recenter();
     builder.normalize();
+
+    builder.addEasier('AFD');
 
     return builder.getPuzzleData();
 }
@@ -2691,6 +2802,8 @@ function AFI()
 
     builder.recenter();
     builder.normalize();
+
+    builder.addEasier('ADT');
 
     return builder.getPuzzleData();
 }
@@ -2751,6 +2864,8 @@ function E1()
     builder.recenter();
     builder.normalize();
 
+    builder.addEasier('ABV');
+
     return builder.getPuzzleData();
 }
 
@@ -2805,6 +2920,8 @@ function ACC()
     builder.recenter();
     builder.normalize();
 
+    builder.addEasier('AAO');
+
     return builder.getPuzzleData();
 }
 
@@ -2833,6 +2950,8 @@ function AAI()
     builder.recenter();
     builder.normalize();
 
+    builder.addEasier('AAH');
+
     return builder.getPuzzleData();
 }
 
@@ -2853,6 +2972,8 @@ function AEF()
 
     builder.recenter();
     builder.normalize();
+
+    builder.addEasier('ADA');
 
     return builder.getPuzzleData();
 }
@@ -2891,6 +3012,9 @@ function AFQ()
 
     builder.recenter();
     builder.normalize();
+
+    builder.addEasier('ADX');
+    builder.addEasier('AEL');
 
     return builder.getPuzzleData();
 }
@@ -2937,6 +3061,8 @@ function ACE()
     builder.recenter();
     builder.normalize();
 
+    builder.addEasier('ABU');
+
     return builder.getPuzzleData();
 }
 
@@ -2961,6 +3087,8 @@ function ABE()
     builder.recenter();
     builder.normalize();
 
+    builder.addEasier('AAM');
+
     return builder.getPuzzleData();
 }
 
@@ -2981,6 +3109,8 @@ function ACX()
 
     builder.recenter();
     builder.normalize();
+
+    builder.addEasier('ACP');
 
     return builder.getPuzzleData();
 }
@@ -3017,6 +3147,8 @@ function ADU()
     builder.recenter();
     builder.normalize();
 
+    builder.addEasier('AAJ');
+
     return builder.getPuzzleData();
 }
 
@@ -3040,6 +3172,8 @@ function AFM()
 
     builder.recenter();
     builder.normalize();
+
+    builder.addEasier('AEY');
 
     return builder.getPuzzleData();
 }
@@ -3066,6 +3200,8 @@ function ADE()
     builder.recenter();
     builder.normalize();
 
+    builder.addEasier('ADC');
+
     return builder.getPuzzleData();
 }
 
@@ -3091,6 +3227,9 @@ function AFV()
 
     builder.recenter();
     builder.normalize();
+
+    builder.addEasier('AFS');
+    builder.addEasier('AFW');
 
     return builder.getPuzzleData();
 }
@@ -3123,6 +3262,8 @@ function ABD()
 
     builder.recenter();
     builder.normalize();
+
+    builder.addEasier('ADW');
 
     return builder.getPuzzleData();
 }
@@ -3226,6 +3367,8 @@ function ACO()
     builder.recenter();
     builder.normalize();
 
+    builder.addEasier('ABL');
+
     return builder.getPuzzleData();
 }
 
@@ -3256,6 +3399,8 @@ function AGO()
     builder.recenter();
     builder.normalize();
 
+    builder.addEasier('AGH');
+
     return builder.getPuzzleData();
 }
 
@@ -3278,6 +3423,9 @@ function AFA()
 
     builder.recenter();
     builder.normalize();
+
+    builder.addEasier('AEZ');
+    builder.addEasier('AFM');
 
     return builder.getPuzzleData();
 }
@@ -3304,6 +3452,8 @@ function ACT()
     builder.recenter();
     builder.normalize();
 
+    builder.addEasier('ACQ');
+
     return builder.getPuzzleData();
 }
 
@@ -3329,6 +3479,8 @@ function AAK()
 
     builder.recenter();
     builder.normalize();
+
+    builder.addEasier('AAJ');
 
     return builder.getPuzzleData();
 }
@@ -3397,6 +3549,8 @@ function ABL()
     builder.recenter();
     builder.normalize();
 
+    builder.addEasier('ABK');
+
     return builder.getPuzzleData();
 }
 
@@ -3428,6 +3582,8 @@ function AHC()
     builder.recenter();
     builder.normalize();
 
+    builder.addEasier('AHB');
+
     return builder.getPuzzleData();
 }
 
@@ -3451,6 +3607,8 @@ function AEQ()
 
     builder.recenter();
     builder.normalize();
+
+    builder.addEasier('AEO');
 
     return builder.getPuzzleData();
 }
@@ -3482,6 +3640,10 @@ function ACW()
     builder.recenter();
     builder.normalize();
 
+    builder.addEasier('ABT');
+    builder.addEasier('ACZ');
+    builder.addEasier('ADH');
+
     return builder.getPuzzleData();
 }
 
@@ -3509,6 +3671,8 @@ function AAY()
     builder.recenter();
     builder.normalize();
 
+    builder.addEasier('AAU');
+
     return builder.getPuzzleData();
 }
 
@@ -3531,6 +3695,8 @@ function AAQ()
 
     builder.recenter();
     builder.normalize();
+
+    builder.addEasier('AAM');
 
     return builder.getPuzzleData();
 }
@@ -3557,6 +3723,8 @@ function AFW()
     builder.recenter();
     builder.normalize();
 
+    builder.addEasier('AHG');
+
     return builder.getPuzzleData();
 }
 
@@ -3580,6 +3748,8 @@ function AFH()
 
     builder.recenter();
     builder.normalize();
+
+    builder.addEasier('AEY');
 
     return builder.getPuzzleData();
 }
@@ -3611,6 +3781,8 @@ function AHD()
     builder.recenter();
     builder.normalize();
 
+    builder.addEasier('AHC');
+
     return builder.getPuzzleData();
 }
 
@@ -3631,6 +3803,8 @@ function ADY()
 
     builder.recenter();
     builder.normalize();
+
+    builder.addEasier('AEN');
 
     return builder.getPuzzleData();
 }
@@ -3658,6 +3832,8 @@ function ADB()
 
     builder.recenter();
     builder.normalize();
+
+    builder.addEasier('AAB');
 
     return builder.getPuzzleData();
 }
@@ -3692,6 +3868,8 @@ function ADP()
     builder.recenter();
     builder.normalize();
 
+    builder.addEasier('AEK');
+
     return builder.getPuzzleData();
 }
 
@@ -3715,6 +3893,8 @@ function AEW()
 
     builder.recenter();
     builder.normalize();
+
+    builder.addEasier('AFD');
 
     return builder.getPuzzleData();
 }
@@ -3749,6 +3929,9 @@ function ABP()
     builder.recenter();
     builder.normalize();
 
+    builder.addEasier('AEG');
+    builder.addEasier('AEK');
+
     return builder.getPuzzleData();
 }
 
@@ -3775,6 +3958,10 @@ function ADI()
     builder.recenter();
     builder.normalize();
 
+    builder.addEasier('ADD');
+    builder.addEasier('ADE');
+    builder.addEasier('ADF');
+
     return builder.getPuzzleData();
 }
 
@@ -3795,6 +3982,8 @@ function ADA()
 
     builder.recenter();
     builder.normalize();
+
+    builder.addEasier('AAA');
 
     return builder.getPuzzleData();
 }
@@ -3819,6 +4008,8 @@ function AER()
 
     builder.recenter();
     builder.normalize();
+
+    builder.addEasier('AEO');
 
     return builder.getPuzzleData();
 }
@@ -3849,6 +4040,8 @@ function AEK()
     builder.recenter();
     builder.normalize();
 
+    builder.addEasier('ADN');
+
     return builder.getPuzzleData();
 }
 
@@ -3877,6 +4070,8 @@ function ADO()
 
     builder.recenter();
     builder.normalize();
+
+    builder.addEasier('ADN');
 
     return builder.getPuzzleData();
 }
@@ -3912,6 +4107,8 @@ function ABC()
     builder.recenter();
     builder.normalize();
 
+    builder.addEasier('AAV');
+
     return builder.getPuzzleData();
 }
 
@@ -3940,6 +4137,8 @@ function ADM()
 
     builder.recenter();
     builder.normalize();
+
+    builder.addEasier('ADL');
 
     return builder.getPuzzleData();
 }
@@ -4005,6 +4204,8 @@ function ACI()
     builder.recenter();
     builder.normalize();
 
+    builder.addEasier('ACG');
+
     return builder.getPuzzleData();
 }
 
@@ -4030,6 +4231,8 @@ function ACP()
 
     builder.recenter();
     builder.normalize();
+
+    builder.addEasier('ADB');
 
     return builder.getPuzzleData();
 }
@@ -4066,6 +4269,8 @@ function AAV()
     builder.recenter();
     builder.normalize();
 
+    builder.addEasier('ABH');
+
     return builder.getPuzzleData();
 }
 
@@ -4094,6 +4299,9 @@ function AGV()
 
     builder.recenter();
     builder.normalize();
+
+    builder.addEasier('AFV');
+    builder.addEasier('AGW');
 
     return builder.getPuzzleData();
 }
@@ -4162,6 +4370,9 @@ function ACJ()
     builder.recenter();
     builder.normalize();
 
+    builder.addEasier('ACH');
+    builder.addEasier('ACI');
+
     return builder.getPuzzleData();
 }
 
@@ -4194,6 +4405,8 @@ function ACK()
     builder.recenter();
     builder.normalize();
 
+    builder.addEasier('AAN');
+
     return builder.getPuzzleData();
 }
 
@@ -4225,6 +4438,8 @@ function AFY()
     builder.recenter();
     builder.normalize();
 
+    builder.addEasier('AGW');
+
     return builder.getPuzzleData();
 }
 
@@ -4255,6 +4470,8 @@ function AHA()
     builder.recenter();
     builder.normalize();
 
+    builder.addEasier('AGZ');
+
     return builder.getPuzzleData();
 }
 
@@ -4280,6 +4497,8 @@ function AFN()
     builder.recenter();
     builder.normalize();
 
+    builder.addEasier('AAD');
+
     return builder.getPuzzleData();
 }
 
@@ -4302,6 +4521,8 @@ function AFB()
 
     builder.recenter();
     builder.normalize();
+
+    builder.addEasier('AFH');
 
     return builder.getPuzzleData();
 }
@@ -4330,6 +4551,10 @@ function ADL()
 
     builder.recenter();
     builder.normalize();
+
+    builder.addEasier('ADJ');
+    builder.addEasier('ADK');
+    builder.addEasier('AED');
 
     return builder.getPuzzleData();
 }
@@ -4361,6 +4586,10 @@ function AAL()
 
     builder.recenter();
     builder.normalize();
+
+    builder.addEasier('AAP');
+    builder.addEasier('AAW');
+    builder.addEasier('AFR');
 
     return builder.getPuzzleData();
 }
@@ -4427,6 +4656,9 @@ function ABX()
     builder.recenter();
     builder.normalize();
 
+    builder.addEasier('ABK');
+    builder.addEasier('ADV');
+
     return builder.getPuzzleData();
 }
 
@@ -4454,6 +4686,8 @@ function AGW()
     builder.recenter();
     builder.normalize();
 
+    builder.addEasier('AFZ');
+
     return builder.getPuzzleData();
 }
 
@@ -4477,6 +4711,8 @@ function AEP()
     builder.recenter();
     builder.normalize();
 
+    builder.addEasier('AFJ');
+
     return builder.getPuzzleData();
 }
 
@@ -4499,6 +4735,9 @@ function AEN()
     builder.recenter();
     builder.normalize();
 
+    builder.addEasier('AAS');
+    builder.addEasier('ACP');
+
     return builder.getPuzzleData();
 }
 
@@ -4518,6 +4757,9 @@ function AAX()
 
     builder.recenter();
     builder.normalize();
+
+    builder.addEasier('AAQ');
+    builder.addEasier('ABE');
 
     return builder.getPuzzleData();
 }
@@ -4541,6 +4783,9 @@ function ACY()
 
     builder.recenter();
     builder.normalize();
+
+    builder.addEasier('AAE');
+    builder.addEasier('ACR');
 
     return builder.getPuzzleData();
 }
@@ -4604,6 +4849,8 @@ function ABZ()
 
     builder.recenter();
     builder.normalize();
+
+    builder.addEasier('ABX');
 
     return builder.getPuzzleData();
 }
@@ -4697,6 +4944,10 @@ function ABM()
     builder.recenter();
     builder.normalize();
 
+    builder.addEasier('ABJ');
+    builder.addEasier('ABO');
+    builder.addEasier('ABS');
+
     return builder.getPuzzleData();
 }
 
@@ -4722,6 +4973,8 @@ function AAH()
 
     builder.recenter();
     builder.normalize();
+
+    builder.addEasier('AAG');
 
     return builder.getPuzzleData();
 }
@@ -4750,6 +5003,9 @@ function ADJ()
     builder.recenter();
     builder.normalize();
 
+    builder.addEasier('ADH');
+    builder.addEasier('ADI');
+
     return builder.getPuzzleData();
 }
 
@@ -4773,6 +5029,8 @@ function AAG()
 
     builder.recenter();
     builder.normalize();
+
+    builder.addEasier('AAT');
 
     return builder.getPuzzleData();
 }
@@ -4841,6 +5099,8 @@ function ACH()
     builder.recenter();
     builder.normalize();
 
+    builder.addEasier('ACG');
+
     return builder.getPuzzleData();
 }
 
@@ -4867,6 +5127,8 @@ function ACZ()
 
     builder.recenter();
     builder.normalize();
+
+    builder.addEasier('AED');
 
     return builder.getPuzzleData();
 }
@@ -4903,6 +5165,8 @@ function ABU()
 
     builder.recenter();
     builder.normalize();
+
+    builder.addEasier('ABK');
 
     return builder.getPuzzleData();
 }
@@ -4941,6 +5205,9 @@ function ADV()
     builder.recenter();
     builder.normalize();
 
+    builder.addEasier('ADP');
+    builder.addEasier('ADU');
+
     return builder.getPuzzleData();
 }
 
@@ -4965,6 +5232,9 @@ function AFE()
 
     builder.recenter();
     builder.normalize();
+
+    builder.addEasier('ADB');
+    builder.addEasier('AEM');
 
     return builder.getPuzzleData();
 }
@@ -4995,6 +5265,8 @@ function AGT()
     builder.recenter();
     builder.normalize();
 
+    builder.addEasier('AGR');
+
     return builder.getPuzzleData();
 }
 
@@ -5020,6 +5292,10 @@ function ADT()
     builder.recenter();
     builder.normalize();
 
+    builder.addEasier('AAS');
+    builder.addEasier('ACR');
+    builder.addEasier('ADZ');
+
     return builder.getPuzzleData();
 }
 
@@ -5041,6 +5317,8 @@ function ACQ()
 
     builder.recenter();
     builder.normalize();
+
+    builder.addEasier('ACX');
 
     return builder.getPuzzleData();
 }
@@ -5099,6 +5377,9 @@ function ABV()
     builder.recenter();
     builder.normalize();
 
+    builder.addEasier('ABU');
+    builder.addEasier('ABW');
+
     return builder.getPuzzleData();
 }
 
@@ -5130,6 +5411,8 @@ function ADQ()
     builder.recenter();
     builder.normalize();
 
+    builder.addEasier('ADO');
+
     return builder.getPuzzleData();
 }
 
@@ -5157,6 +5440,8 @@ function AFX()
 
     builder.recenter();
     builder.normalize();
+
+    builder.addEasier('AFW');
 
     return builder.getPuzzleData();
 }
@@ -5188,6 +5473,8 @@ function AGL()
     builder.recenter();
     builder.normalize();
 
+    builder.addEasier('AGK');
+
     return builder.getPuzzleData();
 }
 
@@ -5210,6 +5497,8 @@ function AFP()
 
     builder.recenter();
     builder.normalize();
+
+    builder.addEasier('AFO');
 
     return builder.getPuzzleData();
 }
@@ -5243,6 +5532,8 @@ function AEL()
     builder.recenter();
     builder.normalize();
 
+    builder.addEasier('ADW');
+
     return builder.getPuzzleData();
 }
 
@@ -5268,6 +5559,10 @@ function ADH()
 
     builder.recenter();
     builder.normalize();
+
+    builder.addEasier('ADE');
+    builder.addEasier('ADF');
+    builder.addEasier('AFB');
 
     return builder.getPuzzleData();
 }
@@ -5295,6 +5590,8 @@ function AEJ()
     builder.recenter();
     builder.normalize();
 
+    builder.addEasier('AEI');
+
     return builder.getPuzzleData();
 }
 
@@ -5321,6 +5618,8 @@ function AFU()
     builder.recenter();
     builder.normalize();
 
+    builder.addEasier('AFS');
+
     return builder.getPuzzleData();
 }
 
@@ -5344,6 +5643,9 @@ function AFO()
 
     builder.recenter();
     builder.normalize();
+
+    builder.addEasier('ACR');
+    builder.addEasier('AFN');
 
     return builder.getPuzzleData();
 }
@@ -5408,6 +5710,8 @@ function ACA()
     builder.recenter();
     builder.normalize();
 
+    builder.addEasier('ABX');
+
     return builder.getPuzzleData();
 }
 
@@ -5455,6 +5759,9 @@ function ACN()
     builder.recenter();
     builder.normalize();
 
+    builder.addEasier('ADP');
+    builder.addEasier('AEL');
+
     return builder.getPuzzleData();
 }
 
@@ -5477,6 +5784,8 @@ function AAR()
 
     builder.recenter();
     builder.normalize();
+
+    builder.addEasier('AAB');
 
     return builder.getPuzzleData();
 }
@@ -5518,6 +5827,8 @@ function AAO()
     builder.recenter();
     builder.normalize();
 
+    builder.addEasier('AAI');
+
     return builder.getPuzzleData();
 }
 
@@ -5544,6 +5855,8 @@ function AGC()
 
     builder.recenter();
     builder.normalize();
+
+    builder.addEasier('AFU');
 
     return builder.getPuzzleData();
 }
@@ -5580,6 +5893,8 @@ function ACB()
     builder.recenter();
     builder.normalize();
 
+    builder.addEasier('ACC');
+
     return builder.getPuzzleData();
 }
 
@@ -5603,6 +5918,9 @@ function AFG()
 
     builder.recenter();
     builder.normalize();
+
+    builder.addEasier('ACP');
+    builder.addEasier('AFE');
 
     return builder.getPuzzleData();
 }
@@ -5630,6 +5948,8 @@ function ABH()
     builder.recenter();
     builder.normalize();
 
+    builder.addEasier('AEL');
+
     return builder.getPuzzleData();
 }
 
@@ -5652,6 +5972,11 @@ function AEB()
 
     builder.recenter();
     builder.normalize();
+
+    builder.addEasier('ADZ');
+    builder.addEasier('AEQ');
+    builder.addEasier('AFJ');
+    builder.addEasier('AFK');
 
     return builder.getPuzzleData();
 }
@@ -5683,6 +6008,8 @@ function AHE()
 
     builder.recenter();
     builder.normalize();
+
+    builder.addEasier('AHD');
 
     return builder.getPuzzleData();
 }
@@ -5748,6 +6075,8 @@ function ACG()
     builder.recenter();
     builder.normalize();
 
+    builder.addEasier('ABW');
+
     return builder.getPuzzleData();
 }
 
@@ -5771,6 +6100,8 @@ function AAB()
     builder.recenter();
     builder.normalize();
 
+    builder.addEasier('AAA');
+
     return builder.getPuzzleData();
 }
 
@@ -5792,6 +6123,9 @@ function AEA()
 
     builder.recenter();
     builder.normalize();
+
+    builder.addEasier('AEC');
+    builder.addEasier('AES');
 
     return builder.getPuzzleData();
 }
@@ -5816,6 +6150,9 @@ function AEU()
     builder.recenter();
     builder.normalize();
 
+    builder.addEasier('AEV');
+    builder.addEasier('AEW');
+
     return builder.getPuzzleData();
 }
 
@@ -5839,6 +6176,9 @@ function AFC()
     builder.recenter();
     builder.normalize();
 
+    builder.addEasier('AEZ');
+    builder.addEasier('AFH');
+
     return builder.getPuzzleData();
 }
 
@@ -5861,6 +6201,8 @@ function AEM()
 
     builder.recenter();
     builder.normalize();
+
+    builder.addEasier('AAC');
 
     return builder.getPuzzleData();
 }
@@ -5892,6 +6234,8 @@ function AGQ()
     builder.recenter();
     builder.normalize();
 
+    builder.addEasier('AGH');
+
     return builder.getPuzzleData();
 }
 
@@ -5919,6 +6263,8 @@ function AGG()
 
     builder.recenter();
     builder.normalize();
+
+    builder.addEasier('AGB');
 
     return builder.getPuzzleData();
 }
@@ -5970,6 +6316,10 @@ function ACM()
     builder.recenter();
     builder.normalize();
 
+    builder.addEasier('ABB');
+    builder.addEasier('ACW');
+    builder.addEasier('ADM');
+
     return builder.getPuzzleData();
 }
 
@@ -5994,6 +6344,8 @@ function AAN()
 
     builder.recenter();
     builder.normalize();
+
+    builder.addEasier('AAH');
 
     return builder.getPuzzleData();
 }
@@ -6040,6 +6392,8 @@ function ACF()
     builder.recenter();
     builder.normalize();
 
+    builder.addEasier('ACE');
+
     return builder.getPuzzleData();
 }
 
@@ -6064,6 +6418,8 @@ function AEH()
     builder.recenter();
     builder.normalize();
 
+    builder.addEasier('ACU');
+
     return builder.getPuzzleData();
 }
 
@@ -6084,6 +6440,8 @@ function AAM()
 
     builder.recenter();
     builder.normalize();
+
+    builder.addEasier('AAF');
 
     return builder.getPuzzleData();
 }
@@ -6113,6 +6471,8 @@ function AGF()
     builder.recenter();
     builder.normalize();
 
+    builder.addEasier('AGC');
+
     return builder.getPuzzleData();
 }
 
@@ -6136,6 +6496,11 @@ function AAP()
 
     builder.recenter();
     builder.normalize();
+
+    builder.addEasier('ACR');
+    builder.addEasier('ADZ');
+    builder.addEasier('AEN');
+    builder.addEasier('AEU');
 
     return builder.getPuzzleData();
 }
@@ -6163,6 +6528,9 @@ function AAF()
     builder.recenter();
     builder.normalize();
 
+    builder.addEasier('ADA');
+    builder.addEasier('AAB');
+
     return builder.getPuzzleData();
 }
 
@@ -6187,6 +6555,8 @@ function AFK()
     builder.recenter();
     builder.normalize();
 
+    builder.addEasier('AEO');
+
     return builder.getPuzzleData();
 }
 
@@ -6208,6 +6578,9 @@ function AEE()
 
     builder.recenter();
     builder.normalize();
+
+    builder.addEasier('AEA');
+    builder.addEasier('AEG');
 
     return builder.getPuzzleData();
 }
@@ -6244,6 +6617,8 @@ function ADS()
     builder.recenter();
     builder.normalize();
 
+    builder.addEasier('ADR');
+
     return builder.getPuzzleData();
 }
 
@@ -6274,6 +6649,8 @@ function ACL()
 
     builder.recenter();
     builder.normalize();
+
+    builder.addEasier('ACK');
 
     return builder.getPuzzleData();
 }
@@ -6318,6 +6695,8 @@ function ABO()
     builder.recenter();
     builder.normalize();
 
+    builder.addEasier('ABN');
+
     return builder.getPuzzleData();
 }
 
@@ -6350,6 +6729,9 @@ function ACS()
 
     builder.recenter();
     builder.normalize();
+
+    builder.addEasier('AEN');
+    builder.addEasier('AFI');
 
     return builder.getPuzzleData();
 }
@@ -6403,6 +6785,8 @@ function ACD()
     builder.recenter();
     builder.normalize();
 
+    builder.addEasier('ACC');
+
     return builder.getPuzzleData();
 }
 
@@ -6432,6 +6816,8 @@ function AGR()
     builder.recenter();
     builder.normalize();
 
+    builder.addEasier('AGP');
+
     return builder.getPuzzleData();
 }
 
@@ -6455,6 +6841,8 @@ function ABT()
 
     builder.recenter();
     builder.normalize();
+
+    builder.addEasier('AFC');
 
     return builder.getPuzzleData();
 }
@@ -6493,6 +6881,9 @@ function ABK()
     builder.recenter();
     builder.normalize();
 
+    builder.addEasier('AAF');
+    builder.addEasier('ADN');
+
     return builder.getPuzzleData();
 }
 
@@ -6516,6 +6907,8 @@ function AFJ()
 
     builder.recenter();
     builder.normalize();
+
+    builder.addEasier('AEO');
 
     return builder.getPuzzleData();
 }
@@ -6552,6 +6945,8 @@ function ABJ()
     builder.recenter();
     builder.normalize();
 
+    builder.addEasier('ABG');
+
     return builder.getPuzzleData();
 }
 
@@ -6577,6 +6972,8 @@ function AFF()
     builder.recenter();
     builder.normalize();
 
+    builder.addEasier('AEM');
+
     return builder.getPuzzleData();
 }
 
@@ -6599,6 +6996,8 @@ function ACV()
 
     builder.recenter();
     builder.normalize();
+
+    builder.addEasier('ACT');
 
     return builder.getPuzzleData();
 }
@@ -6639,6 +7038,9 @@ function ADX()
     builder.recenter();
     builder.normalize();
 
+    builder.addEasier('ADW');
+    builder.addEasier('ADQ');
+
     return builder.getPuzzleData();
 }
 
@@ -6658,6 +7060,8 @@ function AAE()
 
     builder.recenter();
     builder.normalize();
+
+    builder.addEasier('ACX');
 
     return builder.getPuzzleData();
 }
@@ -6717,6 +7121,8 @@ function ABB()
     builder.recenter();
     builder.normalize();
 
+    builder.addEasier('AGK');
+
     return builder.getPuzzleData();
 }
 
@@ -6743,6 +7149,8 @@ function AFT()
 
     builder.recenter();
     builder.normalize();
+
+    builder.addEasier('AFZ');
 
     return builder.getPuzzleData();
 }
@@ -6772,6 +7180,8 @@ function AGY()
 
     builder.recenter();
     builder.normalize();
+
+    builder.addEasier('AGX');
 
     return builder.getPuzzleData();
 }
@@ -6803,6 +7213,8 @@ function AGK()
     builder.recenter();
     builder.normalize();
 
+    builder.addEasier('AGI');
+
     return builder.getPuzzleData();
 }
 
@@ -6831,6 +7243,8 @@ function AGX()
 
     builder.recenter();
     builder.normalize();
+
+    builder.addEasier('AGT');
 
     return builder.getPuzzleData();
 }
@@ -6865,6 +7279,8 @@ function ADR()
     builder.recenter();
     builder.normalize();
 
+    builder.addEasier('ADQ');
+
     return builder.getPuzzleData();
 }
 
@@ -6888,6 +7304,9 @@ function ADC()
 
     builder.recenter();
     builder.normalize();
+
+    builder.addEasier('ACR');
+    builder.addEasier('ACV');
 
     return builder.getPuzzleData();
 }
@@ -6916,6 +7335,8 @@ function AGE()
     builder.recenter();
     builder.normalize();
 
+    builder.addEasier('AGC');
+
     return builder.getPuzzleData();
 }
 
@@ -6940,6 +7361,8 @@ function AFD()
 
     builder.recenter();
     builder.normalize();
+
+    builder.addEasier('AAD');
 
     return builder.getPuzzleData();
 }
@@ -6979,6 +7402,8 @@ function ABW()
     builder.recenter();
     builder.normalize();
 
+    builder.addEasier('ABD');
+
     return builder.getPuzzleData();
 }
 
@@ -6997,6 +7422,7 @@ function AAA()
 
     builder.recenter();
     builder.normalize();
+
 
     return builder.getPuzzleData();
 }
@@ -7030,6 +7456,9 @@ function ABQ()
     builder.recenter();
     builder.normalize();
 
+    builder.addEasier('ABP');
+    builder.addEasier('AAK');
+
     return builder.getPuzzleData();
 }
 
@@ -7058,6 +7487,8 @@ function AHF()
 
     builder.recenter();
     builder.normalize();
+
+    builder.addEasier('AHE');
 
     return builder.getPuzzleData();
 }
@@ -7092,6 +7523,8 @@ function ADW()
     builder.recenter();
     builder.normalize();
 
+    builder.addEasier('ADN');
+
     return builder.getPuzzleData();
 }
 
@@ -7119,6 +7552,10 @@ function ADK()
     builder.recenter();
     builder.normalize();
 
+    builder.addEasier('ADG');
+    builder.addEasier('ADH');
+    builder.addEasier('ADI');
+
     return builder.getPuzzleData();
 }
 
@@ -7139,6 +7576,9 @@ function AEG()
 
     builder.recenter();
     builder.normalize();
+
+    builder.addEasier('AAR');
+    builder.addEasier('ADY');
 
     return builder.getPuzzleData();
 }
@@ -7174,6 +7614,8 @@ function AGB()
     builder.recenter();
     builder.normalize();
 
+    builder.addEasier('AFY');
+
     return builder.getPuzzleData();
 }
 
@@ -7198,6 +7640,8 @@ function AEO()
 
     builder.recenter();
     builder.normalize();
+
+    builder.addEasier('AAS');
 
     return builder.getPuzzleData();
 }
@@ -7229,6 +7673,8 @@ function AGZ()
     builder.recenter();
     builder.normalize();
 
+    builder.addEasier('AGY');
+
     return builder.getPuzzleData();
 }
 
@@ -7257,6 +7703,8 @@ function AFZ()
     builder.recenter();
     builder.normalize();
 
+    builder.addEasier('AFW');
+
     return builder.getPuzzleData();
 }
 
@@ -7278,6 +7726,8 @@ function ADZ()
 
     builder.recenter();
     builder.normalize();
+
+    builder.addEasier('AAS');
 
     return builder.getPuzzleData();
 }
@@ -7308,6 +7758,8 @@ function AGH()
     builder.recenter();
     builder.normalize();
 
+    builder.addEasier('AGC');
+
     return builder.getPuzzleData();
 }
 
@@ -7337,6 +7789,8 @@ function AGU()
     builder.recenter();
     builder.normalize();
 
+    builder.addEasier('AGS');
+
     return builder.getPuzzleData();
 }
 
@@ -7362,6 +7816,8 @@ function AEI()
     builder.recenter();
     builder.normalize();
 
+    builder.addEasier('AEH');
+
     return builder.getPuzzleData();
 }
 
@@ -7383,6 +7839,9 @@ function ACU()
 
     builder.recenter();
     builder.normalize();
+
+    builder.addEasier('AAE');
+    builder.addEasier('ACT');
 
     return builder.getPuzzleData();
 }
@@ -7411,6 +7870,8 @@ function AAC()
     builder.recenter();
     builder.normalize();
 
+    builder.addEasier('AAB');
+
     return builder.getPuzzleData();
 }
 
@@ -7435,6 +7896,9 @@ function ADF()
 
     builder.recenter();
     builder.normalize();
+
+    builder.addEasier('ADC');
+    builder.addEasier('AFP');
 
     return builder.getPuzzleData();
 }
@@ -7466,6 +7930,8 @@ function AGS()
     builder.recenter();
     builder.normalize();
 
+    builder.addEasier('AFU');
+
     return builder.getPuzzleData();
 }
 
@@ -7490,6 +7956,9 @@ function ADD()
 
     builder.recenter();
     builder.normalize();
+
+    builder.addEasier('ACY');
+    builder.addEasier('ADC');
 
     return builder.getPuzzleData();
 }
@@ -7518,6 +7987,8 @@ function AGD()
 
     builder.recenter();
     builder.normalize();
+
+    builder.addEasier('AGC');
 
     return builder.getPuzzleData();
 }
@@ -7590,6 +8061,8 @@ function ABS()
     builder.recenter();
     builder.normalize();
 
+    builder.addEasier('ABN');
+
     return builder.getPuzzleData();
 }
 
@@ -7619,6 +8092,8 @@ function AGM()
 
     builder.recenter();
     builder.normalize();
+
+    builder.addEasier('AGL');
 
     return builder.getPuzzleData();
 }
