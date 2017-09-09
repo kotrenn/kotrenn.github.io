@@ -534,6 +534,32 @@ function loadEasier()
 	document.getElementById("easier").innerHTML = easierStr;
 }
 
+function loadHarder()
+{
+	var harderList = g_puzzleData.getHarderList();
+	var harderStr = 'Harder:';
+	for (var i = 0; i < harderList.length; i++)
+	{
+		var harderPuzzle = harderList[i];
+		harderStr += ' <a href="index.html?puzzle=' + harderPuzzle + '">';
+		harderStr += harderPuzzle + '</a>';
+	}
+	document.getElementById("harder").innerHTML = harderStr;
+}
+
+function loadLocalMap()
+{
+	var localMapList = g_puzzleData.getLocalMap();
+	var mapStr = '<center>';
+	for (var i = 0; i < localMapList.length; i++)
+	{
+		var localMap = localMapList[i];
+		mapStr += localMap;
+	}
+	mapStr += '</center>';
+	document.getElementById("localMap").innerHTML = mapStr;
+}
+
 function refreshPuzzle()
 {
 	if (g_puzzleIndex <                    0) g_puzzleIndex = 0;
@@ -542,6 +568,8 @@ function refreshPuzzle()
 	g_puzzleData = g_puzzleList[g_puzzleIndex];
 	g_actionPanel.setPuzzleData(g_puzzleData);
 	loadEasier();
+	loadHarder();
+	loadLocalMap();
 }
 
 function previousPuzzle()
@@ -1099,6 +1127,16 @@ class PuzzleBuilder
 	{
 		this.puzzleData.addEasier(puzzleName);
 	}
+
+	addHarder(puzzleName)
+	{
+		this.puzzleData.addHarder(puzzleName);
+	}
+
+	addLocalMap(mapStr)
+	{
+		this.puzzleData.addLocalMap(mapStr);
+	}
 }
 
 
@@ -1115,6 +1153,8 @@ class PuzzleData
 		this.arcMap = [];
 		this.center = new vec2f(0.0, 0.0);
 		this.easierList = [];
+		this.harderList = [];
+		this.localMap = [];
 	}
 
 	solve()
@@ -1167,9 +1207,29 @@ class PuzzleData
 		this.easierList.push(puzzleName);
 	}
 
+	addHarder(puzzleName)
+	{
+		this.harderList.push(puzzleName);
+	}
+
+	addLocalMap(mapStr)
+	{
+		this.localMap.push(mapStr);
+	}
+
 	getEasierList()
 	{
 		return this.easierList;
+	}
+
+	getHarderList()
+	{
+		return this.harderList;
+	}
+
+	getLocalMap()
+	{
+		return this.localMap;
 	}
 	
 	addPermutation(permutation)
@@ -1704,6 +1764,15 @@ function AGP()
 
     builder.addEasier('AGM');
 
+    builder.addHarder('AGR');
+
+    builder.addLocalMap('<image src="images/map_AGP.png" usemap="#localmap">');
+    builder.addLocalMap('<map name="localmap">');
+    builder.addLocalMap('<area shape="rect" coords="7.1054273576e-15,0.0,100.0,100.0" href="index.html?puzzle=AGM" alt="AGM">');
+    builder.addLocalMap('<area shape="rect" coords="7.1054273576e-15,200.0,100.0,300.0" href="index.html?puzzle=AGP" alt="AGP">');
+    builder.addLocalMap('<area shape="rect" coords="7.1054273576e-15,400.0,100.0,500.0" href="index.html?puzzle=AGR" alt="AGR">');
+    builder.addLocalMap('</map>');
+
     return builder.getPuzzleData();
 }
 
@@ -1726,6 +1795,18 @@ function AHG()
 
     builder.addEasier('AAE');
     builder.addEasier('AAR');
+
+    builder.addHarder('AFS');
+    builder.addHarder('AFW');
+
+    builder.addLocalMap('<image src="images/map_AHG.png" usemap="#localmap">');
+    builder.addLocalMap('<map name="localmap">');
+    builder.addLocalMap('<area shape="rect" coords="0.0,0.0,100.0,100.0" href="index.html?puzzle=AAE" alt="AAE">');
+    builder.addLocalMap('<area shape="rect" coords="150.0,0.0,250.0,100.0" href="index.html?puzzle=AAR" alt="AAR">');
+    builder.addLocalMap('<area shape="rect" coords="150.0,400.0,250.0,500.0" href="index.html?puzzle=AFS" alt="AFS">');
+    builder.addLocalMap('<area shape="rect" coords="0.0,400.0,100.0,500.0" href="index.html?puzzle=AFW" alt="AFW">');
+    builder.addLocalMap('<area shape="rect" coords="75.0,200.0,175.0,300.0" href="index.html?puzzle=AHG" alt="AHG">');
+    builder.addLocalMap('</map>');
 
     return builder.getPuzzleData();
 }
@@ -1759,6 +1840,12 @@ function AGJ()
 
     builder.addEasier('AGH');
 
+    builder.addLocalMap('<image src="images/map_AGJ.png" usemap="#localmap">');
+    builder.addLocalMap('<map name="localmap">');
+    builder.addLocalMap('<area shape="rect" coords="33.3333333333,33.3333333333,133.333333333,133.333333333" href="index.html?puzzle=AGH" alt="AGH">');
+    builder.addLocalMap('<area shape="rect" coords="33.3333333333,366.666666667,133.333333333,466.666666667" href="index.html?puzzle=AGJ" alt="AGJ">');
+    builder.addLocalMap('</map>');
+
     return builder.getPuzzleData();
 }
 
@@ -1788,6 +1875,17 @@ function AHW()
 
     builder.addEasier('ABU');
 
+    builder.addHarder('ABC');
+    builder.addHarder('AHY');
+
+    builder.addLocalMap('<image src="images/map_AHW.png" usemap="#localmap">');
+    builder.addLocalMap('<map name="localmap">');
+    builder.addLocalMap('<area shape="rect" coords="0.0,400.0,100.0,500.0" href="index.html?puzzle=ABC" alt="ABC">');
+    builder.addLocalMap('<area shape="rect" coords="75.0,0.0,175.0,100.0" href="index.html?puzzle=ABU" alt="ABU">');
+    builder.addLocalMap('<area shape="rect" coords="75.0,200.0,175.0,300.0" href="index.html?puzzle=AHW" alt="AHW">');
+    builder.addLocalMap('<area shape="rect" coords="150.0,400.0,250.0,500.0" href="index.html?puzzle=AHY" alt="AHY">');
+    builder.addLocalMap('</map>');
+
     return builder.getPuzzleData();
 }
 
@@ -1814,6 +1912,17 @@ function AFS()
 
     builder.addEasier('AHG');
 
+    builder.addHarder('AFU');
+    builder.addHarder('AFV');
+
+    builder.addLocalMap('<image src="images/map_AFS.png" usemap="#localmap">');
+    builder.addLocalMap('<map name="localmap">');
+    builder.addLocalMap('<area shape="rect" coords="75.0,200.0,175.0,300.0" href="index.html?puzzle=AFS" alt="AFS">');
+    builder.addLocalMap('<area shape="rect" coords="0.0,400.0,100.0,500.0" href="index.html?puzzle=AFU" alt="AFU">');
+    builder.addLocalMap('<area shape="rect" coords="150.0,400.0,250.0,500.0" href="index.html?puzzle=AFV" alt="AFV">');
+    builder.addLocalMap('<area shape="rect" coords="75.0,0.0,175.0,100.0" href="index.html?puzzle=AHG" alt="AHG">');
+    builder.addLocalMap('</map>');
+
     return builder.getPuzzleData();
 }
 
@@ -1839,6 +1948,16 @@ function AES()
 
     builder.addEasier('AER');
     builder.addEasier('AFK');
+
+    builder.addHarder('AEA');
+
+    builder.addLocalMap('<image src="images/map_AES.png" usemap="#localmap">');
+    builder.addLocalMap('<map name="localmap">');
+    builder.addLocalMap('<area shape="rect" coords="75.0,400.0,175.0,500.0" href="index.html?puzzle=AEA" alt="AEA">');
+    builder.addLocalMap('<area shape="rect" coords="0.0,0.0,100.0,100.0" href="index.html?puzzle=AER" alt="AER">');
+    builder.addLocalMap('<area shape="rect" coords="75.0,200.0,175.0,300.0" href="index.html?puzzle=AES" alt="AES">');
+    builder.addLocalMap('<area shape="rect" coords="150.0,0.0,250.0,100.0" href="index.html?puzzle=AFK" alt="AFK">');
+    builder.addLocalMap('</map>');
 
     return builder.getPuzzleData();
 }
@@ -1869,6 +1988,17 @@ function AAJ()
 
     builder.addEasier('AEK');
 
+    builder.addHarder('AAK');
+    builder.addHarder('ADU');
+
+    builder.addLocalMap('<image src="images/map_AAJ.png" usemap="#localmap">');
+    builder.addLocalMap('<map name="localmap">');
+    builder.addLocalMap('<area shape="rect" coords="75.0,200.0,175.0,300.0" href="index.html?puzzle=AAJ" alt="AAJ">');
+    builder.addLocalMap('<area shape="rect" coords="150.0,400.0,250.0,500.0" href="index.html?puzzle=AAK" alt="AAK">');
+    builder.addLocalMap('<area shape="rect" coords="0.0,400.0,100.0,500.0" href="index.html?puzzle=ADU" alt="ADU">');
+    builder.addLocalMap('<area shape="rect" coords="75.0,0.0,175.0,100.0" href="index.html?puzzle=AEK" alt="AEK">');
+    builder.addLocalMap('</map>');
+
     return builder.getPuzzleData();
 }
 
@@ -1898,6 +2028,12 @@ function AAZ()
 
     builder.addEasier('ADS');
 
+    builder.addLocalMap('<image src="images/map_AAZ.png" usemap="#localmap">');
+    builder.addLocalMap('<map name="localmap">');
+    builder.addLocalMap('<area shape="rect" coords="33.3333333333,366.666666667,133.333333333,466.666666667" href="index.html?puzzle=AAZ" alt="AAZ">');
+    builder.addLocalMap('<area shape="rect" coords="33.3333333333,33.3333333333,133.333333333,133.333333333" href="index.html?puzzle=ADS" alt="ADS">');
+    builder.addLocalMap('</map>');
+
     return builder.getPuzzleData();
 }
 
@@ -1922,6 +2058,23 @@ function AAS()
     builder.normalize();
 
     builder.addEasier('ADB');
+
+    builder.addHarder('ADT');
+    builder.addHarder('ADZ');
+    builder.addHarder('AEN');
+    builder.addHarder('AEO');
+    builder.addHarder('AEY');
+
+    builder.addLocalMap('<image src="images/map_AAS.png" usemap="#localmap">');
+    builder.addLocalMap('<map name="localmap">');
+    builder.addLocalMap('<area shape="rect" coords="200.0,128.571428571,300.0,228.571428571" href="index.html?puzzle=AAS" alt="AAS">');
+    builder.addLocalMap('<area shape="rect" coords="200.0,-14.2857142857,300.0,85.7142857143" href="index.html?puzzle=ADB" alt="ADB">');
+    builder.addLocalMap('<area shape="rect" coords="-14.2857142857,271.428571429,85.7142857143,371.428571429" href="index.html?puzzle=ADT" alt="ADT">');
+    builder.addLocalMap('<area shape="rect" coords="200.0,271.428571429,300.0,371.428571429" href="index.html?puzzle=ADZ" alt="ADZ">');
+    builder.addLocalMap('<area shape="rect" coords="414.285714286,271.428571429,514.285714286,371.428571429" href="index.html?puzzle=AEN" alt="AEN">');
+    builder.addLocalMap('<area shape="rect" coords="307.142857143,271.428571429,407.142857143,371.428571429" href="index.html?puzzle=AEO" alt="AEO">');
+    builder.addLocalMap('<area shape="rect" coords="92.8571428571,271.428571429,192.857142857,371.428571429" href="index.html?puzzle=AEY" alt="AEY">');
+    builder.addLocalMap('</map>');
 
     return builder.getPuzzleData();
 }
@@ -1948,6 +2101,17 @@ function AAT()
     builder.normalize();
 
     builder.addEasier('ABA');
+
+    builder.addHarder('AAG');
+    builder.addHarder('AAU');
+
+    builder.addLocalMap('<image src="images/map_AAT.png" usemap="#localmap">');
+    builder.addLocalMap('<map name="localmap">');
+    builder.addLocalMap('<area shape="rect" coords="150.0,400.0,250.0,500.0" href="index.html?puzzle=AAG" alt="AAG">');
+    builder.addLocalMap('<area shape="rect" coords="75.0,200.0,175.0,300.0" href="index.html?puzzle=AAT" alt="AAT">');
+    builder.addLocalMap('<area shape="rect" coords="0.0,400.0,100.0,500.0" href="index.html?puzzle=AAU" alt="AAU">');
+    builder.addLocalMap('<area shape="rect" coords="75.0,0.0,175.0,100.0" href="index.html?puzzle=ABA" alt="ABA">');
+    builder.addLocalMap('</map>');
 
     return builder.getPuzzleData();
 }
@@ -2028,6 +2192,15 @@ function ABR()
     builder.addEasier('ABE');
     builder.addEasier('AIF');
 
+    builder.addLocalMap('<image src="images/map_ABR.png" usemap="#localmap">');
+    builder.addLocalMap('<map name="localmap">');
+    builder.addLocalMap('<area shape="rect" coords="-4.54545454545,-4.54545454545,95.4545454545,95.4545454545" href="index.html?puzzle=AAQ" alt="AAQ">');
+    builder.addLocalMap('<area shape="rect" coords="404.545454545,-4.54545454545,504.545454545,95.4545454545" href="index.html?puzzle=AAX" alt="AAX">');
+    builder.addLocalMap('<area shape="rect" coords="131.818181818,-4.54545454545,231.818181818,95.4545454545" href="index.html?puzzle=ABE" alt="ABE">');
+    builder.addLocalMap('<area shape="rect" coords="200.0,177.272727273,300.0,277.272727273" href="index.html?puzzle=ABR" alt="ABR">');
+    builder.addLocalMap('<area shape="rect" coords="268.181818182,-4.54545454545,368.181818182,95.4545454545" href="index.html?puzzle=AIF" alt="AIF">');
+    builder.addLocalMap('</map>');
+
     return builder.getPuzzleData();
 }
 
@@ -2058,6 +2231,23 @@ function ADN()
     builder.addEasier('AAR');
     builder.addEasier('ABA');
     builder.addEasier('AEF');
+
+    builder.addHarder('ABK');
+    builder.addHarder('ADO');
+    builder.addHarder('ADW');
+    builder.addHarder('AEK');
+
+    builder.addLocalMap('<image src="images/map_ADN.png" usemap="#localmap">');
+    builder.addLocalMap('<map name="localmap">');
+    builder.addLocalMap('<area shape="rect" coords="200.0,-4.54545454545,300.0,95.4545454545" href="index.html?puzzle=AAR" alt="AAR">');
+    builder.addLocalMap('<area shape="rect" coords="63.6363636364,-4.54545454545,163.636363636,95.4545454545" href="index.html?puzzle=ABA" alt="ABA">');
+    builder.addLocalMap('<area shape="rect" coords="268.181818182,359.090909091,368.181818182,459.090909091" href="index.html?puzzle=ABK" alt="ABK">');
+    builder.addLocalMap('<area shape="rect" coords="200.0,177.272727273,300.0,277.272727273" href="index.html?puzzle=ADN" alt="ADN">');
+    builder.addLocalMap('<area shape="rect" coords="-4.54545454545,359.090909091,95.4545454545,459.090909091" href="index.html?puzzle=ADO" alt="ADO">');
+    builder.addLocalMap('<area shape="rect" coords="404.545454545,359.090909091,504.545454545,459.090909091" href="index.html?puzzle=ADW" alt="ADW">');
+    builder.addLocalMap('<area shape="rect" coords="336.363636364,-4.54545454545,436.363636364,95.4545454545" href="index.html?puzzle=AEF" alt="AEF">');
+    builder.addLocalMap('<area shape="rect" coords="131.818181818,359.090909091,231.818181818,459.090909091" href="index.html?puzzle=AEK" alt="AEK">');
+    builder.addLocalMap('</map>');
 
     return builder.getPuzzleData();
 }
@@ -2090,6 +2280,12 @@ function AGN()
     builder.normalize();
 
     builder.addEasier('AGH');
+
+    builder.addLocalMap('<image src="images/map_AGN.png" usemap="#localmap">');
+    builder.addLocalMap('<map name="localmap">');
+    builder.addLocalMap('<area shape="rect" coords="33.3333333333,33.3333333333,133.333333333,133.333333333" href="index.html?puzzle=AGH" alt="AGH">');
+    builder.addLocalMap('<area shape="rect" coords="33.3333333333,366.666666667,133.333333333,466.666666667" href="index.html?puzzle=AGN" alt="AGN">');
+    builder.addLocalMap('</map>');
 
     return builder.getPuzzleData();
 }
@@ -2124,6 +2320,12 @@ function AGA()
 
     builder.addEasier('AFZ');
 
+    builder.addLocalMap('<image src="images/map_AGA.png" usemap="#localmap">');
+    builder.addLocalMap('<map name="localmap">');
+    builder.addLocalMap('<area shape="rect" coords="33.3333333333,33.3333333333,133.333333333,133.333333333" href="index.html?puzzle=AFZ" alt="AFZ">');
+    builder.addLocalMap('<area shape="rect" coords="33.3333333333,366.666666667,133.333333333,466.666666667" href="index.html?puzzle=AGA" alt="AGA">');
+    builder.addLocalMap('</map>');
+
     return builder.getPuzzleData();
 }
 
@@ -2146,6 +2348,15 @@ function AAU()
     builder.normalize();
 
     builder.addEasier('AAT');
+
+    builder.addHarder('AAY');
+
+    builder.addLocalMap('<image src="images/map_AAU.png" usemap="#localmap">');
+    builder.addLocalMap('<map name="localmap">');
+    builder.addLocalMap('<area shape="rect" coords="7.1054273576e-15,0.0,100.0,100.0" href="index.html?puzzle=AAT" alt="AAT">');
+    builder.addLocalMap('<area shape="rect" coords="7.1054273576e-15,200.0,100.0,300.0" href="index.html?puzzle=AAU" alt="AAU">');
+    builder.addLocalMap('<area shape="rect" coords="7.1054273576e-15,400.0,100.0,500.0" href="index.html?puzzle=AAY" alt="AAY">');
+    builder.addLocalMap('</map>');
 
     return builder.getPuzzleData();
 }
@@ -2175,6 +2386,15 @@ function AAW()
     builder.normalize();
 
     builder.addEasier('AEA');
+
+    builder.addHarder('AAL');
+
+    builder.addLocalMap('<image src="images/map_AAW.png" usemap="#localmap">');
+    builder.addLocalMap('<map name="localmap">');
+    builder.addLocalMap('<area shape="rect" coords="7.1054273576e-15,400.0,100.0,500.0" href="index.html?puzzle=AAL" alt="AAL">');
+    builder.addLocalMap('<area shape="rect" coords="7.1054273576e-15,200.0,100.0,300.0" href="index.html?puzzle=AAW" alt="AAW">');
+    builder.addLocalMap('<area shape="rect" coords="7.1054273576e-15,0.0,100.0,100.0" href="index.html?puzzle=AEA" alt="AEA">');
+    builder.addLocalMap('</map>');
 
     return builder.getPuzzleData();
 }
@@ -2222,6 +2442,17 @@ function ABN()
 
     builder.addEasier('ACN');
 
+    builder.addHarder('ABO');
+    builder.addHarder('ABS');
+
+    builder.addLocalMap('<image src="images/map_ABN.png" usemap="#localmap">');
+    builder.addLocalMap('<map name="localmap">');
+    builder.addLocalMap('<area shape="rect" coords="75.0,200.0,175.0,300.0" href="index.html?puzzle=ABN" alt="ABN">');
+    builder.addLocalMap('<area shape="rect" coords="150.0,400.0,250.0,500.0" href="index.html?puzzle=ABO" alt="ABO">');
+    builder.addLocalMap('<area shape="rect" coords="0.0,400.0,100.0,500.0" href="index.html?puzzle=ABS" alt="ABS">');
+    builder.addLocalMap('<area shape="rect" coords="75.0,0.0,175.0,100.0" href="index.html?puzzle=ACN" alt="ACN">');
+    builder.addLocalMap('</map>');
+
     return builder.getPuzzleData();
 }
 
@@ -2260,6 +2491,18 @@ function AHL()
     builder.addEasier('AHI');
     builder.addEasier('AHM');
 
+    builder.addHarder('AHK');
+    builder.addHarder('AHO');
+
+    builder.addLocalMap('<image src="images/map_AHL.png" usemap="#localmap">');
+    builder.addLocalMap('<map name="localmap">');
+    builder.addLocalMap('<area shape="rect" coords="0.0,0.0,100.0,100.0" href="index.html?puzzle=AHI" alt="AHI">');
+    builder.addLocalMap('<area shape="rect" coords="0.0,400.0,100.0,500.0" href="index.html?puzzle=AHK" alt="AHK">');
+    builder.addLocalMap('<area shape="rect" coords="75.0,200.0,175.0,300.0" href="index.html?puzzle=AHL" alt="AHL">');
+    builder.addLocalMap('<area shape="rect" coords="150.0,0.0,250.0,100.0" href="index.html?puzzle=AHM" alt="AHM">');
+    builder.addLocalMap('<area shape="rect" coords="150.0,400.0,250.0,500.0" href="index.html?puzzle=AHO" alt="AHO">');
+    builder.addLocalMap('</map>');
+
     return builder.getPuzzleData();
 }
 
@@ -2283,6 +2526,17 @@ function ABA()
     builder.normalize();
 
     builder.addEasier('ADA');
+
+    builder.addHarder('AAT');
+    builder.addHarder('ADN');
+
+    builder.addLocalMap('<image src="images/map_ABA.png" usemap="#localmap">');
+    builder.addLocalMap('<map name="localmap">');
+    builder.addLocalMap('<area shape="rect" coords="150.0,400.0,250.0,500.0" href="index.html?puzzle=AAT" alt="AAT">');
+    builder.addLocalMap('<area shape="rect" coords="75.0,200.0,175.0,300.0" href="index.html?puzzle=ABA" alt="ABA">');
+    builder.addLocalMap('<area shape="rect" coords="75.0,0.0,175.0,100.0" href="index.html?puzzle=ADA" alt="ADA">');
+    builder.addLocalMap('<area shape="rect" coords="0.0,400.0,100.0,500.0" href="index.html?puzzle=ADN" alt="ADN">');
+    builder.addLocalMap('</map>');
 
     return builder.getPuzzleData();
 }
@@ -2313,6 +2567,12 @@ function ABI()
 
     builder.addEasier('ABH');
 
+    builder.addLocalMap('<image src="images/map_ABI.png" usemap="#localmap">');
+    builder.addLocalMap('<map name="localmap">');
+    builder.addLocalMap('<area shape="rect" coords="33.3333333333,33.3333333333,133.333333333,133.333333333" href="index.html?puzzle=ABH" alt="ABH">');
+    builder.addLocalMap('<area shape="rect" coords="33.3333333333,366.666666667,133.333333333,466.666666667" href="index.html?puzzle=ABI" alt="ABI">');
+    builder.addLocalMap('</map>');
+
     return builder.getPuzzleData();
 }
 
@@ -2341,6 +2601,20 @@ function AEY()
     builder.addEasier('AAD');
     builder.addEasier('AAS');
 
+    builder.addHarder('AEZ');
+    builder.addHarder('AFH');
+    builder.addHarder('AFM');
+
+    builder.addLocalMap('<image src="images/map_AEY.png" usemap="#localmap">');
+    builder.addLocalMap('<map name="localmap">');
+    builder.addLocalMap('<area shape="rect" coords="75.0,0.0,175.0,100.0" href="index.html?puzzle=AAD" alt="AAD">');
+    builder.addLocalMap('<area shape="rect" coords="225.0,0.0,325.0,100.0" href="index.html?puzzle=AAS" alt="AAS">');
+    builder.addLocalMap('<area shape="rect" coords="150.0,200.0,250.0,300.0" href="index.html?puzzle=AEY" alt="AEY">');
+    builder.addLocalMap('<area shape="rect" coords="300.0,400.0,400.0,500.0" href="index.html?puzzle=AEZ" alt="AEZ">');
+    builder.addLocalMap('<area shape="rect" coords="7.1054273576e-15,400.0,100.0,500.0" href="index.html?puzzle=AFH" alt="AFH">');
+    builder.addLocalMap('<area shape="rect" coords="150.0,400.0,250.0,500.0" href="index.html?puzzle=AFM" alt="AFM">');
+    builder.addLocalMap('</map>');
+
     return builder.getPuzzleData();
 }
 
@@ -2368,6 +2642,15 @@ function ADG()
     builder.normalize();
 
     builder.addEasier('ADE');
+
+    builder.addHarder('ADK');
+
+    builder.addLocalMap('<image src="images/map_ADG.png" usemap="#localmap">');
+    builder.addLocalMap('<map name="localmap">');
+    builder.addLocalMap('<area shape="rect" coords="7.1054273576e-15,0.0,100.0,100.0" href="index.html?puzzle=ADE" alt="ADE">');
+    builder.addLocalMap('<area shape="rect" coords="7.1054273576e-15,200.0,100.0,300.0" href="index.html?puzzle=ADG" alt="ADG">');
+    builder.addLocalMap('<area shape="rect" coords="7.1054273576e-15,400.0,100.0,500.0" href="index.html?puzzle=ADK" alt="ADK">');
+    builder.addLocalMap('</map>');
 
     return builder.getPuzzleData();
 }
@@ -2401,6 +2684,15 @@ function AHB()
 
     builder.addEasier('AHA');
 
+    builder.addHarder('AHC');
+
+    builder.addLocalMap('<image src="images/map_AHB.png" usemap="#localmap">');
+    builder.addLocalMap('<map name="localmap">');
+    builder.addLocalMap('<area shape="rect" coords="7.1054273576e-15,0.0,100.0,100.0" href="index.html?puzzle=AHA" alt="AHA">');
+    builder.addLocalMap('<area shape="rect" coords="7.1054273576e-15,200.0,100.0,300.0" href="index.html?puzzle=AHB" alt="AHB">');
+    builder.addLocalMap('<area shape="rect" coords="7.1054273576e-15,400.0,100.0,500.0" href="index.html?puzzle=AHC" alt="AHC">');
+    builder.addLocalMap('</map>');
+
     return builder.getPuzzleData();
 }
 
@@ -2426,6 +2718,17 @@ function AEZ()
     builder.normalize();
 
     builder.addEasier('AEY');
+
+    builder.addHarder('AFA');
+    builder.addHarder('AFC');
+
+    builder.addLocalMap('<image src="images/map_AEZ.png" usemap="#localmap">');
+    builder.addLocalMap('<map name="localmap">');
+    builder.addLocalMap('<area shape="rect" coords="75.0,0.0,175.0,100.0" href="index.html?puzzle=AEY" alt="AEY">');
+    builder.addLocalMap('<area shape="rect" coords="75.0,200.0,175.0,300.0" href="index.html?puzzle=AEZ" alt="AEZ">');
+    builder.addLocalMap('<area shape="rect" coords="0.0,400.0,100.0,500.0" href="index.html?puzzle=AFA" alt="AFA">');
+    builder.addLocalMap('<area shape="rect" coords="150.0,400.0,250.0,500.0" href="index.html?puzzle=AFC" alt="AFC">');
+    builder.addLocalMap('</map>');
 
     return builder.getPuzzleData();
 }
@@ -2455,6 +2758,17 @@ function AED()
     builder.normalize();
 
     builder.addEasier('ADI');
+
+    builder.addHarder('ACZ');
+    builder.addHarder('ADL');
+
+    builder.addLocalMap('<image src="images/map_AED.png" usemap="#localmap">');
+    builder.addLocalMap('<map name="localmap">');
+    builder.addLocalMap('<area shape="rect" coords="0.0,400.0,100.0,500.0" href="index.html?puzzle=ACZ" alt="ACZ">');
+    builder.addLocalMap('<area shape="rect" coords="75.0,0.0,175.0,100.0" href="index.html?puzzle=ADI" alt="ADI">');
+    builder.addLocalMap('<area shape="rect" coords="150.0,400.0,250.0,500.0" href="index.html?puzzle=ADL" alt="ADL">');
+    builder.addLocalMap('<area shape="rect" coords="75.0,200.0,175.0,300.0" href="index.html?puzzle=AED" alt="AED">');
+    builder.addLocalMap('</map>');
 
     return builder.getPuzzleData();
 }
@@ -2488,6 +2802,15 @@ function AGI()
 
     builder.addEasier('AGG');
 
+    builder.addHarder('AGK');
+
+    builder.addLocalMap('<image src="images/map_AGI.png" usemap="#localmap">');
+    builder.addLocalMap('<map name="localmap">');
+    builder.addLocalMap('<area shape="rect" coords="7.1054273576e-15,0.0,100.0,100.0" href="index.html?puzzle=AGG" alt="AGG">');
+    builder.addLocalMap('<area shape="rect" coords="7.1054273576e-15,200.0,100.0,300.0" href="index.html?puzzle=AGI" alt="AGI">');
+    builder.addLocalMap('<area shape="rect" coords="7.1054273576e-15,400.0,100.0,500.0" href="index.html?puzzle=AGK" alt="AGK">');
+    builder.addLocalMap('</map>');
+
     return builder.getPuzzleData();
 }
 
@@ -2515,6 +2838,15 @@ function AFR()
     builder.normalize();
 
     builder.addEasier('AFP');
+
+    builder.addHarder('AAL');
+
+    builder.addLocalMap('<image src="images/map_AFR.png" usemap="#localmap">');
+    builder.addLocalMap('<map name="localmap">');
+    builder.addLocalMap('<area shape="rect" coords="7.1054273576e-15,400.0,100.0,500.0" href="index.html?puzzle=AAL" alt="AAL">');
+    builder.addLocalMap('<area shape="rect" coords="7.1054273576e-15,0.0,100.0,100.0" href="index.html?puzzle=AFP" alt="AFP">');
+    builder.addLocalMap('<area shape="rect" coords="7.1054273576e-15,200.0,100.0,300.0" href="index.html?puzzle=AFR" alt="AFR">');
+    builder.addLocalMap('</map>');
 
     return builder.getPuzzleData();
 }
@@ -2581,6 +2913,12 @@ function ABY()
 
     builder.addEasier('ABX');
 
+    builder.addLocalMap('<image src="images/map_ABY.png" usemap="#localmap">');
+    builder.addLocalMap('<map name="localmap">');
+    builder.addLocalMap('<area shape="rect" coords="33.3333333333,33.3333333333,133.333333333,133.333333333" href="index.html?puzzle=ABX" alt="ABX">');
+    builder.addLocalMap('<area shape="rect" coords="33.3333333333,366.666666667,133.333333333,466.666666667" href="index.html?puzzle=ABY" alt="ABY">');
+    builder.addLocalMap('</map>');
+
     return builder.getPuzzleData();
 }
 
@@ -2615,6 +2953,12 @@ function ABF()
 
     builder.addEasier('AHD');
 
+    builder.addLocalMap('<image src="images/map_ABF.png" usemap="#localmap">');
+    builder.addLocalMap('<map name="localmap">');
+    builder.addLocalMap('<area shape="rect" coords="33.3333333333,366.666666667,133.333333333,466.666666667" href="index.html?puzzle=ABF" alt="ABF">');
+    builder.addLocalMap('<area shape="rect" coords="33.3333333333,33.3333333333,133.333333333,133.333333333" href="index.html?puzzle=AHD" alt="AHD">');
+    builder.addLocalMap('</map>');
+
     return builder.getPuzzleData();
 }
 
@@ -2641,6 +2985,17 @@ function AEV()
 
     builder.addEasier('AFD');
 
+    builder.addHarder('AET');
+    builder.addHarder('AEU');
+
+    builder.addLocalMap('<image src="images/map_AEV.png" usemap="#localmap">');
+    builder.addLocalMap('<map name="localmap">');
+    builder.addLocalMap('<area shape="rect" coords="150.0,400.0,250.0,500.0" href="index.html?puzzle=AET" alt="AET">');
+    builder.addLocalMap('<area shape="rect" coords="0.0,400.0,100.0,500.0" href="index.html?puzzle=AEU" alt="AEU">');
+    builder.addLocalMap('<area shape="rect" coords="75.0,200.0,175.0,300.0" href="index.html?puzzle=AEV" alt="AEV">');
+    builder.addLocalMap('<area shape="rect" coords="75.0,0.0,175.0,100.0" href="index.html?puzzle=AFD" alt="AFD">');
+    builder.addLocalMap('</map>');
+
     return builder.getPuzzleData();
 }
 
@@ -2666,6 +3021,13 @@ function AFL()
 
     builder.addEasier('AER');
     builder.addEasier('AFJ');
+
+    builder.addLocalMap('<image src="images/map_AFL.png" usemap="#localmap">');
+    builder.addLocalMap('<map name="localmap">');
+    builder.addLocalMap('<area shape="rect" coords="33.3333333333,33.3333333333,133.333333333,133.333333333" href="index.html?puzzle=AER" alt="AER">');
+    builder.addLocalMap('<area shape="rect" coords="283.333333333,33.3333333333,383.333333333,133.333333333" href="index.html?puzzle=AFJ" alt="AFJ">');
+    builder.addLocalMap('<area shape="rect" coords="158.333333333,366.666666667,258.333333333,466.666666667" href="index.html?puzzle=AFL" alt="AFL">');
+    builder.addLocalMap('</map>');
 
     return builder.getPuzzleData();
 }
@@ -2704,6 +3066,16 @@ function AHK()
     builder.addEasier('AFT');
     builder.addEasier('AHL');
 
+    builder.addHarder('AHN');
+
+    builder.addLocalMap('<image src="images/map_AHK.png" usemap="#localmap">');
+    builder.addLocalMap('<map name="localmap">');
+    builder.addLocalMap('<area shape="rect" coords="0.0,0.0,100.0,100.0" href="index.html?puzzle=AFT" alt="AFT">');
+    builder.addLocalMap('<area shape="rect" coords="75.0,200.0,175.0,300.0" href="index.html?puzzle=AHK" alt="AHK">');
+    builder.addLocalMap('<area shape="rect" coords="150.0,0.0,250.0,100.0" href="index.html?puzzle=AHL" alt="AHL">');
+    builder.addLocalMap('<area shape="rect" coords="75.0,400.0,175.0,500.0" href="index.html?puzzle=AHN" alt="AHN">');
+    builder.addLocalMap('</map>');
+
     return builder.getPuzzleData();
 }
 
@@ -2733,6 +3105,15 @@ function AID()
 
     builder.addEasier('ACQ');
 
+    builder.addHarder('AIB');
+
+    builder.addLocalMap('<image src="images/map_AID.png" usemap="#localmap">');
+    builder.addLocalMap('<map name="localmap">');
+    builder.addLocalMap('<area shape="rect" coords="7.1054273576e-15,0.0,100.0,100.0" href="index.html?puzzle=ACQ" alt="ACQ">');
+    builder.addLocalMap('<area shape="rect" coords="7.1054273576e-15,400.0,100.0,500.0" href="index.html?puzzle=AIB" alt="AIB">');
+    builder.addLocalMap('<area shape="rect" coords="7.1054273576e-15,200.0,100.0,300.0" href="index.html?puzzle=AID" alt="AID">');
+    builder.addLocalMap('</map>');
+
     return builder.getPuzzleData();
 }
 
@@ -2759,6 +3140,13 @@ function AET()
     builder.addEasier('AEV');
     builder.addEasier('AEX');
 
+    builder.addLocalMap('<image src="images/map_AET.png" usemap="#localmap">');
+    builder.addLocalMap('<map name="localmap">');
+    builder.addLocalMap('<area shape="rect" coords="158.333333333,366.666666667,258.333333333,466.666666667" href="index.html?puzzle=AET" alt="AET">');
+    builder.addLocalMap('<area shape="rect" coords="283.333333333,33.3333333333,383.333333333,133.333333333" href="index.html?puzzle=AEV" alt="AEV">');
+    builder.addLocalMap('<area shape="rect" coords="33.3333333333,33.3333333333,133.333333333,133.333333333" href="index.html?puzzle=AEX" alt="AEX">');
+    builder.addLocalMap('</map>');
+
     return builder.getPuzzleData();
 }
 
@@ -2784,6 +3172,24 @@ function AAD()
 
     builder.addEasier('AAC');
     builder.addEasier('ADB');
+
+    builder.addHarder('AAP');
+    builder.addHarder('ACR');
+    builder.addHarder('AEY');
+    builder.addHarder('AFD');
+    builder.addHarder('AFN');
+
+    builder.addLocalMap('<image src="images/map_AAD.png" usemap="#localmap">');
+    builder.addLocalMap('<map name="localmap">');
+    builder.addLocalMap('<area shape="rect" coords="253.571428571,-14.2857142857,353.571428571,85.7142857143" href="index.html?puzzle=AAC" alt="AAC">');
+    builder.addLocalMap('<area shape="rect" coords="200.0,128.571428571,300.0,228.571428571" href="index.html?puzzle=AAD" alt="AAD">');
+    builder.addLocalMap('<area shape="rect" coords="92.8571428571,271.428571429,192.857142857,371.428571429" href="index.html?puzzle=AAP" alt="AAP">');
+    builder.addLocalMap('<area shape="rect" coords="200.0,271.428571429,300.0,371.428571429" href="index.html?puzzle=ACR" alt="ACR">');
+    builder.addLocalMap('<area shape="rect" coords="146.428571429,-14.2857142857,246.428571429,85.7142857143" href="index.html?puzzle=ADB" alt="ADB">');
+    builder.addLocalMap('<area shape="rect" coords="307.142857143,271.428571429,407.142857143,371.428571429" href="index.html?puzzle=AEY" alt="AEY">');
+    builder.addLocalMap('<area shape="rect" coords="414.285714286,271.428571429,514.285714286,371.428571429" href="index.html?puzzle=AFD" alt="AFD">');
+    builder.addLocalMap('<area shape="rect" coords="-14.2857142857,271.428571429,85.7142857143,371.428571429" href="index.html?puzzle=AFN" alt="AFN">');
+    builder.addLocalMap('</map>');
 
     return builder.getPuzzleData();
 }
@@ -2826,6 +3232,15 @@ function ABG()
 
     builder.addEasier('ABC');
 
+    builder.addHarder('ABJ');
+
+    builder.addLocalMap('<image src="images/map_ABG.png" usemap="#localmap">');
+    builder.addLocalMap('<map name="localmap">');
+    builder.addLocalMap('<area shape="rect" coords="7.1054273576e-15,0.0,100.0,100.0" href="index.html?puzzle=ABC" alt="ABC">');
+    builder.addLocalMap('<area shape="rect" coords="7.1054273576e-15,200.0,100.0,300.0" href="index.html?puzzle=ABG" alt="ABG">');
+    builder.addLocalMap('<area shape="rect" coords="7.1054273576e-15,400.0,100.0,500.0" href="index.html?puzzle=ABJ" alt="ABJ">');
+    builder.addLocalMap('</map>');
+
     return builder.getPuzzleData();
 }
 
@@ -2850,6 +3265,24 @@ function ACR()
 
     builder.addEasier('AAD');
     builder.addEasier('ACP');
+
+    builder.addHarder('AAP');
+    builder.addHarder('ACY');
+    builder.addHarder('ADC');
+    builder.addHarder('ADT');
+    builder.addHarder('AFO');
+
+    builder.addLocalMap('<image src="images/map_ACR.png" usemap="#localmap">');
+    builder.addLocalMap('<map name="localmap">');
+    builder.addLocalMap('<area shape="rect" coords="253.571428571,-14.2857142857,353.571428571,85.7142857143" href="index.html?puzzle=AAD" alt="AAD">');
+    builder.addLocalMap('<area shape="rect" coords="92.8571428571,271.428571429,192.857142857,371.428571429" href="index.html?puzzle=AAP" alt="AAP">');
+    builder.addLocalMap('<area shape="rect" coords="146.428571429,-14.2857142857,246.428571429,85.7142857143" href="index.html?puzzle=ACP" alt="ACP">');
+    builder.addLocalMap('<area shape="rect" coords="200.0,128.571428571,300.0,228.571428571" href="index.html?puzzle=ACR" alt="ACR">');
+    builder.addLocalMap('<area shape="rect" coords="307.142857143,271.428571429,407.142857143,371.428571429" href="index.html?puzzle=ACY" alt="ACY">');
+    builder.addLocalMap('<area shape="rect" coords="414.285714286,271.428571429,514.285714286,371.428571429" href="index.html?puzzle=ADC" alt="ADC">');
+    builder.addLocalMap('<area shape="rect" coords="-14.2857142857,271.428571429,85.7142857143,371.428571429" href="index.html?puzzle=ADT" alt="ADT">');
+    builder.addLocalMap('<area shape="rect" coords="200.0,271.428571429,300.0,371.428571429" href="index.html?puzzle=AFO" alt="AFO">');
+    builder.addLocalMap('</map>');
 
     return builder.getPuzzleData();
 }
@@ -2878,6 +3311,17 @@ function AEC()
     builder.addEasier('AEQ');
     builder.addEasier('AER');
 
+    builder.addHarder('AEA');
+
+    builder.addLocalMap('<image src="images/map_AEC.png" usemap="#localmap">');
+    builder.addLocalMap('<map name="localmap">');
+    builder.addLocalMap('<area shape="rect" coords="300.0,0.0,400.0,100.0" href="index.html?puzzle=ADY" alt="ADY">');
+    builder.addLocalMap('<area shape="rect" coords="150.0,400.0,250.0,500.0" href="index.html?puzzle=AEA" alt="AEA">');
+    builder.addLocalMap('<area shape="rect" coords="150.0,200.0,250.0,300.0" href="index.html?puzzle=AEC" alt="AEC">');
+    builder.addLocalMap('<area shape="rect" coords="7.1054273576e-15,0.0,100.0,100.0" href="index.html?puzzle=AEQ" alt="AEQ">');
+    builder.addLocalMap('<area shape="rect" coords="150.0,0.0,250.0,100.0" href="index.html?puzzle=AER" alt="AER">');
+    builder.addLocalMap('</map>');
+
     return builder.getPuzzleData();
 }
 
@@ -2903,6 +3347,15 @@ function AEX()
     builder.normalize();
 
     builder.addEasier('AFD');
+
+    builder.addHarder('AET');
+
+    builder.addLocalMap('<image src="images/map_AEX.png" usemap="#localmap">');
+    builder.addLocalMap('<map name="localmap">');
+    builder.addLocalMap('<area shape="rect" coords="7.1054273576e-15,400.0,100.0,500.0" href="index.html?puzzle=AET" alt="AET">');
+    builder.addLocalMap('<area shape="rect" coords="7.1054273576e-15,200.0,100.0,300.0" href="index.html?puzzle=AEX" alt="AEX">');
+    builder.addLocalMap('<area shape="rect" coords="7.1054273576e-15,0.0,100.0,100.0" href="index.html?puzzle=AFD" alt="AFD">');
+    builder.addLocalMap('</map>');
 
     return builder.getPuzzleData();
 }
@@ -2940,6 +3393,15 @@ function AFI()
     builder.normalize();
 
     builder.addEasier('ADT');
+
+    builder.addHarder('ACS');
+
+    builder.addLocalMap('<image src="images/map_AFI.png" usemap="#localmap">');
+    builder.addLocalMap('<map name="localmap">');
+    builder.addLocalMap('<area shape="rect" coords="7.1054273576e-15,400.0,100.0,500.0" href="index.html?puzzle=ACS" alt="ACS">');
+    builder.addLocalMap('<area shape="rect" coords="7.1054273576e-15,0.0,100.0,100.0" href="index.html?puzzle=ADT" alt="ADT">');
+    builder.addLocalMap('<area shape="rect" coords="7.1054273576e-15,200.0,100.0,300.0" href="index.html?puzzle=AFI" alt="AFI">');
+    builder.addLocalMap('</map>');
 
     return builder.getPuzzleData();
 }
@@ -2997,6 +3459,17 @@ function ACC()
 
     builder.addEasier('AAO');
 
+    builder.addHarder('ACB');
+    builder.addHarder('ACD');
+
+    builder.addLocalMap('<image src="images/map_ACC.png" usemap="#localmap">');
+    builder.addLocalMap('<map name="localmap">');
+    builder.addLocalMap('<area shape="rect" coords="75.0,0.0,175.0,100.0" href="index.html?puzzle=AAO" alt="AAO">');
+    builder.addLocalMap('<area shape="rect" coords="0.0,400.0,100.0,500.0" href="index.html?puzzle=ACB" alt="ACB">');
+    builder.addLocalMap('<area shape="rect" coords="75.0,200.0,175.0,300.0" href="index.html?puzzle=ACC" alt="ACC">');
+    builder.addLocalMap('<area shape="rect" coords="150.0,400.0,250.0,500.0" href="index.html?puzzle=ACD" alt="ACD">');
+    builder.addLocalMap('</map>');
+
     return builder.getPuzzleData();
 }
 
@@ -3043,6 +3516,15 @@ function AIF()
 
     builder.addEasier('AIG');
 
+    builder.addHarder('ABR');
+
+    builder.addLocalMap('<image src="images/map_AIF.png" usemap="#localmap">');
+    builder.addLocalMap('<map name="localmap">');
+    builder.addLocalMap('<area shape="rect" coords="7.1054273576e-15,400.0,100.0,500.0" href="index.html?puzzle=ABR" alt="ABR">');
+    builder.addLocalMap('<area shape="rect" coords="7.1054273576e-15,200.0,100.0,300.0" href="index.html?puzzle=AIF" alt="AIF">');
+    builder.addLocalMap('<area shape="rect" coords="7.1054273576e-15,0.0,100.0,100.0" href="index.html?puzzle=AIG" alt="AIG">');
+    builder.addLocalMap('</map>');
+
     return builder.getPuzzleData();
 }
 
@@ -3073,6 +3555,15 @@ function AAI()
 
     builder.addEasier('AAH');
 
+    builder.addHarder('AAO');
+
+    builder.addLocalMap('<image src="images/map_AAI.png" usemap="#localmap">');
+    builder.addLocalMap('<map name="localmap">');
+    builder.addLocalMap('<area shape="rect" coords="7.1054273576e-15,0.0,100.0,100.0" href="index.html?puzzle=AAH" alt="AAH">');
+    builder.addLocalMap('<area shape="rect" coords="7.1054273576e-15,200.0,100.0,300.0" href="index.html?puzzle=AAI" alt="AAI">');
+    builder.addLocalMap('<area shape="rect" coords="7.1054273576e-15,400.0,100.0,500.0" href="index.html?puzzle=AAO" alt="AAO">');
+    builder.addLocalMap('</map>');
+
     return builder.getPuzzleData();
 }
 
@@ -3095,6 +3586,15 @@ function AEF()
     builder.normalize();
 
     builder.addEasier('ADA');
+
+    builder.addHarder('ADN');
+
+    builder.addLocalMap('<image src="images/map_AEF.png" usemap="#localmap">');
+    builder.addLocalMap('<map name="localmap">');
+    builder.addLocalMap('<area shape="rect" coords="7.1054273576e-15,0.0,100.0,100.0" href="index.html?puzzle=ADA" alt="ADA">');
+    builder.addLocalMap('<area shape="rect" coords="7.1054273576e-15,400.0,100.0,500.0" href="index.html?puzzle=ADN" alt="ADN">');
+    builder.addLocalMap('<area shape="rect" coords="7.1054273576e-15,200.0,100.0,300.0" href="index.html?puzzle=AEF" alt="AEF">');
+    builder.addLocalMap('</map>');
 
     return builder.getPuzzleData();
 }
@@ -3146,6 +3646,16 @@ function AHN()
     builder.addEasier('AHK');
     builder.addEasier('AHO');
 
+    builder.addHarder('AHQ');
+
+    builder.addLocalMap('<image src="images/map_AHN.png" usemap="#localmap">');
+    builder.addLocalMap('<map name="localmap">');
+    builder.addLocalMap('<area shape="rect" coords="0.0,0.0,100.0,100.0" href="index.html?puzzle=AHK" alt="AHK">');
+    builder.addLocalMap('<area shape="rect" coords="75.0,200.0,175.0,300.0" href="index.html?puzzle=AHN" alt="AHN">');
+    builder.addLocalMap('<area shape="rect" coords="150.0,0.0,250.0,100.0" href="index.html?puzzle=AHO" alt="AHO">');
+    builder.addLocalMap('<area shape="rect" coords="75.0,400.0,175.0,500.0" href="index.html?puzzle=AHQ" alt="AHQ">');
+    builder.addLocalMap('</map>');
+
     return builder.getPuzzleData();
 }
 
@@ -3186,6 +3696,13 @@ function AFQ()
 
     builder.addEasier('ADX');
     builder.addEasier('AEL');
+
+    builder.addLocalMap('<image src="images/map_AFQ.png" usemap="#localmap">');
+    builder.addLocalMap('<map name="localmap">');
+    builder.addLocalMap('<area shape="rect" coords="33.3333333333,33.3333333333,133.333333333,133.333333333" href="index.html?puzzle=ADX" alt="ADX">');
+    builder.addLocalMap('<area shape="rect" coords="283.333333333,33.3333333333,383.333333333,133.333333333" href="index.html?puzzle=AEL" alt="AEL">');
+    builder.addLocalMap('<area shape="rect" coords="158.333333333,366.666666667,258.333333333,466.666666667" href="index.html?puzzle=AFQ" alt="AFQ">');
+    builder.addLocalMap('</map>');
 
     return builder.getPuzzleData();
 }
@@ -3234,6 +3751,15 @@ function ACE()
 
     builder.addEasier('ABU');
 
+    builder.addHarder('ACF');
+
+    builder.addLocalMap('<image src="images/map_ACE.png" usemap="#localmap">');
+    builder.addLocalMap('<map name="localmap">');
+    builder.addLocalMap('<area shape="rect" coords="7.1054273576e-15,0.0,100.0,100.0" href="index.html?puzzle=ABU" alt="ABU">');
+    builder.addLocalMap('<area shape="rect" coords="7.1054273576e-15,200.0,100.0,300.0" href="index.html?puzzle=ACE" alt="ACE">');
+    builder.addLocalMap('<area shape="rect" coords="7.1054273576e-15,400.0,100.0,500.0" href="index.html?puzzle=ACF" alt="ACF">');
+    builder.addLocalMap('</map>');
+
     return builder.getPuzzleData();
 }
 
@@ -3263,6 +3789,17 @@ function AHI()
     builder.normalize();
 
     builder.addEasier('AHJ');
+
+    builder.addHarder('AFT');
+    builder.addHarder('AHL');
+
+    builder.addLocalMap('<image src="images/map_AHI.png" usemap="#localmap">');
+    builder.addLocalMap('<map name="localmap">');
+    builder.addLocalMap('<area shape="rect" coords="0.0,400.0,100.0,500.0" href="index.html?puzzle=AFT" alt="AFT">');
+    builder.addLocalMap('<area shape="rect" coords="75.0,200.0,175.0,300.0" href="index.html?puzzle=AHI" alt="AHI">');
+    builder.addLocalMap('<area shape="rect" coords="75.0,0.0,175.0,100.0" href="index.html?puzzle=AHJ" alt="AHJ">');
+    builder.addLocalMap('<area shape="rect" coords="150.0,400.0,250.0,500.0" href="index.html?puzzle=AHL" alt="AHL">');
+    builder.addLocalMap('</map>');
 
     return builder.getPuzzleData();
 }
@@ -3302,6 +3839,15 @@ function ABE()
 
     builder.addEasier('AAM');
 
+    builder.addHarder('ABR');
+
+    builder.addLocalMap('<image src="images/map_ABE.png" usemap="#localmap">');
+    builder.addLocalMap('<map name="localmap">');
+    builder.addLocalMap('<area shape="rect" coords="7.1054273576e-15,0.0,100.0,100.0" href="index.html?puzzle=AAM" alt="AAM">');
+    builder.addLocalMap('<area shape="rect" coords="7.1054273576e-15,200.0,100.0,300.0" href="index.html?puzzle=ABE" alt="ABE">');
+    builder.addLocalMap('<area shape="rect" coords="7.1054273576e-15,400.0,100.0,500.0" href="index.html?puzzle=ABR" alt="ABR">');
+    builder.addLocalMap('</map>');
+
     return builder.getPuzzleData();
 }
 
@@ -3324,6 +3870,17 @@ function ACX()
     builder.normalize();
 
     builder.addEasier('ACP');
+
+    builder.addHarder('AAE');
+    builder.addHarder('ACQ');
+
+    builder.addLocalMap('<image src="images/map_ACX.png" usemap="#localmap">');
+    builder.addLocalMap('<map name="localmap">');
+    builder.addLocalMap('<area shape="rect" coords="0.0,400.0,100.0,500.0" href="index.html?puzzle=AAE" alt="AAE">');
+    builder.addLocalMap('<area shape="rect" coords="75.0,0.0,175.0,100.0" href="index.html?puzzle=ACP" alt="ACP">');
+    builder.addLocalMap('<area shape="rect" coords="150.0,400.0,250.0,500.0" href="index.html?puzzle=ACQ" alt="ACQ">');
+    builder.addLocalMap('<area shape="rect" coords="75.0,200.0,175.0,300.0" href="index.html?puzzle=ACX" alt="ACX">');
+    builder.addLocalMap('</map>');
 
     return builder.getPuzzleData();
 }
@@ -3362,6 +3919,15 @@ function ADU()
 
     builder.addEasier('AAJ');
 
+    builder.addHarder('ADV');
+
+    builder.addLocalMap('<image src="images/map_ADU.png" usemap="#localmap">');
+    builder.addLocalMap('<map name="localmap">');
+    builder.addLocalMap('<area shape="rect" coords="7.1054273576e-15,0.0,100.0,100.0" href="index.html?puzzle=AAJ" alt="AAJ">');
+    builder.addLocalMap('<area shape="rect" coords="7.1054273576e-15,200.0,100.0,300.0" href="index.html?puzzle=ADU" alt="ADU">');
+    builder.addLocalMap('<area shape="rect" coords="7.1054273576e-15,400.0,100.0,500.0" href="index.html?puzzle=ADV" alt="ADV">');
+    builder.addLocalMap('</map>');
+
     return builder.getPuzzleData();
 }
 
@@ -3387,6 +3953,15 @@ function AFM()
     builder.normalize();
 
     builder.addEasier('AEY');
+
+    builder.addHarder('AFA');
+
+    builder.addLocalMap('<image src="images/map_AFM.png" usemap="#localmap">');
+    builder.addLocalMap('<map name="localmap">');
+    builder.addLocalMap('<area shape="rect" coords="7.1054273576e-15,0.0,100.0,100.0" href="index.html?puzzle=AEY" alt="AEY">');
+    builder.addLocalMap('<area shape="rect" coords="7.1054273576e-15,400.0,100.0,500.0" href="index.html?puzzle=AFA" alt="AFA">');
+    builder.addLocalMap('<area shape="rect" coords="7.1054273576e-15,200.0,100.0,300.0" href="index.html?puzzle=AFM" alt="AFM">');
+    builder.addLocalMap('</map>');
 
     return builder.getPuzzleData();
 }
@@ -3414,6 +3989,19 @@ function ADE()
     builder.normalize();
 
     builder.addEasier('ADC');
+
+    builder.addHarder('ADG');
+    builder.addHarder('ADH');
+    builder.addHarder('ADI');
+
+    builder.addLocalMap('<image src="images/map_ADE.png" usemap="#localmap">');
+    builder.addLocalMap('<map name="localmap">');
+    builder.addLocalMap('<area shape="rect" coords="150.0,0.0,250.0,100.0" href="index.html?puzzle=ADC" alt="ADC">');
+    builder.addLocalMap('<area shape="rect" coords="150.0,200.0,250.0,300.0" href="index.html?puzzle=ADE" alt="ADE">');
+    builder.addLocalMap('<area shape="rect" coords="7.1054273576e-15,400.0,100.0,500.0" href="index.html?puzzle=ADG" alt="ADG">');
+    builder.addLocalMap('<area shape="rect" coords="150.0,400.0,250.0,500.0" href="index.html?puzzle=ADH" alt="ADH">');
+    builder.addLocalMap('<area shape="rect" coords="300.0,400.0,400.0,500.0" href="index.html?puzzle=ADI" alt="ADI">');
+    builder.addLocalMap('</map>');
 
     return builder.getPuzzleData();
 }
@@ -3443,6 +4031,16 @@ function AFV()
 
     builder.addEasier('AFS');
     builder.addEasier('AFW');
+
+    builder.addHarder('AGV');
+
+    builder.addLocalMap('<image src="images/map_AFV.png" usemap="#localmap">');
+    builder.addLocalMap('<map name="localmap">');
+    builder.addLocalMap('<area shape="rect" coords="150.0,0.0,250.0,100.0" href="index.html?puzzle=AFS" alt="AFS">');
+    builder.addLocalMap('<area shape="rect" coords="75.0,200.0,175.0,300.0" href="index.html?puzzle=AFV" alt="AFV">');
+    builder.addLocalMap('<area shape="rect" coords="0.0,0.0,100.0,100.0" href="index.html?puzzle=AFW" alt="AFW">');
+    builder.addLocalMap('<area shape="rect" coords="75.0,400.0,175.0,500.0" href="index.html?puzzle=AGV" alt="AGV">');
+    builder.addLocalMap('</map>');
 
     return builder.getPuzzleData();
 }
@@ -3477,6 +4075,15 @@ function ABD()
     builder.normalize();
 
     builder.addEasier('ADW');
+
+    builder.addHarder('ABW');
+
+    builder.addLocalMap('<image src="images/map_ABD.png" usemap="#localmap">');
+    builder.addLocalMap('<map name="localmap">');
+    builder.addLocalMap('<area shape="rect" coords="7.1054273576e-15,200.0,100.0,300.0" href="index.html?puzzle=ABD" alt="ABD">');
+    builder.addLocalMap('<area shape="rect" coords="7.1054273576e-15,400.0,100.0,500.0" href="index.html?puzzle=ABW" alt="ABW">');
+    builder.addLocalMap('<area shape="rect" coords="7.1054273576e-15,0.0,100.0,100.0" href="index.html?puzzle=ADW" alt="ADW">');
+    builder.addLocalMap('</map>');
 
     return builder.getPuzzleData();
 }
@@ -3582,6 +4189,12 @@ function ACO()
 
     builder.addEasier('ABL');
 
+    builder.addLocalMap('<image src="images/map_ACO.png" usemap="#localmap">');
+    builder.addLocalMap('<map name="localmap">');
+    builder.addLocalMap('<area shape="rect" coords="33.3333333333,33.3333333333,133.333333333,133.333333333" href="index.html?puzzle=ABL" alt="ABL">');
+    builder.addLocalMap('<area shape="rect" coords="33.3333333333,366.666666667,133.333333333,466.666666667" href="index.html?puzzle=ACO" alt="ACO">');
+    builder.addLocalMap('</map>');
+
     return builder.getPuzzleData();
 }
 
@@ -3614,6 +4227,12 @@ function AGO()
 
     builder.addEasier('AGH');
 
+    builder.addLocalMap('<image src="images/map_AGO.png" usemap="#localmap">');
+    builder.addLocalMap('<map name="localmap">');
+    builder.addLocalMap('<area shape="rect" coords="33.3333333333,33.3333333333,133.333333333,133.333333333" href="index.html?puzzle=AGH" alt="AGH">');
+    builder.addLocalMap('<area shape="rect" coords="33.3333333333,366.666666667,133.333333333,466.666666667" href="index.html?puzzle=AGO" alt="AGO">');
+    builder.addLocalMap('</map>');
+
     return builder.getPuzzleData();
 }
 
@@ -3639,6 +4258,13 @@ function AFA()
 
     builder.addEasier('AEZ');
     builder.addEasier('AFM');
+
+    builder.addLocalMap('<image src="images/map_AFA.png" usemap="#localmap">');
+    builder.addLocalMap('<map name="localmap">');
+    builder.addLocalMap('<area shape="rect" coords="283.333333333,33.3333333333,383.333333333,133.333333333" href="index.html?puzzle=AEZ" alt="AEZ">');
+    builder.addLocalMap('<area shape="rect" coords="158.333333333,366.666666667,258.333333333,466.666666667" href="index.html?puzzle=AFA" alt="AFA">');
+    builder.addLocalMap('<area shape="rect" coords="33.3333333333,33.3333333333,133.333333333,133.333333333" href="index.html?puzzle=AFM" alt="AFM">');
+    builder.addLocalMap('</map>');
 
     return builder.getPuzzleData();
 }
@@ -3667,6 +4293,17 @@ function AIM()
     builder.recenter();
     builder.normalize();
 
+    builder.addEasier('AIL');
+
+    builder.addHarder('AIK');
+
+    builder.addLocalMap('<image src="images/map_AIM.png" usemap="#localmap">');
+    builder.addLocalMap('<map name="localmap">');
+    builder.addLocalMap('<area shape="rect" coords="7.1054273576e-15,400.0,100.0,500.0" href="index.html?puzzle=AIK" alt="AIK">');
+    builder.addLocalMap('<area shape="rect" coords="7.1054273576e-15,0.0,100.0,100.0" href="index.html?puzzle=AIL" alt="AIL">');
+    builder.addLocalMap('<area shape="rect" coords="7.1054273576e-15,200.0,100.0,300.0" href="index.html?puzzle=AIM" alt="AIM">');
+    builder.addLocalMap('</map>');
+
     return builder.getPuzzleData();
 }
 
@@ -3691,6 +4328,19 @@ function AIJ()
 
     builder.recenter();
     builder.normalize();
+
+    builder.addEasier('AIL');
+
+    builder.addHarder('AIH');
+    builder.addHarder('AIK');
+
+    builder.addLocalMap('<image src="images/map_AIJ.png" usemap="#localmap">');
+    builder.addLocalMap('<map name="localmap">');
+    builder.addLocalMap('<area shape="rect" coords="0.0,400.0,100.0,500.0" href="index.html?puzzle=AIH" alt="AIH">');
+    builder.addLocalMap('<area shape="rect" coords="75.0,200.0,175.0,300.0" href="index.html?puzzle=AIJ" alt="AIJ">');
+    builder.addLocalMap('<area shape="rect" coords="150.0,400.0,250.0,500.0" href="index.html?puzzle=AIK" alt="AIK">');
+    builder.addLocalMap('<area shape="rect" coords="75.0,0.0,175.0,100.0" href="index.html?puzzle=AIL" alt="AIL">');
+    builder.addLocalMap('</map>');
 
     return builder.getPuzzleData();
 }
@@ -3719,6 +4369,17 @@ function ACT()
 
     builder.addEasier('ACQ');
 
+    builder.addHarder('ACU');
+    builder.addHarder('ACV');
+
+    builder.addLocalMap('<image src="images/map_ACT.png" usemap="#localmap">');
+    builder.addLocalMap('<map name="localmap">');
+    builder.addLocalMap('<area shape="rect" coords="75.0,0.0,175.0,100.0" href="index.html?puzzle=ACQ" alt="ACQ">');
+    builder.addLocalMap('<area shape="rect" coords="75.0,200.0,175.0,300.0" href="index.html?puzzle=ACT" alt="ACT">');
+    builder.addLocalMap('<area shape="rect" coords="150.0,400.0,250.0,500.0" href="index.html?puzzle=ACU" alt="ACU">');
+    builder.addLocalMap('<area shape="rect" coords="0.0,400.0,100.0,500.0" href="index.html?puzzle=ACV" alt="ACV">');
+    builder.addLocalMap('</map>');
+
     return builder.getPuzzleData();
 }
 
@@ -3743,6 +4404,19 @@ function AIL()
 
     builder.recenter();
     builder.normalize();
+
+    builder.addEasier('AEK');
+
+    builder.addHarder('AIJ');
+    builder.addHarder('AIM');
+
+    builder.addLocalMap('<image src="images/map_AIL.png" usemap="#localmap">');
+    builder.addLocalMap('<map name="localmap">');
+    builder.addLocalMap('<area shape="rect" coords="75.0,0.0,175.0,100.0" href="index.html?puzzle=AEK" alt="AEK">');
+    builder.addLocalMap('<area shape="rect" coords="150.0,400.0,250.0,500.0" href="index.html?puzzle=AIJ" alt="AIJ">');
+    builder.addLocalMap('<area shape="rect" coords="75.0,200.0,175.0,300.0" href="index.html?puzzle=AIL" alt="AIL">');
+    builder.addLocalMap('<area shape="rect" coords="0.0,400.0,100.0,500.0" href="index.html?puzzle=AIM" alt="AIM">');
+    builder.addLocalMap('</map>');
 
     return builder.getPuzzleData();
 }
@@ -3771,6 +4445,15 @@ function AAK()
     builder.normalize();
 
     builder.addEasier('AAJ');
+
+    builder.addHarder('ABQ');
+
+    builder.addLocalMap('<image src="images/map_AAK.png" usemap="#localmap">');
+    builder.addLocalMap('<map name="localmap">');
+    builder.addLocalMap('<area shape="rect" coords="7.1054273576e-15,0.0,100.0,100.0" href="index.html?puzzle=AAJ" alt="AAJ">');
+    builder.addLocalMap('<area shape="rect" coords="7.1054273576e-15,200.0,100.0,300.0" href="index.html?puzzle=AAK" alt="AAK">');
+    builder.addLocalMap('<area shape="rect" coords="7.1054273576e-15,400.0,100.0,500.0" href="index.html?puzzle=ABQ" alt="ABQ">');
+    builder.addLocalMap('</map>');
 
     return builder.getPuzzleData();
 }
@@ -3841,6 +4524,15 @@ function ABL()
 
     builder.addEasier('ABK');
 
+    builder.addHarder('ACO');
+
+    builder.addLocalMap('<image src="images/map_ABL.png" usemap="#localmap">');
+    builder.addLocalMap('<map name="localmap">');
+    builder.addLocalMap('<area shape="rect" coords="7.1054273576e-15,0.0,100.0,100.0" href="index.html?puzzle=ABK" alt="ABK">');
+    builder.addLocalMap('<area shape="rect" coords="7.1054273576e-15,200.0,100.0,300.0" href="index.html?puzzle=ABL" alt="ABL">');
+    builder.addLocalMap('<area shape="rect" coords="7.1054273576e-15,400.0,100.0,500.0" href="index.html?puzzle=ACO" alt="ACO">');
+    builder.addLocalMap('</map>');
+
     return builder.getPuzzleData();
 }
 
@@ -3874,6 +4566,15 @@ function AHC()
 
     builder.addEasier('AHB');
 
+    builder.addHarder('AHD');
+
+    builder.addLocalMap('<image src="images/map_AHC.png" usemap="#localmap">');
+    builder.addLocalMap('<map name="localmap">');
+    builder.addLocalMap('<area shape="rect" coords="7.1054273576e-15,0.0,100.0,100.0" href="index.html?puzzle=AHB" alt="AHB">');
+    builder.addLocalMap('<area shape="rect" coords="7.1054273576e-15,200.0,100.0,300.0" href="index.html?puzzle=AHC" alt="AHC">');
+    builder.addLocalMap('<area shape="rect" coords="7.1054273576e-15,400.0,100.0,500.0" href="index.html?puzzle=AHD" alt="AHD">');
+    builder.addLocalMap('</map>');
+
     return builder.getPuzzleData();
 }
 
@@ -3899,6 +4600,17 @@ function AEQ()
     builder.normalize();
 
     builder.addEasier('AEO');
+
+    builder.addHarder('AEB');
+    builder.addHarder('AEC');
+
+    builder.addLocalMap('<image src="images/map_AEQ.png" usemap="#localmap">');
+    builder.addLocalMap('<map name="localmap">');
+    builder.addLocalMap('<area shape="rect" coords="150.0,400.0,250.0,500.0" href="index.html?puzzle=AEB" alt="AEB">');
+    builder.addLocalMap('<area shape="rect" coords="0.0,400.0,100.0,500.0" href="index.html?puzzle=AEC" alt="AEC">');
+    builder.addLocalMap('<area shape="rect" coords="75.0,0.0,175.0,100.0" href="index.html?puzzle=AEO" alt="AEO">');
+    builder.addLocalMap('<area shape="rect" coords="75.0,200.0,175.0,300.0" href="index.html?puzzle=AEQ" alt="AEQ">');
+    builder.addLocalMap('</map>');
 
     return builder.getPuzzleData();
 }
@@ -3934,6 +4646,17 @@ function ACW()
     builder.addEasier('ACZ');
     builder.addEasier('ADH');
 
+    builder.addHarder('ACM');
+
+    builder.addLocalMap('<image src="images/map_ACW.png" usemap="#localmap">');
+    builder.addLocalMap('<map name="localmap">');
+    builder.addLocalMap('<area shape="rect" coords="300.0,0.0,400.0,100.0" href="index.html?puzzle=ABT" alt="ABT">');
+    builder.addLocalMap('<area shape="rect" coords="150.0,400.0,250.0,500.0" href="index.html?puzzle=ACM" alt="ACM">');
+    builder.addLocalMap('<area shape="rect" coords="150.0,200.0,250.0,300.0" href="index.html?puzzle=ACW" alt="ACW">');
+    builder.addLocalMap('<area shape="rect" coords="150.0,0.0,250.0,100.0" href="index.html?puzzle=ACZ" alt="ACZ">');
+    builder.addLocalMap('<area shape="rect" coords="7.1054273576e-15,0.0,100.0,100.0" href="index.html?puzzle=ADH" alt="ADH">');
+    builder.addLocalMap('</map>');
+
     return builder.getPuzzleData();
 }
 
@@ -3962,6 +4685,12 @@ function AAY()
     builder.normalize();
 
     builder.addEasier('AAU');
+
+    builder.addLocalMap('<image src="images/map_AAY.png" usemap="#localmap">');
+    builder.addLocalMap('<map name="localmap">');
+    builder.addLocalMap('<area shape="rect" coords="33.3333333333,33.3333333333,133.333333333,133.333333333" href="index.html?puzzle=AAU" alt="AAU">');
+    builder.addLocalMap('<area shape="rect" coords="33.3333333333,366.666666667,133.333333333,466.666666667" href="index.html?puzzle=AAY" alt="AAY">');
+    builder.addLocalMap('</map>');
 
     return builder.getPuzzleData();
 }
@@ -3994,6 +4723,15 @@ function AAQ()
 
     builder.addEasier('AAM');
 
+    builder.addHarder('ABR');
+
+    builder.addLocalMap('<image src="images/map_AAQ.png" usemap="#localmap">');
+    builder.addLocalMap('<map name="localmap">');
+    builder.addLocalMap('<area shape="rect" coords="7.1054273576e-15,0.0,100.0,100.0" href="index.html?puzzle=AAM" alt="AAM">');
+    builder.addLocalMap('<area shape="rect" coords="7.1054273576e-15,200.0,100.0,300.0" href="index.html?puzzle=AAQ" alt="AAQ">');
+    builder.addLocalMap('<area shape="rect" coords="7.1054273576e-15,400.0,100.0,500.0" href="index.html?puzzle=ABR" alt="ABR">');
+    builder.addLocalMap('</map>');
+
     return builder.getPuzzleData();
 }
 
@@ -4021,6 +4759,19 @@ function AFW()
 
     builder.addEasier('AHG');
 
+    builder.addHarder('AFV');
+    builder.addHarder('AFX');
+    builder.addHarder('AFZ');
+
+    builder.addLocalMap('<image src="images/map_AFW.png" usemap="#localmap">');
+    builder.addLocalMap('<map name="localmap">');
+    builder.addLocalMap('<area shape="rect" coords="7.1054273576e-15,400.0,100.0,500.0" href="index.html?puzzle=AFV" alt="AFV">');
+    builder.addLocalMap('<area shape="rect" coords="150.0,200.0,250.0,300.0" href="index.html?puzzle=AFW" alt="AFW">');
+    builder.addLocalMap('<area shape="rect" coords="150.0,400.0,250.0,500.0" href="index.html?puzzle=AFX" alt="AFX">');
+    builder.addLocalMap('<area shape="rect" coords="300.0,400.0,400.0,500.0" href="index.html?puzzle=AFZ" alt="AFZ">');
+    builder.addLocalMap('<area shape="rect" coords="150.0,0.0,250.0,100.0" href="index.html?puzzle=AHG" alt="AHG">');
+    builder.addLocalMap('</map>');
+
     return builder.getPuzzleData();
 }
 
@@ -4046,6 +4797,17 @@ function AFH()
     builder.normalize();
 
     builder.addEasier('AEY');
+
+    builder.addHarder('AFB');
+    builder.addHarder('AFC');
+
+    builder.addLocalMap('<image src="images/map_AFH.png" usemap="#localmap">');
+    builder.addLocalMap('<map name="localmap">');
+    builder.addLocalMap('<area shape="rect" coords="75.0,0.0,175.0,100.0" href="index.html?puzzle=AEY" alt="AEY">');
+    builder.addLocalMap('<area shape="rect" coords="0.0,400.0,100.0,500.0" href="index.html?puzzle=AFB" alt="AFB">');
+    builder.addLocalMap('<area shape="rect" coords="150.0,400.0,250.0,500.0" href="index.html?puzzle=AFC" alt="AFC">');
+    builder.addLocalMap('<area shape="rect" coords="75.0,200.0,175.0,300.0" href="index.html?puzzle=AFH" alt="AFH">');
+    builder.addLocalMap('</map>');
 
     return builder.getPuzzleData();
 }
@@ -4079,6 +4841,17 @@ function AHD()
 
     builder.addEasier('AHC');
 
+    builder.addHarder('ABF');
+    builder.addHarder('AHE');
+
+    builder.addLocalMap('<image src="images/map_AHD.png" usemap="#localmap">');
+    builder.addLocalMap('<map name="localmap">');
+    builder.addLocalMap('<area shape="rect" coords="0.0,400.0,100.0,500.0" href="index.html?puzzle=ABF" alt="ABF">');
+    builder.addLocalMap('<area shape="rect" coords="75.0,0.0,175.0,100.0" href="index.html?puzzle=AHC" alt="AHC">');
+    builder.addLocalMap('<area shape="rect" coords="75.0,200.0,175.0,300.0" href="index.html?puzzle=AHD" alt="AHD">');
+    builder.addLocalMap('<area shape="rect" coords="150.0,400.0,250.0,500.0" href="index.html?puzzle=AHE" alt="AHE">');
+    builder.addLocalMap('</map>');
+
     return builder.getPuzzleData();
 }
 
@@ -4101,6 +4874,17 @@ function ADY()
     builder.normalize();
 
     builder.addEasier('AEN');
+
+    builder.addHarder('AEC');
+    builder.addHarder('AEG');
+
+    builder.addLocalMap('<image src="images/map_ADY.png" usemap="#localmap">');
+    builder.addLocalMap('<map name="localmap">');
+    builder.addLocalMap('<area shape="rect" coords="75.0,200.0,175.0,300.0" href="index.html?puzzle=ADY" alt="ADY">');
+    builder.addLocalMap('<area shape="rect" coords="0.0,400.0,100.0,500.0" href="index.html?puzzle=AEC" alt="AEC">');
+    builder.addLocalMap('<area shape="rect" coords="150.0,400.0,250.0,500.0" href="index.html?puzzle=AEG" alt="AEG">');
+    builder.addLocalMap('<area shape="rect" coords="75.0,0.0,175.0,100.0" href="index.html?puzzle=AEN" alt="AEN">');
+    builder.addLocalMap('</map>');
 
     return builder.getPuzzleData();
 }
@@ -4130,6 +4914,21 @@ function ADB()
     builder.normalize();
 
     builder.addEasier('AAB');
+
+    builder.addHarder('AAD');
+    builder.addHarder('AAS');
+    builder.addHarder('ACP');
+    builder.addHarder('AFE');
+
+    builder.addLocalMap('<image src="images/map_ADB.png" usemap="#localmap">');
+    builder.addLocalMap('<map name="localmap">');
+    builder.addLocalMap('<area shape="rect" coords="200.0,-4.54545454545,300.0,95.4545454545" href="index.html?puzzle=AAB" alt="AAB">');
+    builder.addLocalMap('<area shape="rect" coords="-4.54545454545,359.090909091,95.4545454545,459.090909091" href="index.html?puzzle=AAD" alt="AAD">');
+    builder.addLocalMap('<area shape="rect" coords="268.181818182,359.090909091,368.181818182,459.090909091" href="index.html?puzzle=AAS" alt="AAS">');
+    builder.addLocalMap('<area shape="rect" coords="131.818181818,359.090909091,231.818181818,459.090909091" href="index.html?puzzle=ACP" alt="ACP">');
+    builder.addLocalMap('<area shape="rect" coords="200.0,177.272727273,300.0,277.272727273" href="index.html?puzzle=ADB" alt="ADB">');
+    builder.addLocalMap('<area shape="rect" coords="404.545454545,359.090909091,504.545454545,459.090909091" href="index.html?puzzle=AFE" alt="AFE">');
+    builder.addLocalMap('</map>');
 
     return builder.getPuzzleData();
 }
@@ -4166,6 +4965,17 @@ function ADP()
 
     builder.addEasier('AEK');
 
+    builder.addHarder('ACN');
+    builder.addHarder('ADV');
+
+    builder.addLocalMap('<image src="images/map_ADP.png" usemap="#localmap">');
+    builder.addLocalMap('<map name="localmap">');
+    builder.addLocalMap('<area shape="rect" coords="150.0,400.0,250.0,500.0" href="index.html?puzzle=ACN" alt="ACN">');
+    builder.addLocalMap('<area shape="rect" coords="75.0,200.0,175.0,300.0" href="index.html?puzzle=ADP" alt="ADP">');
+    builder.addLocalMap('<area shape="rect" coords="0.0,400.0,100.0,500.0" href="index.html?puzzle=ADV" alt="ADV">');
+    builder.addLocalMap('<area shape="rect" coords="75.0,0.0,175.0,100.0" href="index.html?puzzle=AEK" alt="AEK">');
+    builder.addLocalMap('</map>');
+
     return builder.getPuzzleData();
 }
 
@@ -4191,6 +5001,15 @@ function AEW()
     builder.normalize();
 
     builder.addEasier('AFD');
+
+    builder.addHarder('AEU');
+
+    builder.addLocalMap('<image src="images/map_AEW.png" usemap="#localmap">');
+    builder.addLocalMap('<map name="localmap">');
+    builder.addLocalMap('<area shape="rect" coords="7.1054273576e-15,400.0,100.0,500.0" href="index.html?puzzle=AEU" alt="AEU">');
+    builder.addLocalMap('<area shape="rect" coords="7.1054273576e-15,200.0,100.0,300.0" href="index.html?puzzle=AEW" alt="AEW">');
+    builder.addLocalMap('<area shape="rect" coords="7.1054273576e-15,0.0,100.0,100.0" href="index.html?puzzle=AFD" alt="AFD">');
+    builder.addLocalMap('</map>');
 
     return builder.getPuzzleData();
 }
@@ -4228,6 +5047,16 @@ function ABP()
     builder.addEasier('AEG');
     builder.addEasier('AEK');
 
+    builder.addHarder('ABQ');
+
+    builder.addLocalMap('<image src="images/map_ABP.png" usemap="#localmap">');
+    builder.addLocalMap('<map name="localmap">');
+    builder.addLocalMap('<area shape="rect" coords="75.0,200.0,175.0,300.0" href="index.html?puzzle=ABP" alt="ABP">');
+    builder.addLocalMap('<area shape="rect" coords="75.0,400.0,175.0,500.0" href="index.html?puzzle=ABQ" alt="ABQ">');
+    builder.addLocalMap('<area shape="rect" coords="150.0,0.0,250.0,100.0" href="index.html?puzzle=AEG" alt="AEG">');
+    builder.addLocalMap('<area shape="rect" coords="0.0,0.0,100.0,100.0" href="index.html?puzzle=AEK" alt="AEK">');
+    builder.addLocalMap('</map>');
+
     return builder.getPuzzleData();
 }
 
@@ -4258,6 +5087,21 @@ function ADI()
     builder.addEasier('ADE');
     builder.addEasier('ADF');
 
+    builder.addHarder('ADJ');
+    builder.addHarder('ADK');
+    builder.addHarder('AED');
+
+    builder.addLocalMap('<image src="images/map_ADI.png" usemap="#localmap">');
+    builder.addLocalMap('<map name="localmap">');
+    builder.addLocalMap('<area shape="rect" coords="150.0,0.0,250.0,100.0" href="index.html?puzzle=ADD" alt="ADD">');
+    builder.addLocalMap('<area shape="rect" coords="300.0,0.0,400.0,100.0" href="index.html?puzzle=ADE" alt="ADE">');
+    builder.addLocalMap('<area shape="rect" coords="7.1054273576e-15,0.0,100.0,100.0" href="index.html?puzzle=ADF" alt="ADF">');
+    builder.addLocalMap('<area shape="rect" coords="150.0,200.0,250.0,300.0" href="index.html?puzzle=ADI" alt="ADI">');
+    builder.addLocalMap('<area shape="rect" coords="150.0,400.0,250.0,500.0" href="index.html?puzzle=ADJ" alt="ADJ">');
+    builder.addLocalMap('<area shape="rect" coords="300.0,400.0,400.0,500.0" href="index.html?puzzle=ADK" alt="ADK">');
+    builder.addLocalMap('<area shape="rect" coords="7.1054273576e-15,400.0,100.0,500.0" href="index.html?puzzle=AED" alt="AED">');
+    builder.addLocalMap('</map>');
+
     return builder.getPuzzleData();
 }
 
@@ -4280,6 +5124,19 @@ function ADA()
     builder.normalize();
 
     builder.addEasier('AAA');
+
+    builder.addHarder('AAF');
+    builder.addHarder('ABA');
+    builder.addHarder('AEF');
+
+    builder.addLocalMap('<image src="images/map_ADA.png" usemap="#localmap">');
+    builder.addLocalMap('<map name="localmap">');
+    builder.addLocalMap('<area shape="rect" coords="150.0,0.0,250.0,100.0" href="index.html?puzzle=AAA" alt="AAA">');
+    builder.addLocalMap('<area shape="rect" coords="150.0,400.0,250.0,500.0" href="index.html?puzzle=AAF" alt="AAF">');
+    builder.addLocalMap('<area shape="rect" coords="7.1054273576e-15,400.0,100.0,500.0" href="index.html?puzzle=ABA" alt="ABA">');
+    builder.addLocalMap('<area shape="rect" coords="150.0,200.0,250.0,300.0" href="index.html?puzzle=ADA" alt="ADA">');
+    builder.addLocalMap('<area shape="rect" coords="300.0,400.0,400.0,500.0" href="index.html?puzzle=AEF" alt="AEF">');
+    builder.addLocalMap('</map>');
 
     return builder.getPuzzleData();
 }
@@ -4306,6 +5163,19 @@ function AER()
     builder.normalize();
 
     builder.addEasier('AEO');
+
+    builder.addHarder('AEC');
+    builder.addHarder('AES');
+    builder.addHarder('AFL');
+
+    builder.addLocalMap('<image src="images/map_AER.png" usemap="#localmap">');
+    builder.addLocalMap('<map name="localmap">');
+    builder.addLocalMap('<area shape="rect" coords="150.0,400.0,250.0,500.0" href="index.html?puzzle=AEC" alt="AEC">');
+    builder.addLocalMap('<area shape="rect" coords="150.0,0.0,250.0,100.0" href="index.html?puzzle=AEO" alt="AEO">');
+    builder.addLocalMap('<area shape="rect" coords="150.0,200.0,250.0,300.0" href="index.html?puzzle=AER" alt="AER">');
+    builder.addLocalMap('<area shape="rect" coords="300.0,400.0,400.0,500.0" href="index.html?puzzle=AES" alt="AES">');
+    builder.addLocalMap('<area shape="rect" coords="7.1054273576e-15,400.0,100.0,500.0" href="index.html?puzzle=AFL" alt="AFL">');
+    builder.addLocalMap('</map>');
 
     return builder.getPuzzleData();
 }
@@ -4338,6 +5208,21 @@ function AEK()
 
     builder.addEasier('ADN');
 
+    builder.addHarder('AAJ');
+    builder.addHarder('ABP');
+    builder.addHarder('ADP');
+    builder.addHarder('AIL');
+
+    builder.addLocalMap('<image src="images/map_AEK.png" usemap="#localmap">');
+    builder.addLocalMap('<map name="localmap">');
+    builder.addLocalMap('<area shape="rect" coords="404.545454545,359.090909091,504.545454545,459.090909091" href="index.html?puzzle=AAJ" alt="AAJ">');
+    builder.addLocalMap('<area shape="rect" coords="-4.54545454545,359.090909091,95.4545454545,459.090909091" href="index.html?puzzle=ABP" alt="ABP">');
+    builder.addLocalMap('<area shape="rect" coords="200.0,-4.54545454545,300.0,95.4545454545" href="index.html?puzzle=ADN" alt="ADN">');
+    builder.addLocalMap('<area shape="rect" coords="268.181818182,359.090909091,368.181818182,459.090909091" href="index.html?puzzle=ADP" alt="ADP">');
+    builder.addLocalMap('<area shape="rect" coords="200.0,177.272727273,300.0,277.272727273" href="index.html?puzzle=AEK" alt="AEK">');
+    builder.addLocalMap('<area shape="rect" coords="131.818181818,359.090909091,231.818181818,459.090909091" href="index.html?puzzle=AIL" alt="AIL">');
+    builder.addLocalMap('</map>');
+
     return builder.getPuzzleData();
 }
 
@@ -4368,6 +5253,15 @@ function ADO()
     builder.normalize();
 
     builder.addEasier('ADN');
+
+    builder.addHarder('ADQ');
+
+    builder.addLocalMap('<image src="images/map_ADO.png" usemap="#localmap">');
+    builder.addLocalMap('<map name="localmap">');
+    builder.addLocalMap('<area shape="rect" coords="7.1054273576e-15,0.0,100.0,100.0" href="index.html?puzzle=ADN" alt="ADN">');
+    builder.addLocalMap('<area shape="rect" coords="7.1054273576e-15,200.0,100.0,300.0" href="index.html?puzzle=ADO" alt="ADO">');
+    builder.addLocalMap('<area shape="rect" coords="7.1054273576e-15,400.0,100.0,500.0" href="index.html?puzzle=ADQ" alt="ADQ">');
+    builder.addLocalMap('</map>');
 
     return builder.getPuzzleData();
 }
@@ -4405,6 +5299,16 @@ function ABC()
 
     builder.addEasier('AAV');
     builder.addEasier('AHW');
+
+    builder.addHarder('ABG');
+
+    builder.addLocalMap('<image src="images/map_ABC.png" usemap="#localmap">');
+    builder.addLocalMap('<map name="localmap">');
+    builder.addLocalMap('<area shape="rect" coords="0.0,0.0,100.0,100.0" href="index.html?puzzle=AAV" alt="AAV">');
+    builder.addLocalMap('<area shape="rect" coords="75.0,200.0,175.0,300.0" href="index.html?puzzle=ABC" alt="ABC">');
+    builder.addLocalMap('<area shape="rect" coords="75.0,400.0,175.0,500.0" href="index.html?puzzle=ABG" alt="ABG">');
+    builder.addLocalMap('<area shape="rect" coords="150.0,0.0,250.0,100.0" href="index.html?puzzle=AHW" alt="AHW">');
+    builder.addLocalMap('</map>');
 
     return builder.getPuzzleData();
 }
@@ -4529,6 +5433,15 @@ function AHV()
 
     builder.addEasier('AHS');
 
+    builder.addHarder('AHU');
+
+    builder.addLocalMap('<image src="images/map_AHV.png" usemap="#localmap">');
+    builder.addLocalMap('<map name="localmap">');
+    builder.addLocalMap('<area shape="rect" coords="7.1054273576e-15,0.0,100.0,100.0" href="index.html?puzzle=AHS" alt="AHS">');
+    builder.addLocalMap('<area shape="rect" coords="7.1054273576e-15,400.0,100.0,500.0" href="index.html?puzzle=AHU" alt="AHU">');
+    builder.addLocalMap('<area shape="rect" coords="7.1054273576e-15,200.0,100.0,300.0" href="index.html?puzzle=AHV" alt="AHV">');
+    builder.addLocalMap('</map>');
+
     return builder.getPuzzleData();
 }
 
@@ -4559,6 +5472,15 @@ function ADM()
     builder.normalize();
 
     builder.addEasier('ADL');
+
+    builder.addHarder('ACM');
+
+    builder.addLocalMap('<image src="images/map_ADM.png" usemap="#localmap">');
+    builder.addLocalMap('<map name="localmap">');
+    builder.addLocalMap('<area shape="rect" coords="7.1054273576e-15,400.0,100.0,500.0" href="index.html?puzzle=ACM" alt="ACM">');
+    builder.addLocalMap('<area shape="rect" coords="7.1054273576e-15,0.0,100.0,100.0" href="index.html?puzzle=ADL" alt="ADL">');
+    builder.addLocalMap('<area shape="rect" coords="7.1054273576e-15,200.0,100.0,300.0" href="index.html?puzzle=ADM" alt="ADM">');
+    builder.addLocalMap('</map>');
 
     return builder.getPuzzleData();
 }
@@ -4626,6 +5548,15 @@ function ACI()
 
     builder.addEasier('ACG');
 
+    builder.addHarder('ACJ');
+
+    builder.addLocalMap('<image src="images/map_ACI.png" usemap="#localmap">');
+    builder.addLocalMap('<map name="localmap">');
+    builder.addLocalMap('<area shape="rect" coords="7.1054273576e-15,0.0,100.0,100.0" href="index.html?puzzle=ACG" alt="ACG">');
+    builder.addLocalMap('<area shape="rect" coords="7.1054273576e-15,200.0,100.0,300.0" href="index.html?puzzle=ACI" alt="ACI">');
+    builder.addLocalMap('<area shape="rect" coords="7.1054273576e-15,400.0,100.0,500.0" href="index.html?puzzle=ACJ" alt="ACJ">');
+    builder.addLocalMap('</map>');
+
     return builder.getPuzzleData();
 }
 
@@ -4653,6 +5584,21 @@ function ACP()
     builder.normalize();
 
     builder.addEasier('ADB');
+
+    builder.addHarder('ACR');
+    builder.addHarder('ACX');
+    builder.addHarder('AEN');
+    builder.addHarder('AFG');
+
+    builder.addLocalMap('<image src="images/map_ACP.png" usemap="#localmap">');
+    builder.addLocalMap('<map name="localmap">');
+    builder.addLocalMap('<area shape="rect" coords="200.0,177.272727273,300.0,277.272727273" href="index.html?puzzle=ACP" alt="ACP">');
+    builder.addLocalMap('<area shape="rect" coords="-4.54545454545,359.090909091,95.4545454545,459.090909091" href="index.html?puzzle=ACR" alt="ACR">');
+    builder.addLocalMap('<area shape="rect" coords="268.181818182,359.090909091,368.181818182,459.090909091" href="index.html?puzzle=ACX" alt="ACX">');
+    builder.addLocalMap('<area shape="rect" coords="200.0,-4.54545454545,300.0,95.4545454545" href="index.html?puzzle=ADB" alt="ADB">');
+    builder.addLocalMap('<area shape="rect" coords="404.545454545,359.090909091,504.545454545,459.090909091" href="index.html?puzzle=AEN" alt="AEN">');
+    builder.addLocalMap('<area shape="rect" coords="131.818181818,359.090909091,231.818181818,459.090909091" href="index.html?puzzle=AFG" alt="AFG">');
+    builder.addLocalMap('</map>');
 
     return builder.getPuzzleData();
 }
@@ -4691,6 +5637,15 @@ function AAV()
 
     builder.addEasier('ABH');
 
+    builder.addHarder('ABC');
+
+    builder.addLocalMap('<image src="images/map_AAV.png" usemap="#localmap">');
+    builder.addLocalMap('<map name="localmap">');
+    builder.addLocalMap('<area shape="rect" coords="7.1054273576e-15,200.0,100.0,300.0" href="index.html?puzzle=AAV" alt="AAV">');
+    builder.addLocalMap('<area shape="rect" coords="7.1054273576e-15,400.0,100.0,500.0" href="index.html?puzzle=ABC" alt="ABC">');
+    builder.addLocalMap('<area shape="rect" coords="7.1054273576e-15,0.0,100.0,100.0" href="index.html?puzzle=ABH" alt="ABH">');
+    builder.addLocalMap('</map>');
+
     return builder.getPuzzleData();
 }
 
@@ -4722,6 +5677,13 @@ function AGV()
 
     builder.addEasier('AFV');
     builder.addEasier('AGW');
+
+    builder.addLocalMap('<image src="images/map_AGV.png" usemap="#localmap">');
+    builder.addLocalMap('<map name="localmap">');
+    builder.addLocalMap('<area shape="rect" coords="283.333333333,33.3333333333,383.333333333,133.333333333" href="index.html?puzzle=AFV" alt="AFV">');
+    builder.addLocalMap('<area shape="rect" coords="158.333333333,366.666666667,258.333333333,466.666666667" href="index.html?puzzle=AGV" alt="AGV">');
+    builder.addLocalMap('<area shape="rect" coords="33.3333333333,33.3333333333,133.333333333,133.333333333" href="index.html?puzzle=AGW" alt="AGW">');
+    builder.addLocalMap('</map>');
 
     return builder.getPuzzleData();
 }
@@ -4793,6 +5755,13 @@ function ACJ()
     builder.addEasier('ACH');
     builder.addEasier('ACI');
 
+    builder.addLocalMap('<image src="images/map_ACJ.png" usemap="#localmap">');
+    builder.addLocalMap('<map name="localmap">');
+    builder.addLocalMap('<area shape="rect" coords="283.333333333,33.3333333333,383.333333333,133.333333333" href="index.html?puzzle=ACH" alt="ACH">');
+    builder.addLocalMap('<area shape="rect" coords="33.3333333333,33.3333333333,133.333333333,133.333333333" href="index.html?puzzle=ACI" alt="ACI">');
+    builder.addLocalMap('<area shape="rect" coords="158.333333333,366.666666667,258.333333333,466.666666667" href="index.html?puzzle=ACJ" alt="ACJ">');
+    builder.addLocalMap('</map>');
+
     return builder.getPuzzleData();
 }
 
@@ -4844,6 +5813,17 @@ function AHP()
 
     builder.addEasier('AHM');
 
+    builder.addHarder('AHO');
+    builder.addHarder('AHS');
+
+    builder.addLocalMap('<image src="images/map_AHP.png" usemap="#localmap">');
+    builder.addLocalMap('<map name="localmap">');
+    builder.addLocalMap('<area shape="rect" coords="75.0,0.0,175.0,100.0" href="index.html?puzzle=AHM" alt="AHM">');
+    builder.addLocalMap('<area shape="rect" coords="150.0,400.0,250.0,500.0" href="index.html?puzzle=AHO" alt="AHO">');
+    builder.addLocalMap('<area shape="rect" coords="75.0,200.0,175.0,300.0" href="index.html?puzzle=AHP" alt="AHP">');
+    builder.addLocalMap('<area shape="rect" coords="0.0,400.0,100.0,500.0" href="index.html?puzzle=AHS" alt="AHS">');
+    builder.addLocalMap('</map>');
+
     return builder.getPuzzleData();
 }
 
@@ -4878,6 +5858,15 @@ function ACK()
 
     builder.addEasier('AAN');
 
+    builder.addHarder('ACL');
+
+    builder.addLocalMap('<image src="images/map_ACK.png" usemap="#localmap">');
+    builder.addLocalMap('<map name="localmap">');
+    builder.addLocalMap('<area shape="rect" coords="7.1054273576e-15,0.0,100.0,100.0" href="index.html?puzzle=AAN" alt="AAN">');
+    builder.addLocalMap('<area shape="rect" coords="7.1054273576e-15,200.0,100.0,300.0" href="index.html?puzzle=ACK" alt="ACK">');
+    builder.addLocalMap('<area shape="rect" coords="7.1054273576e-15,400.0,100.0,500.0" href="index.html?puzzle=ACL" alt="ACL">');
+    builder.addLocalMap('</map>');
+
     return builder.getPuzzleData();
 }
 
@@ -4910,6 +5899,17 @@ function AII()
     builder.normalize();
 
     builder.addEasier('AIH');
+    builder.addEasier('AIK');
+
+    builder.addHarder('ACH');
+
+    builder.addLocalMap('<image src="images/map_AII.png" usemap="#localmap">');
+    builder.addLocalMap('<map name="localmap">');
+    builder.addLocalMap('<area shape="rect" coords="75.0,400.0,175.0,500.0" href="index.html?puzzle=ACH" alt="ACH">');
+    builder.addLocalMap('<area shape="rect" coords="0.0,0.0,100.0,100.0" href="index.html?puzzle=AIH" alt="AIH">');
+    builder.addLocalMap('<area shape="rect" coords="75.0,200.0,175.0,300.0" href="index.html?puzzle=AII" alt="AII">');
+    builder.addLocalMap('<area shape="rect" coords="150.0,0.0,250.0,100.0" href="index.html?puzzle=AIK" alt="AIK">');
+    builder.addLocalMap('</map>');
 
     return builder.getPuzzleData();
 }
@@ -4944,6 +5944,15 @@ function AFY()
 
     builder.addEasier('AGW');
 
+    builder.addHarder('AGB');
+
+    builder.addLocalMap('<image src="images/map_AFY.png" usemap="#localmap">');
+    builder.addLocalMap('<map name="localmap">');
+    builder.addLocalMap('<area shape="rect" coords="7.1054273576e-15,200.0,100.0,300.0" href="index.html?puzzle=AFY" alt="AFY">');
+    builder.addLocalMap('<area shape="rect" coords="7.1054273576e-15,400.0,100.0,500.0" href="index.html?puzzle=AGB" alt="AGB">');
+    builder.addLocalMap('<area shape="rect" coords="7.1054273576e-15,0.0,100.0,100.0" href="index.html?puzzle=AGW" alt="AGW">');
+    builder.addLocalMap('</map>');
+
     return builder.getPuzzleData();
 }
 
@@ -4976,6 +5985,15 @@ function AHA()
 
     builder.addEasier('AGZ');
 
+    builder.addHarder('AHB');
+
+    builder.addLocalMap('<image src="images/map_AHA.png" usemap="#localmap">');
+    builder.addLocalMap('<map name="localmap">');
+    builder.addLocalMap('<area shape="rect" coords="7.1054273576e-15,0.0,100.0,100.0" href="index.html?puzzle=AGZ" alt="AGZ">');
+    builder.addLocalMap('<area shape="rect" coords="7.1054273576e-15,200.0,100.0,300.0" href="index.html?puzzle=AHA" alt="AHA">');
+    builder.addLocalMap('<area shape="rect" coords="7.1054273576e-15,400.0,100.0,500.0" href="index.html?puzzle=AHB" alt="AHB">');
+    builder.addLocalMap('</map>');
+
     return builder.getPuzzleData();
 }
 
@@ -5003,6 +6021,15 @@ function AFN()
 
     builder.addEasier('AAD');
 
+    builder.addHarder('AFO');
+
+    builder.addLocalMap('<image src="images/map_AFN.png" usemap="#localmap">');
+    builder.addLocalMap('<map name="localmap">');
+    builder.addLocalMap('<area shape="rect" coords="7.1054273576e-15,0.0,100.0,100.0" href="index.html?puzzle=AAD" alt="AAD">');
+    builder.addLocalMap('<area shape="rect" coords="7.1054273576e-15,200.0,100.0,300.0" href="index.html?puzzle=AFN" alt="AFN">');
+    builder.addLocalMap('<area shape="rect" coords="7.1054273576e-15,400.0,100.0,500.0" href="index.html?puzzle=AFO" alt="AFO">');
+    builder.addLocalMap('</map>');
+
     return builder.getPuzzleData();
 }
 
@@ -5027,6 +6054,15 @@ function AFB()
     builder.normalize();
 
     builder.addEasier('AFH');
+
+    builder.addHarder('ADH');
+
+    builder.addLocalMap('<image src="images/map_AFB.png" usemap="#localmap">');
+    builder.addLocalMap('<map name="localmap">');
+    builder.addLocalMap('<area shape="rect" coords="7.1054273576e-15,400.0,100.0,500.0" href="index.html?puzzle=ADH" alt="ADH">');
+    builder.addLocalMap('<area shape="rect" coords="7.1054273576e-15,200.0,100.0,300.0" href="index.html?puzzle=AFB" alt="AFB">');
+    builder.addLocalMap('<area shape="rect" coords="7.1054273576e-15,0.0,100.0,100.0" href="index.html?puzzle=AFH" alt="AFH">');
+    builder.addLocalMap('</map>');
 
     return builder.getPuzzleData();
 }
@@ -5059,6 +6095,17 @@ function ADL()
     builder.addEasier('ADJ');
     builder.addEasier('ADK');
     builder.addEasier('AED');
+
+    builder.addHarder('ADM');
+
+    builder.addLocalMap('<image src="images/map_ADL.png" usemap="#localmap">');
+    builder.addLocalMap('<map name="localmap">');
+    builder.addLocalMap('<area shape="rect" coords="7.1054273576e-15,0.0,100.0,100.0" href="index.html?puzzle=ADJ" alt="ADJ">');
+    builder.addLocalMap('<area shape="rect" coords="150.0,0.0,250.0,100.0" href="index.html?puzzle=ADK" alt="ADK">');
+    builder.addLocalMap('<area shape="rect" coords="150.0,200.0,250.0,300.0" href="index.html?puzzle=ADL" alt="ADL">');
+    builder.addLocalMap('<area shape="rect" coords="150.0,400.0,250.0,500.0" href="index.html?puzzle=ADM" alt="ADM">');
+    builder.addLocalMap('<area shape="rect" coords="300.0,0.0,400.0,100.0" href="index.html?puzzle=AED" alt="AED">');
+    builder.addLocalMap('</map>');
 
     return builder.getPuzzleData();
 }
@@ -5098,6 +6145,18 @@ function AIG()
     builder.addEasier('AAF');
     builder.addEasier('AEL');
 
+    builder.addHarder('ABX');
+    builder.addHarder('AIF');
+
+    builder.addLocalMap('<image src="images/map_AIG.png" usemap="#localmap">');
+    builder.addLocalMap('<map name="localmap">');
+    builder.addLocalMap('<area shape="rect" coords="0.0,0.0,100.0,100.0" href="index.html?puzzle=AAF" alt="AAF">');
+    builder.addLocalMap('<area shape="rect" coords="0.0,400.0,100.0,500.0" href="index.html?puzzle=ABX" alt="ABX">');
+    builder.addLocalMap('<area shape="rect" coords="150.0,0.0,250.0,100.0" href="index.html?puzzle=AEL" alt="AEL">');
+    builder.addLocalMap('<area shape="rect" coords="150.0,400.0,250.0,500.0" href="index.html?puzzle=AIF" alt="AIF">');
+    builder.addLocalMap('<area shape="rect" coords="75.0,200.0,175.0,300.0" href="index.html?puzzle=AIG" alt="AIG">');
+    builder.addLocalMap('</map>');
+
     return builder.getPuzzleData();
 }
 
@@ -5132,6 +6191,14 @@ function AAL()
     builder.addEasier('AAP');
     builder.addEasier('AAW');
     builder.addEasier('AFR');
+
+    builder.addLocalMap('<image src="images/map_AAL.png" usemap="#localmap">');
+    builder.addLocalMap('<map name="localmap">');
+    builder.addLocalMap('<area shape="rect" coords="200.0,262.5,300.0,362.5" href="index.html?puzzle=AAL" alt="AAL">');
+    builder.addLocalMap('<area shape="rect" coords="200.0,12.5,300.0,112.5" href="index.html?puzzle=AAP" alt="AAP">');
+    builder.addLocalMap('<area shape="rect" coords="12.5,12.5,112.5,112.5" href="index.html?puzzle=AAW" alt="AAW">');
+    builder.addLocalMap('<area shape="rect" coords="387.5,12.5,487.5,112.5" href="index.html?puzzle=AFR" alt="AFR">');
+    builder.addLocalMap('</map>');
 
     return builder.getPuzzleData();
 }
@@ -5171,6 +6238,12 @@ function AHZ()
     builder.normalize();
 
     builder.addEasier('AIB');
+
+    builder.addLocalMap('<image src="images/map_AHZ.png" usemap="#localmap">');
+    builder.addLocalMap('<map name="localmap">');
+    builder.addLocalMap('<area shape="rect" coords="33.3333333333,366.666666667,133.333333333,466.666666667" href="index.html?puzzle=AHZ" alt="AHZ">');
+    builder.addLocalMap('<area shape="rect" coords="33.3333333333,33.3333333333,133.333333333,133.333333333" href="index.html?puzzle=AIB" alt="AIB">');
+    builder.addLocalMap('</map>');
 
     return builder.getPuzzleData();
 }
@@ -5240,6 +6313,21 @@ function ABX()
     builder.addEasier('ABK');
     builder.addEasier('ADV');
     builder.addEasier('AIG');
+
+    builder.addHarder('ABY');
+    builder.addHarder('ABZ');
+    builder.addHarder('ACA');
+
+    builder.addLocalMap('<image src="images/map_ABX.png" usemap="#localmap">');
+    builder.addLocalMap('<map name="localmap">');
+    builder.addLocalMap('<area shape="rect" coords="300.0,0.0,400.0,100.0" href="index.html?puzzle=ABK" alt="ABK">');
+    builder.addLocalMap('<area shape="rect" coords="150.0,200.0,250.0,300.0" href="index.html?puzzle=ABX" alt="ABX">');
+    builder.addLocalMap('<area shape="rect" coords="150.0,400.0,250.0,500.0" href="index.html?puzzle=ABY" alt="ABY">');
+    builder.addLocalMap('<area shape="rect" coords="300.0,400.0,400.0,500.0" href="index.html?puzzle=ABZ" alt="ABZ">');
+    builder.addLocalMap('<area shape="rect" coords="7.1054273576e-15,400.0,100.0,500.0" href="index.html?puzzle=ACA" alt="ACA">');
+    builder.addLocalMap('<area shape="rect" coords="7.1054273576e-15,0.0,100.0,100.0" href="index.html?puzzle=ADV" alt="ADV">');
+    builder.addLocalMap('<area shape="rect" coords="150.0,0.0,250.0,100.0" href="index.html?puzzle=AIG" alt="AIG">');
+    builder.addLocalMap('</map>');
 
     return builder.getPuzzleData();
 }
@@ -5364,6 +6452,16 @@ function AHU()
     builder.addEasier('AHR');
     builder.addEasier('AHV');
 
+    builder.addHarder('AHT');
+
+    builder.addLocalMap('<image src="images/map_AHU.png" usemap="#localmap">');
+    builder.addLocalMap('<map name="localmap">');
+    builder.addLocalMap('<area shape="rect" coords="0.0,0.0,100.0,100.0" href="index.html?puzzle=AHR" alt="AHR">');
+    builder.addLocalMap('<area shape="rect" coords="75.0,400.0,175.0,500.0" href="index.html?puzzle=AHT" alt="AHT">');
+    builder.addLocalMap('<area shape="rect" coords="75.0,200.0,175.0,300.0" href="index.html?puzzle=AHU" alt="AHU">');
+    builder.addLocalMap('<area shape="rect" coords="150.0,0.0,250.0,100.0" href="index.html?puzzle=AHV" alt="AHV">');
+    builder.addLocalMap('</map>');
+
     return builder.getPuzzleData();
 }
 
@@ -5393,6 +6491,17 @@ function AGW()
 
     builder.addEasier('AFZ');
 
+    builder.addHarder('AFY');
+    builder.addHarder('AGV');
+
+    builder.addLocalMap('<image src="images/map_AGW.png" usemap="#localmap">');
+    builder.addLocalMap('<map name="localmap">');
+    builder.addLocalMap('<area shape="rect" coords="150.0,400.0,250.0,500.0" href="index.html?puzzle=AFY" alt="AFY">');
+    builder.addLocalMap('<area shape="rect" coords="75.0,0.0,175.0,100.0" href="index.html?puzzle=AFZ" alt="AFZ">');
+    builder.addLocalMap('<area shape="rect" coords="0.0,400.0,100.0,500.0" href="index.html?puzzle=AGV" alt="AGV">');
+    builder.addLocalMap('<area shape="rect" coords="75.0,200.0,175.0,300.0" href="index.html?puzzle=AGW" alt="AGW">');
+    builder.addLocalMap('</map>');
+
     return builder.getPuzzleData();
 }
 
@@ -5418,6 +6527,12 @@ function AEP()
 
     builder.addEasier('AFJ');
 
+    builder.addLocalMap('<image src="images/map_AEP.png" usemap="#localmap">');
+    builder.addLocalMap('<map name="localmap">');
+    builder.addLocalMap('<area shape="rect" coords="33.3333333333,366.666666667,133.333333333,466.666666667" href="index.html?puzzle=AEP" alt="AEP">');
+    builder.addLocalMap('<area shape="rect" coords="33.3333333333,33.3333333333,133.333333333,133.333333333" href="index.html?puzzle=AFJ" alt="AFJ">');
+    builder.addLocalMap('</map>');
+
     return builder.getPuzzleData();
 }
 
@@ -5442,6 +6557,20 @@ function AEN()
 
     builder.addEasier('AAS');
     builder.addEasier('ACP');
+
+    builder.addHarder('AAP');
+    builder.addHarder('ACS');
+    builder.addHarder('ADY');
+
+    builder.addLocalMap('<image src="images/map_AEN.png" usemap="#localmap">');
+    builder.addLocalMap('<map name="localmap">');
+    builder.addLocalMap('<area shape="rect" coords="150.0,400.0,250.0,500.0" href="index.html?puzzle=AAP" alt="AAP">');
+    builder.addLocalMap('<area shape="rect" coords="225.0,0.0,325.0,100.0" href="index.html?puzzle=AAS" alt="AAS">');
+    builder.addLocalMap('<area shape="rect" coords="75.0,0.0,175.0,100.0" href="index.html?puzzle=ACP" alt="ACP">');
+    builder.addLocalMap('<area shape="rect" coords="7.1054273576e-15,400.0,100.0,500.0" href="index.html?puzzle=ACS" alt="ACS">');
+    builder.addLocalMap('<area shape="rect" coords="300.0,400.0,400.0,500.0" href="index.html?puzzle=ADY" alt="ADY">');
+    builder.addLocalMap('<area shape="rect" coords="150.0,200.0,250.0,300.0" href="index.html?puzzle=AEN" alt="AEN">');
+    builder.addLocalMap('</map>');
 
     return builder.getPuzzleData();
 }
@@ -5481,6 +6610,15 @@ function AAX()
 
     builder.addEasier('AAM');
 
+    builder.addHarder('ABR');
+
+    builder.addLocalMap('<image src="images/map_AAX.png" usemap="#localmap">');
+    builder.addLocalMap('<map name="localmap">');
+    builder.addLocalMap('<area shape="rect" coords="7.1054273576e-15,0.0,100.0,100.0" href="index.html?puzzle=AAM" alt="AAM">');
+    builder.addLocalMap('<area shape="rect" coords="7.1054273576e-15,200.0,100.0,300.0" href="index.html?puzzle=AAX" alt="AAX">');
+    builder.addLocalMap('<area shape="rect" coords="7.1054273576e-15,400.0,100.0,500.0" href="index.html?puzzle=ABR" alt="ABR">');
+    builder.addLocalMap('</map>');
+
     return builder.getPuzzleData();
 }
 
@@ -5506,6 +6644,16 @@ function ACY()
 
     builder.addEasier('AAE');
     builder.addEasier('ACR');
+
+    builder.addHarder('ADD');
+
+    builder.addLocalMap('<image src="images/map_ACY.png" usemap="#localmap">');
+    builder.addLocalMap('<map name="localmap">');
+    builder.addLocalMap('<area shape="rect" coords="0.0,0.0,100.0,100.0" href="index.html?puzzle=AAE" alt="AAE">');
+    builder.addLocalMap('<area shape="rect" coords="150.0,0.0,250.0,100.0" href="index.html?puzzle=ACR" alt="ACR">');
+    builder.addLocalMap('<area shape="rect" coords="75.0,200.0,175.0,300.0" href="index.html?puzzle=ACY" alt="ACY">');
+    builder.addLocalMap('<area shape="rect" coords="75.0,400.0,175.0,500.0" href="index.html?puzzle=ADD" alt="ADD">');
+    builder.addLocalMap('</map>');
 
     return builder.getPuzzleData();
 }
@@ -5571,6 +6719,12 @@ function ABZ()
     builder.normalize();
 
     builder.addEasier('ABX');
+
+    builder.addLocalMap('<image src="images/map_ABZ.png" usemap="#localmap">');
+    builder.addLocalMap('<map name="localmap">');
+    builder.addLocalMap('<area shape="rect" coords="33.3333333333,33.3333333333,133.333333333,133.333333333" href="index.html?puzzle=ABX" alt="ABX">');
+    builder.addLocalMap('<area shape="rect" coords="33.3333333333,366.666666667,133.333333333,466.666666667" href="index.html?puzzle=ABZ" alt="ABZ">');
+    builder.addLocalMap('</map>');
 
     return builder.getPuzzleData();
 }
@@ -5668,6 +6822,14 @@ function ABM()
     builder.addEasier('ABO');
     builder.addEasier('ABS');
 
+    builder.addLocalMap('<image src="images/map_ABM.png" usemap="#localmap">');
+    builder.addLocalMap('<map name="localmap">');
+    builder.addLocalMap('<area shape="rect" coords="12.5,12.5,112.5,112.5" href="index.html?puzzle=ABJ" alt="ABJ">');
+    builder.addLocalMap('<area shape="rect" coords="200.0,262.5,300.0,362.5" href="index.html?puzzle=ABM" alt="ABM">');
+    builder.addLocalMap('<area shape="rect" coords="387.5,12.5,487.5,112.5" href="index.html?puzzle=ABO" alt="ABO">');
+    builder.addLocalMap('<area shape="rect" coords="200.0,12.5,300.0,112.5" href="index.html?puzzle=ABS" alt="ABS">');
+    builder.addLocalMap('</map>');
+
     return builder.getPuzzleData();
 }
 
@@ -5695,6 +6857,17 @@ function AAH()
     builder.normalize();
 
     builder.addEasier('AAG');
+
+    builder.addHarder('AAI');
+    builder.addHarder('AAN');
+
+    builder.addLocalMap('<image src="images/map_AAH.png" usemap="#localmap">');
+    builder.addLocalMap('<map name="localmap">');
+    builder.addLocalMap('<area shape="rect" coords="75.0,0.0,175.0,100.0" href="index.html?puzzle=AAG" alt="AAG">');
+    builder.addLocalMap('<area shape="rect" coords="75.0,200.0,175.0,300.0" href="index.html?puzzle=AAH" alt="AAH">');
+    builder.addLocalMap('<area shape="rect" coords="150.0,400.0,250.0,500.0" href="index.html?puzzle=AAI" alt="AAI">');
+    builder.addLocalMap('<area shape="rect" coords="0.0,400.0,100.0,500.0" href="index.html?puzzle=AAN" alt="AAN">');
+    builder.addLocalMap('</map>');
 
     return builder.getPuzzleData();
 }
@@ -5726,6 +6899,16 @@ function ADJ()
     builder.addEasier('ADH');
     builder.addEasier('ADI');
 
+    builder.addHarder('ADL');
+
+    builder.addLocalMap('<image src="images/map_ADJ.png" usemap="#localmap">');
+    builder.addLocalMap('<map name="localmap">');
+    builder.addLocalMap('<area shape="rect" coords="0.0,0.0,100.0,100.0" href="index.html?puzzle=ADH" alt="ADH">');
+    builder.addLocalMap('<area shape="rect" coords="150.0,0.0,250.0,100.0" href="index.html?puzzle=ADI" alt="ADI">');
+    builder.addLocalMap('<area shape="rect" coords="75.0,200.0,175.0,300.0" href="index.html?puzzle=ADJ" alt="ADJ">');
+    builder.addLocalMap('<area shape="rect" coords="75.0,400.0,175.0,500.0" href="index.html?puzzle=ADL" alt="ADL">');
+    builder.addLocalMap('</map>');
+
     return builder.getPuzzleData();
 }
 
@@ -5755,6 +6938,15 @@ function AIE()
 
     builder.addEasier('ACQ');
 
+    builder.addHarder('AIC');
+
+    builder.addLocalMap('<image src="images/map_AIE.png" usemap="#localmap">');
+    builder.addLocalMap('<map name="localmap">');
+    builder.addLocalMap('<area shape="rect" coords="7.1054273576e-15,0.0,100.0,100.0" href="index.html?puzzle=ACQ" alt="ACQ">');
+    builder.addLocalMap('<area shape="rect" coords="7.1054273576e-15,400.0,100.0,500.0" href="index.html?puzzle=AIC" alt="AIC">');
+    builder.addLocalMap('<area shape="rect" coords="7.1054273576e-15,200.0,100.0,300.0" href="index.html?puzzle=AIE" alt="AIE">');
+    builder.addLocalMap('</map>');
+
     return builder.getPuzzleData();
 }
 
@@ -5783,7 +6975,18 @@ function AIH()
     builder.recenter();
     builder.normalize();
 
-    builder.addEasier('AEK');
+    builder.addEasier('AIJ');
+
+    builder.addHarder('ACG');
+    builder.addHarder('AII');
+
+    builder.addLocalMap('<image src="images/map_AIH.png" usemap="#localmap">');
+    builder.addLocalMap('<map name="localmap">');
+    builder.addLocalMap('<area shape="rect" coords="150.0,400.0,250.0,500.0" href="index.html?puzzle=ACG" alt="ACG">');
+    builder.addLocalMap('<area shape="rect" coords="75.0,200.0,175.0,300.0" href="index.html?puzzle=AIH" alt="AIH">');
+    builder.addLocalMap('<area shape="rect" coords="0.0,400.0,100.0,500.0" href="index.html?puzzle=AII" alt="AII">');
+    builder.addLocalMap('<area shape="rect" coords="75.0,0.0,175.0,100.0" href="index.html?puzzle=AIJ" alt="AIJ">');
+    builder.addLocalMap('</map>');
 
     return builder.getPuzzleData();
 }
@@ -5810,6 +7013,15 @@ function AAG()
     builder.normalize();
 
     builder.addEasier('AAT');
+
+    builder.addHarder('AAH');
+
+    builder.addLocalMap('<image src="images/map_AAG.png" usemap="#localmap">');
+    builder.addLocalMap('<map name="localmap">');
+    builder.addLocalMap('<area shape="rect" coords="7.1054273576e-15,200.0,100.0,300.0" href="index.html?puzzle=AAG" alt="AAG">');
+    builder.addLocalMap('<area shape="rect" coords="7.1054273576e-15,400.0,100.0,500.0" href="index.html?puzzle=AAH" alt="AAH">');
+    builder.addLocalMap('<area shape="rect" coords="7.1054273576e-15,0.0,100.0,100.0" href="index.html?puzzle=AAT" alt="AAT">');
+    builder.addLocalMap('</map>');
 
     return builder.getPuzzleData();
 }
@@ -5881,6 +7093,16 @@ function ACH()
     builder.addEasier('ACG');
     builder.addEasier('AII');
 
+    builder.addHarder('ACJ');
+
+    builder.addLocalMap('<image src="images/map_ACH.png" usemap="#localmap">');
+    builder.addLocalMap('<map name="localmap">');
+    builder.addLocalMap('<area shape="rect" coords="0.0,0.0,100.0,100.0" href="index.html?puzzle=ACG" alt="ACG">');
+    builder.addLocalMap('<area shape="rect" coords="75.0,200.0,175.0,300.0" href="index.html?puzzle=ACH" alt="ACH">');
+    builder.addLocalMap('<area shape="rect" coords="75.0,400.0,175.0,500.0" href="index.html?puzzle=ACJ" alt="ACJ">');
+    builder.addLocalMap('<area shape="rect" coords="150.0,0.0,250.0,100.0" href="index.html?puzzle=AII" alt="AII">');
+    builder.addLocalMap('</map>');
+
     return builder.getPuzzleData();
 }
 
@@ -5909,6 +7131,15 @@ function ACZ()
     builder.normalize();
 
     builder.addEasier('AED');
+
+    builder.addHarder('ACW');
+
+    builder.addLocalMap('<image src="images/map_ACZ.png" usemap="#localmap">');
+    builder.addLocalMap('<map name="localmap">');
+    builder.addLocalMap('<area shape="rect" coords="7.1054273576e-15,400.0,100.0,500.0" href="index.html?puzzle=ACW" alt="ACW">');
+    builder.addLocalMap('<area shape="rect" coords="7.1054273576e-15,200.0,100.0,300.0" href="index.html?puzzle=ACZ" alt="ACZ">');
+    builder.addLocalMap('<area shape="rect" coords="7.1054273576e-15,0.0,100.0,100.0" href="index.html?puzzle=AED" alt="AED">');
+    builder.addLocalMap('</map>');
 
     return builder.getPuzzleData();
 }
@@ -5948,6 +7179,19 @@ function ABU()
 
     builder.addEasier('ABK');
 
+    builder.addHarder('ABV');
+    builder.addHarder('ACE');
+    builder.addHarder('AHW');
+
+    builder.addLocalMap('<image src="images/map_ABU.png" usemap="#localmap">');
+    builder.addLocalMap('<map name="localmap">');
+    builder.addLocalMap('<area shape="rect" coords="150.0,0.0,250.0,100.0" href="index.html?puzzle=ABK" alt="ABK">');
+    builder.addLocalMap('<area shape="rect" coords="150.0,200.0,250.0,300.0" href="index.html?puzzle=ABU" alt="ABU">');
+    builder.addLocalMap('<area shape="rect" coords="150.0,400.0,250.0,500.0" href="index.html?puzzle=ABV" alt="ABV">');
+    builder.addLocalMap('<area shape="rect" coords="7.1054273576e-15,400.0,100.0,500.0" href="index.html?puzzle=ACE" alt="ACE">');
+    builder.addLocalMap('<area shape="rect" coords="300.0,400.0,400.0,500.0" href="index.html?puzzle=AHW" alt="AHW">');
+    builder.addLocalMap('</map>');
+
     return builder.getPuzzleData();
 }
 
@@ -5977,6 +7221,17 @@ function AHJ()
     builder.normalize();
 
     builder.addEasier('AFZ');
+
+    builder.addHarder('AHI');
+    builder.addHarder('AHM');
+
+    builder.addLocalMap('<image src="images/map_AHJ.png" usemap="#localmap">');
+    builder.addLocalMap('<map name="localmap">');
+    builder.addLocalMap('<area shape="rect" coords="75.0,0.0,175.0,100.0" href="index.html?puzzle=AFZ" alt="AFZ">');
+    builder.addLocalMap('<area shape="rect" coords="0.0,400.0,100.0,500.0" href="index.html?puzzle=AHI" alt="AHI">');
+    builder.addLocalMap('<area shape="rect" coords="75.0,200.0,175.0,300.0" href="index.html?puzzle=AHJ" alt="AHJ">');
+    builder.addLocalMap('<area shape="rect" coords="150.0,400.0,250.0,500.0" href="index.html?puzzle=AHM" alt="AHM">');
+    builder.addLocalMap('</map>');
 
     return builder.getPuzzleData();
 }
@@ -6054,6 +7309,17 @@ function AHS()
 
     builder.addEasier('AHP');
 
+    builder.addHarder('AHR');
+    builder.addHarder('AHV');
+
+    builder.addLocalMap('<image src="images/map_AHS.png" usemap="#localmap">');
+    builder.addLocalMap('<map name="localmap">');
+    builder.addLocalMap('<area shape="rect" coords="75.0,0.0,175.0,100.0" href="index.html?puzzle=AHP" alt="AHP">');
+    builder.addLocalMap('<area shape="rect" coords="0.0,400.0,100.0,500.0" href="index.html?puzzle=AHR" alt="AHR">');
+    builder.addLocalMap('<area shape="rect" coords="75.0,200.0,175.0,300.0" href="index.html?puzzle=AHS" alt="AHS">');
+    builder.addLocalMap('<area shape="rect" coords="150.0,400.0,250.0,500.0" href="index.html?puzzle=AHV" alt="AHV">');
+    builder.addLocalMap('</map>');
+
     return builder.getPuzzleData();
 }
 
@@ -6094,6 +7360,16 @@ function ADV()
     builder.addEasier('ADP');
     builder.addEasier('ADU');
 
+    builder.addHarder('ABX');
+
+    builder.addLocalMap('<image src="images/map_ADV.png" usemap="#localmap">');
+    builder.addLocalMap('<map name="localmap">');
+    builder.addLocalMap('<area shape="rect" coords="75.0,400.0,175.0,500.0" href="index.html?puzzle=ABX" alt="ABX">');
+    builder.addLocalMap('<area shape="rect" coords="150.0,0.0,250.0,100.0" href="index.html?puzzle=ADP" alt="ADP">');
+    builder.addLocalMap('<area shape="rect" coords="0.0,0.0,100.0,100.0" href="index.html?puzzle=ADU" alt="ADU">');
+    builder.addLocalMap('<area shape="rect" coords="75.0,200.0,175.0,300.0" href="index.html?puzzle=ADV" alt="ADV">');
+    builder.addLocalMap('</map>');
+
     return builder.getPuzzleData();
 }
 
@@ -6121,6 +7397,16 @@ function AFE()
 
     builder.addEasier('ADB');
     builder.addEasier('AEM');
+
+    builder.addHarder('AFG');
+
+    builder.addLocalMap('<image src="images/map_AFE.png" usemap="#localmap">');
+    builder.addLocalMap('<map name="localmap">');
+    builder.addLocalMap('<area shape="rect" coords="0.0,0.0,100.0,100.0" href="index.html?puzzle=ADB" alt="ADB">');
+    builder.addLocalMap('<area shape="rect" coords="150.0,0.0,250.0,100.0" href="index.html?puzzle=AEM" alt="AEM">');
+    builder.addLocalMap('<area shape="rect" coords="75.0,200.0,175.0,300.0" href="index.html?puzzle=AFE" alt="AFE">');
+    builder.addLocalMap('<area shape="rect" coords="75.0,400.0,175.0,500.0" href="index.html?puzzle=AFG" alt="AFG">');
+    builder.addLocalMap('</map>');
 
     return builder.getPuzzleData();
 }
@@ -6153,6 +7439,15 @@ function AGT()
 
     builder.addEasier('AGR');
 
+    builder.addHarder('AGX');
+
+    builder.addLocalMap('<image src="images/map_AGT.png" usemap="#localmap">');
+    builder.addLocalMap('<map name="localmap">');
+    builder.addLocalMap('<area shape="rect" coords="7.1054273576e-15,0.0,100.0,100.0" href="index.html?puzzle=AGR" alt="AGR">');
+    builder.addLocalMap('<area shape="rect" coords="7.1054273576e-15,200.0,100.0,300.0" href="index.html?puzzle=AGT" alt="AGT">');
+    builder.addLocalMap('<area shape="rect" coords="7.1054273576e-15,400.0,100.0,500.0" href="index.html?puzzle=AGX" alt="AGX">');
+    builder.addLocalMap('</map>');
+
     return builder.getPuzzleData();
 }
 
@@ -6182,6 +7477,17 @@ function ADT()
     builder.addEasier('ACR');
     builder.addEasier('ADZ');
 
+    builder.addHarder('AFI');
+
+    builder.addLocalMap('<image src="images/map_ADT.png" usemap="#localmap">');
+    builder.addLocalMap('<map name="localmap">');
+    builder.addLocalMap('<area shape="rect" coords="300.0,0.0,400.0,100.0" href="index.html?puzzle=AAS" alt="AAS">');
+    builder.addLocalMap('<area shape="rect" coords="7.1054273576e-15,0.0,100.0,100.0" href="index.html?puzzle=ACR" alt="ACR">');
+    builder.addLocalMap('<area shape="rect" coords="150.0,200.0,250.0,300.0" href="index.html?puzzle=ADT" alt="ADT">');
+    builder.addLocalMap('<area shape="rect" coords="150.0,0.0,250.0,100.0" href="index.html?puzzle=ADZ" alt="ADZ">');
+    builder.addLocalMap('<area shape="rect" coords="150.0,400.0,250.0,500.0" href="index.html?puzzle=AFI" alt="AFI">');
+    builder.addLocalMap('</map>');
+
     return builder.getPuzzleData();
 }
 
@@ -6205,6 +7511,19 @@ function ACQ()
     builder.normalize();
 
     builder.addEasier('ACX');
+
+    builder.addHarder('ACT');
+    builder.addHarder('AID');
+    builder.addHarder('AIE');
+
+    builder.addLocalMap('<image src="images/map_ACQ.png" usemap="#localmap">');
+    builder.addLocalMap('<map name="localmap">');
+    builder.addLocalMap('<area shape="rect" coords="150.0,200.0,250.0,300.0" href="index.html?puzzle=ACQ" alt="ACQ">');
+    builder.addLocalMap('<area shape="rect" coords="300.0,400.0,400.0,500.0" href="index.html?puzzle=ACT" alt="ACT">');
+    builder.addLocalMap('<area shape="rect" coords="150.0,0.0,250.0,100.0" href="index.html?puzzle=ACX" alt="ACX">');
+    builder.addLocalMap('<area shape="rect" coords="150.0,400.0,250.0,500.0" href="index.html?puzzle=AID" alt="AID">');
+    builder.addLocalMap('<area shape="rect" coords="7.1054273576e-15,400.0,100.0,500.0" href="index.html?puzzle=AIE" alt="AIE">');
+    builder.addLocalMap('</map>');
 
     return builder.getPuzzleData();
 }
@@ -6266,6 +7585,16 @@ function ABV()
     builder.addEasier('ABU');
     builder.addEasier('ABW');
 
+    builder.addHarder('AHY');
+
+    builder.addLocalMap('<image src="images/map_ABV.png" usemap="#localmap">');
+    builder.addLocalMap('<map name="localmap">');
+    builder.addLocalMap('<area shape="rect" coords="0.0,0.0,100.0,100.0" href="index.html?puzzle=ABU" alt="ABU">');
+    builder.addLocalMap('<area shape="rect" coords="75.0,200.0,175.0,300.0" href="index.html?puzzle=ABV" alt="ABV">');
+    builder.addLocalMap('<area shape="rect" coords="150.0,0.0,250.0,100.0" href="index.html?puzzle=ABW" alt="ABW">');
+    builder.addLocalMap('<area shape="rect" coords="75.0,400.0,175.0,500.0" href="index.html?puzzle=AHY" alt="AHY">');
+    builder.addLocalMap('</map>');
+
     return builder.getPuzzleData();
 }
 
@@ -6299,6 +7628,17 @@ function ADQ()
 
     builder.addEasier('ADO');
 
+    builder.addHarder('ADR');
+    builder.addHarder('ADX');
+
+    builder.addLocalMap('<image src="images/map_ADQ.png" usemap="#localmap">');
+    builder.addLocalMap('<map name="localmap">');
+    builder.addLocalMap('<area shape="rect" coords="75.0,0.0,175.0,100.0" href="index.html?puzzle=ADO" alt="ADO">');
+    builder.addLocalMap('<area shape="rect" coords="75.0,200.0,175.0,300.0" href="index.html?puzzle=ADQ" alt="ADQ">');
+    builder.addLocalMap('<area shape="rect" coords="0.0,400.0,100.0,500.0" href="index.html?puzzle=ADR" alt="ADR">');
+    builder.addLocalMap('<area shape="rect" coords="150.0,400.0,250.0,500.0" href="index.html?puzzle=ADX" alt="ADX">');
+    builder.addLocalMap('</map>');
+
     return builder.getPuzzleData();
 }
 
@@ -6328,6 +7668,12 @@ function AFX()
     builder.normalize();
 
     builder.addEasier('AFW');
+
+    builder.addLocalMap('<image src="images/map_AFX.png" usemap="#localmap">');
+    builder.addLocalMap('<map name="localmap">');
+    builder.addLocalMap('<area shape="rect" coords="33.3333333333,33.3333333333,133.333333333,133.333333333" href="index.html?puzzle=AFW" alt="AFW">');
+    builder.addLocalMap('<area shape="rect" coords="33.3333333333,366.666666667,133.333333333,466.666666667" href="index.html?puzzle=AFX" alt="AFX">');
+    builder.addLocalMap('</map>');
 
     return builder.getPuzzleData();
 }
@@ -6360,6 +7706,15 @@ function AGL()
     builder.normalize();
 
     builder.addEasier('AGK');
+
+    builder.addHarder('AGM');
+
+    builder.addLocalMap('<image src="images/map_AGL.png" usemap="#localmap">');
+    builder.addLocalMap('<map name="localmap">');
+    builder.addLocalMap('<area shape="rect" coords="7.1054273576e-15,0.0,100.0,100.0" href="index.html?puzzle=AGK" alt="AGK">');
+    builder.addLocalMap('<area shape="rect" coords="7.1054273576e-15,200.0,100.0,300.0" href="index.html?puzzle=AGL" alt="AGL">');
+    builder.addLocalMap('<area shape="rect" coords="7.1054273576e-15,400.0,100.0,500.0" href="index.html?puzzle=AGM" alt="AGM">');
+    builder.addLocalMap('</map>');
 
     return builder.getPuzzleData();
 }
@@ -6400,6 +7755,12 @@ function AIA()
 
     builder.addEasier('AIC');
 
+    builder.addLocalMap('<image src="images/map_AIA.png" usemap="#localmap">');
+    builder.addLocalMap('<map name="localmap">');
+    builder.addLocalMap('<area shape="rect" coords="33.3333333333,366.666666667,133.333333333,466.666666667" href="index.html?puzzle=AIA" alt="AIA">');
+    builder.addLocalMap('<area shape="rect" coords="33.3333333333,33.3333333333,133.333333333,133.333333333" href="index.html?puzzle=AIC" alt="AIC">');
+    builder.addLocalMap('</map>');
+
     return builder.getPuzzleData();
 }
 
@@ -6424,6 +7785,17 @@ function AFP()
     builder.normalize();
 
     builder.addEasier('AFO');
+
+    builder.addHarder('ADF');
+    builder.addHarder('AFR');
+
+    builder.addLocalMap('<image src="images/map_AFP.png" usemap="#localmap">');
+    builder.addLocalMap('<map name="localmap">');
+    builder.addLocalMap('<area shape="rect" coords="0.0,400.0,100.0,500.0" href="index.html?puzzle=ADF" alt="ADF">');
+    builder.addLocalMap('<area shape="rect" coords="75.0,0.0,175.0,100.0" href="index.html?puzzle=AFO" alt="AFO">');
+    builder.addLocalMap('<area shape="rect" coords="75.0,200.0,175.0,300.0" href="index.html?puzzle=AFP" alt="AFP">');
+    builder.addLocalMap('<area shape="rect" coords="150.0,400.0,250.0,500.0" href="index.html?puzzle=AFR" alt="AFR">');
+    builder.addLocalMap('</map>');
 
     return builder.getPuzzleData();
 }
@@ -6459,6 +7831,21 @@ function AEL()
 
     builder.addEasier('ADW');
 
+    builder.addHarder('ABH');
+    builder.addHarder('ACN');
+    builder.addHarder('AFQ');
+    builder.addHarder('AIG');
+
+    builder.addLocalMap('<image src="images/map_AEL.png" usemap="#localmap">');
+    builder.addLocalMap('<map name="localmap">');
+    builder.addLocalMap('<area shape="rect" coords="131.818181818,359.090909091,231.818181818,459.090909091" href="index.html?puzzle=ABH" alt="ABH">');
+    builder.addLocalMap('<area shape="rect" coords="-4.54545454545,359.090909091,95.4545454545,459.090909091" href="index.html?puzzle=ACN" alt="ACN">');
+    builder.addLocalMap('<area shape="rect" coords="200.0,-4.54545454545,300.0,95.4545454545" href="index.html?puzzle=ADW" alt="ADW">');
+    builder.addLocalMap('<area shape="rect" coords="200.0,177.272727273,300.0,277.272727273" href="index.html?puzzle=AEL" alt="AEL">');
+    builder.addLocalMap('<area shape="rect" coords="404.545454545,359.090909091,504.545454545,459.090909091" href="index.html?puzzle=AFQ" alt="AFQ">');
+    builder.addLocalMap('<area shape="rect" coords="268.181818182,359.090909091,368.181818182,459.090909091" href="index.html?puzzle=AIG" alt="AIG">');
+    builder.addLocalMap('</map>');
+
     return builder.getPuzzleData();
 }
 
@@ -6489,6 +7876,21 @@ function ADH()
     builder.addEasier('ADF');
     builder.addEasier('AFB');
 
+    builder.addHarder('ACW');
+    builder.addHarder('ADJ');
+    builder.addHarder('ADK');
+
+    builder.addLocalMap('<image src="images/map_ADH.png" usemap="#localmap">');
+    builder.addLocalMap('<map name="localmap">');
+    builder.addLocalMap('<area shape="rect" coords="7.1054273576e-15,400.0,100.0,500.0" href="index.html?puzzle=ACW" alt="ACW">');
+    builder.addLocalMap('<area shape="rect" coords="150.0,0.0,250.0,100.0" href="index.html?puzzle=ADE" alt="ADE">');
+    builder.addLocalMap('<area shape="rect" coords="7.1054273576e-15,0.0,100.0,100.0" href="index.html?puzzle=ADF" alt="ADF">');
+    builder.addLocalMap('<area shape="rect" coords="150.0,200.0,250.0,300.0" href="index.html?puzzle=ADH" alt="ADH">');
+    builder.addLocalMap('<area shape="rect" coords="150.0,400.0,250.0,500.0" href="index.html?puzzle=ADJ" alt="ADJ">');
+    builder.addLocalMap('<area shape="rect" coords="300.0,400.0,400.0,500.0" href="index.html?puzzle=ADK" alt="ADK">');
+    builder.addLocalMap('<area shape="rect" coords="300.0,0.0,400.0,100.0" href="index.html?puzzle=AFB" alt="AFB">');
+    builder.addLocalMap('</map>');
+
     return builder.getPuzzleData();
 }
 
@@ -6516,6 +7918,12 @@ function AEJ()
     builder.normalize();
 
     builder.addEasier('AEI');
+
+    builder.addLocalMap('<image src="images/map_AEJ.png" usemap="#localmap">');
+    builder.addLocalMap('<map name="localmap">');
+    builder.addLocalMap('<area shape="rect" coords="33.3333333333,33.3333333333,133.333333333,133.333333333" href="index.html?puzzle=AEI" alt="AEI">');
+    builder.addLocalMap('<area shape="rect" coords="33.3333333333,366.666666667,133.333333333,466.666666667" href="index.html?puzzle=AEJ" alt="AEJ">');
+    builder.addLocalMap('</map>');
 
     return builder.getPuzzleData();
 }
@@ -6545,6 +7953,17 @@ function AFU()
 
     builder.addEasier('AFS');
 
+    builder.addHarder('AGC');
+    builder.addHarder('AGS');
+
+    builder.addLocalMap('<image src="images/map_AFU.png" usemap="#localmap">');
+    builder.addLocalMap('<map name="localmap">');
+    builder.addLocalMap('<area shape="rect" coords="75.0,0.0,175.0,100.0" href="index.html?puzzle=AFS" alt="AFS">');
+    builder.addLocalMap('<area shape="rect" coords="75.0,200.0,175.0,300.0" href="index.html?puzzle=AFU" alt="AFU">');
+    builder.addLocalMap('<area shape="rect" coords="0.0,400.0,100.0,500.0" href="index.html?puzzle=AGC" alt="AGC">');
+    builder.addLocalMap('<area shape="rect" coords="150.0,400.0,250.0,500.0" href="index.html?puzzle=AGS" alt="AGS">');
+    builder.addLocalMap('</map>');
+
     return builder.getPuzzleData();
 }
 
@@ -6571,6 +7990,16 @@ function AFO()
 
     builder.addEasier('ACR');
     builder.addEasier('AFN');
+
+    builder.addHarder('AFP');
+
+    builder.addLocalMap('<image src="images/map_AFO.png" usemap="#localmap">');
+    builder.addLocalMap('<map name="localmap">');
+    builder.addLocalMap('<area shape="rect" coords="0.0,0.0,100.0,100.0" href="index.html?puzzle=ACR" alt="ACR">');
+    builder.addLocalMap('<area shape="rect" coords="150.0,0.0,250.0,100.0" href="index.html?puzzle=AFN" alt="AFN">');
+    builder.addLocalMap('<area shape="rect" coords="75.0,200.0,175.0,300.0" href="index.html?puzzle=AFO" alt="AFO">');
+    builder.addLocalMap('<area shape="rect" coords="75.0,400.0,175.0,500.0" href="index.html?puzzle=AFP" alt="AFP">');
+    builder.addLocalMap('</map>');
 
     return builder.getPuzzleData();
 }
@@ -6637,6 +8066,12 @@ function ACA()
 
     builder.addEasier('ABX');
 
+    builder.addLocalMap('<image src="images/map_ACA.png" usemap="#localmap">');
+    builder.addLocalMap('<map name="localmap">');
+    builder.addLocalMap('<area shape="rect" coords="33.3333333333,33.3333333333,133.333333333,133.333333333" href="index.html?puzzle=ABX" alt="ABX">');
+    builder.addLocalMap('<area shape="rect" coords="33.3333333333,366.666666667,133.333333333,466.666666667" href="index.html?puzzle=ACA" alt="ACA">');
+    builder.addLocalMap('</map>');
+
     return builder.getPuzzleData();
 }
 
@@ -6687,6 +8122,16 @@ function ACN()
     builder.addEasier('ADP');
     builder.addEasier('AEL');
 
+    builder.addHarder('ABN');
+
+    builder.addLocalMap('<image src="images/map_ACN.png" usemap="#localmap">');
+    builder.addLocalMap('<map name="localmap">');
+    builder.addLocalMap('<area shape="rect" coords="75.0,400.0,175.0,500.0" href="index.html?puzzle=ABN" alt="ABN">');
+    builder.addLocalMap('<area shape="rect" coords="75.0,200.0,175.0,300.0" href="index.html?puzzle=ACN" alt="ACN">');
+    builder.addLocalMap('<area shape="rect" coords="0.0,0.0,100.0,100.0" href="index.html?puzzle=ADP" alt="ADP">');
+    builder.addLocalMap('<area shape="rect" coords="150.0,0.0,250.0,100.0" href="index.html?puzzle=AEL" alt="AEL">');
+    builder.addLocalMap('</map>');
+
     return builder.getPuzzleData();
 }
 
@@ -6711,6 +8156,19 @@ function AAR()
     builder.normalize();
 
     builder.addEasier('AAB');
+
+    builder.addHarder('ADN');
+    builder.addHarder('AEG');
+    builder.addHarder('AHG');
+
+    builder.addLocalMap('<image src="images/map_AAR.png" usemap="#localmap">');
+    builder.addLocalMap('<map name="localmap">');
+    builder.addLocalMap('<area shape="rect" coords="150.0,0.0,250.0,100.0" href="index.html?puzzle=AAB" alt="AAB">');
+    builder.addLocalMap('<area shape="rect" coords="150.0,200.0,250.0,300.0" href="index.html?puzzle=AAR" alt="AAR">');
+    builder.addLocalMap('<area shape="rect" coords="7.1054273576e-15,400.0,100.0,500.0" href="index.html?puzzle=ADN" alt="ADN">');
+    builder.addLocalMap('<area shape="rect" coords="300.0,400.0,400.0,500.0" href="index.html?puzzle=AEG" alt="AEG">');
+    builder.addLocalMap('<area shape="rect" coords="150.0,400.0,250.0,500.0" href="index.html?puzzle=AHG" alt="AHG">');
+    builder.addLocalMap('</map>');
 
     return builder.getPuzzleData();
 }
@@ -6754,6 +8212,15 @@ function AAO()
 
     builder.addEasier('AAI');
 
+    builder.addHarder('ACC');
+
+    builder.addLocalMap('<image src="images/map_AAO.png" usemap="#localmap">');
+    builder.addLocalMap('<map name="localmap">');
+    builder.addLocalMap('<area shape="rect" coords="7.1054273576e-15,0.0,100.0,100.0" href="index.html?puzzle=AAI" alt="AAI">');
+    builder.addLocalMap('<area shape="rect" coords="7.1054273576e-15,200.0,100.0,300.0" href="index.html?puzzle=AAO" alt="AAO">');
+    builder.addLocalMap('<area shape="rect" coords="7.1054273576e-15,400.0,100.0,500.0" href="index.html?puzzle=ACC" alt="ACC">');
+    builder.addLocalMap('</map>');
+
     return builder.getPuzzleData();
 }
 
@@ -6782,6 +8249,21 @@ function AGC()
     builder.normalize();
 
     builder.addEasier('AFU');
+
+    builder.addHarder('AGD');
+    builder.addHarder('AGE');
+    builder.addHarder('AGF');
+    builder.addHarder('AGH');
+
+    builder.addLocalMap('<image src="images/map_AGC.png" usemap="#localmap">');
+    builder.addLocalMap('<map name="localmap">');
+    builder.addLocalMap('<area shape="rect" coords="200.0,-4.54545454545,300.0,95.4545454545" href="index.html?puzzle=AFU" alt="AFU">');
+    builder.addLocalMap('<area shape="rect" coords="200.0,177.272727273,300.0,277.272727273" href="index.html?puzzle=AGC" alt="AGC">');
+    builder.addLocalMap('<area shape="rect" coords="404.545454545,359.090909091,504.545454545,459.090909091" href="index.html?puzzle=AGD" alt="AGD">');
+    builder.addLocalMap('<area shape="rect" coords="268.181818182,359.090909091,368.181818182,459.090909091" href="index.html?puzzle=AGE" alt="AGE">');
+    builder.addLocalMap('<area shape="rect" coords="-4.54545454545,359.090909091,95.4545454545,459.090909091" href="index.html?puzzle=AGF" alt="AGF">');
+    builder.addLocalMap('<area shape="rect" coords="131.818181818,359.090909091,231.818181818,459.090909091" href="index.html?puzzle=AGH" alt="AGH">');
+    builder.addLocalMap('</map>');
 
     return builder.getPuzzleData();
 }
@@ -6815,6 +8297,15 @@ function AHX()
     builder.normalize();
 
     builder.addEasier('ABW');
+
+    builder.addHarder('AHY');
+
+    builder.addLocalMap('<image src="images/map_AHX.png" usemap="#localmap">');
+    builder.addLocalMap('<map name="localmap">');
+    builder.addLocalMap('<area shape="rect" coords="7.1054273576e-15,0.0,100.0,100.0" href="index.html?puzzle=ABW" alt="ABW">');
+    builder.addLocalMap('<area shape="rect" coords="7.1054273576e-15,200.0,100.0,300.0" href="index.html?puzzle=AHX" alt="AHX">');
+    builder.addLocalMap('<area shape="rect" coords="7.1054273576e-15,400.0,100.0,500.0" href="index.html?puzzle=AHY" alt="AHY">');
+    builder.addLocalMap('</map>');
 
     return builder.getPuzzleData();
 }
@@ -6853,6 +8344,12 @@ function ACB()
 
     builder.addEasier('ACC');
 
+    builder.addLocalMap('<image src="images/map_ACB.png" usemap="#localmap">');
+    builder.addLocalMap('<map name="localmap">');
+    builder.addLocalMap('<area shape="rect" coords="33.3333333333,366.666666667,133.333333333,466.666666667" href="index.html?puzzle=ACB" alt="ACB">');
+    builder.addLocalMap('<area shape="rect" coords="33.3333333333,33.3333333333,133.333333333,133.333333333" href="index.html?puzzle=ACC" alt="ACC">');
+    builder.addLocalMap('</map>');
+
     return builder.getPuzzleData();
 }
 
@@ -6887,6 +8384,15 @@ function AIB()
 
     builder.addEasier('AID');
 
+    builder.addHarder('AHZ');
+
+    builder.addLocalMap('<image src="images/map_AIB.png" usemap="#localmap">');
+    builder.addLocalMap('<map name="localmap">');
+    builder.addLocalMap('<area shape="rect" coords="7.1054273576e-15,400.0,100.0,500.0" href="index.html?puzzle=AHZ" alt="AHZ">');
+    builder.addLocalMap('<area shape="rect" coords="7.1054273576e-15,200.0,100.0,300.0" href="index.html?puzzle=AIB" alt="AIB">');
+    builder.addLocalMap('<area shape="rect" coords="7.1054273576e-15,0.0,100.0,100.0" href="index.html?puzzle=AID" alt="AID">');
+    builder.addLocalMap('</map>');
+
     return builder.getPuzzleData();
 }
 
@@ -6913,6 +8419,13 @@ function AFG()
 
     builder.addEasier('ACP');
     builder.addEasier('AFE');
+
+    builder.addLocalMap('<image src="images/map_AFG.png" usemap="#localmap">');
+    builder.addLocalMap('<map name="localmap">');
+    builder.addLocalMap('<area shape="rect" coords="33.3333333333,33.3333333333,133.333333333,133.333333333" href="index.html?puzzle=ACP" alt="ACP">');
+    builder.addLocalMap('<area shape="rect" coords="283.333333333,33.3333333333,383.333333333,133.333333333" href="index.html?puzzle=AFE" alt="AFE">');
+    builder.addLocalMap('<area shape="rect" coords="158.333333333,366.666666667,258.333333333,466.666666667" href="index.html?puzzle=AFG" alt="AFG">');
+    builder.addLocalMap('</map>');
 
     return builder.getPuzzleData();
 }
@@ -6942,6 +8455,17 @@ function ABH()
 
     builder.addEasier('AEL');
 
+    builder.addHarder('AAV');
+    builder.addHarder('ABI');
+
+    builder.addLocalMap('<image src="images/map_ABH.png" usemap="#localmap">');
+    builder.addLocalMap('<map name="localmap">');
+    builder.addLocalMap('<area shape="rect" coords="150.0,400.0,250.0,500.0" href="index.html?puzzle=AAV" alt="AAV">');
+    builder.addLocalMap('<area shape="rect" coords="75.0,200.0,175.0,300.0" href="index.html?puzzle=ABH" alt="ABH">');
+    builder.addLocalMap('<area shape="rect" coords="0.0,400.0,100.0,500.0" href="index.html?puzzle=ABI" alt="ABI">');
+    builder.addLocalMap('<area shape="rect" coords="75.0,0.0,175.0,100.0" href="index.html?puzzle=AEL" alt="AEL">');
+    builder.addLocalMap('</map>');
+
     return builder.getPuzzleData();
 }
 
@@ -6969,6 +8493,15 @@ function AEB()
     builder.addEasier('AEQ');
     builder.addEasier('AFJ');
     builder.addEasier('AFK');
+
+    builder.addLocalMap('<image src="images/map_AEB.png" usemap="#localmap">');
+    builder.addLocalMap('<map name="localmap">');
+    builder.addLocalMap('<area shape="rect" coords="404.545454545,-4.54545454545,504.545454545,95.4545454545" href="index.html?puzzle=ADZ" alt="ADZ">');
+    builder.addLocalMap('<area shape="rect" coords="200.0,177.272727273,300.0,277.272727273" href="index.html?puzzle=AEB" alt="AEB">');
+    builder.addLocalMap('<area shape="rect" coords="-4.54545454545,-4.54545454545,95.4545454545,95.4545454545" href="index.html?puzzle=AEQ" alt="AEQ">');
+    builder.addLocalMap('<area shape="rect" coords="131.818181818,-4.54545454545,231.818181818,95.4545454545" href="index.html?puzzle=AFJ" alt="AFJ">');
+    builder.addLocalMap('<area shape="rect" coords="268.181818182,-4.54545454545,368.181818182,95.4545454545" href="index.html?puzzle=AFK" alt="AFK">');
+    builder.addLocalMap('</map>');
 
     return builder.getPuzzleData();
 }
@@ -7002,6 +8535,15 @@ function AHE()
     builder.normalize();
 
     builder.addEasier('AHD');
+
+    builder.addHarder('AHF');
+
+    builder.addLocalMap('<image src="images/map_AHE.png" usemap="#localmap">');
+    builder.addLocalMap('<map name="localmap">');
+    builder.addLocalMap('<area shape="rect" coords="7.1054273576e-15,0.0,100.0,100.0" href="index.html?puzzle=AHD" alt="AHD">');
+    builder.addLocalMap('<area shape="rect" coords="7.1054273576e-15,200.0,100.0,300.0" href="index.html?puzzle=AHE" alt="AHE">');
+    builder.addLocalMap('<area shape="rect" coords="7.1054273576e-15,400.0,100.0,500.0" href="index.html?puzzle=AHF" alt="AHF">');
+    builder.addLocalMap('</map>');
 
     return builder.getPuzzleData();
 }
@@ -7069,6 +8611,17 @@ function ACG()
 
     builder.addEasier('AIH');
 
+    builder.addHarder('ACH');
+    builder.addHarder('ACI');
+
+    builder.addLocalMap('<image src="images/map_ACG.png" usemap="#localmap">');
+    builder.addLocalMap('<map name="localmap">');
+    builder.addLocalMap('<area shape="rect" coords="75.0,200.0,175.0,300.0" href="index.html?puzzle=ACG" alt="ACG">');
+    builder.addLocalMap('<area shape="rect" coords="150.0,400.0,250.0,500.0" href="index.html?puzzle=ACH" alt="ACH">');
+    builder.addLocalMap('<area shape="rect" coords="0.0,400.0,100.0,500.0" href="index.html?puzzle=ACI" alt="ACI">');
+    builder.addLocalMap('<area shape="rect" coords="75.0,0.0,175.0,100.0" href="index.html?puzzle=AIH" alt="AIH">');
+    builder.addLocalMap('</map>');
+
     return builder.getPuzzleData();
 }
 
@@ -7093,6 +8646,21 @@ function AAB()
     builder.normalize();
 
     builder.addEasier('AAA');
+
+    builder.addHarder('AAC');
+    builder.addHarder('AAF');
+    builder.addHarder('AAR');
+    builder.addHarder('ADB');
+
+    builder.addLocalMap('<image src="images/map_AAB.png" usemap="#localmap">');
+    builder.addLocalMap('<map name="localmap">');
+    builder.addLocalMap('<area shape="rect" coords="200.0,-4.54545454545,300.0,95.4545454545" href="index.html?puzzle=AAA" alt="AAA">');
+    builder.addLocalMap('<area shape="rect" coords="200.0,177.272727273,300.0,277.272727273" href="index.html?puzzle=AAB" alt="AAB">');
+    builder.addLocalMap('<area shape="rect" coords="131.818181818,359.090909091,231.818181818,459.090909091" href="index.html?puzzle=AAC" alt="AAC">');
+    builder.addLocalMap('<area shape="rect" coords="-4.54545454545,359.090909091,95.4545454545,459.090909091" href="index.html?puzzle=AAF" alt="AAF">');
+    builder.addLocalMap('<area shape="rect" coords="268.181818182,359.090909091,368.181818182,459.090909091" href="index.html?puzzle=AAR" alt="AAR">');
+    builder.addLocalMap('<area shape="rect" coords="404.545454545,359.090909091,504.545454545,459.090909091" href="index.html?puzzle=ADB" alt="ADB">');
+    builder.addLocalMap('</map>');
 
     return builder.getPuzzleData();
 }
@@ -7119,6 +8687,18 @@ function AEA()
     builder.addEasier('AEC');
     builder.addEasier('AES');
 
+    builder.addHarder('AAW');
+    builder.addHarder('AEE');
+
+    builder.addLocalMap('<image src="images/map_AEA.png" usemap="#localmap">');
+    builder.addLocalMap('<map name="localmap">');
+    builder.addLocalMap('<area shape="rect" coords="0.0,400.0,100.0,500.0" href="index.html?puzzle=AAW" alt="AAW">');
+    builder.addLocalMap('<area shape="rect" coords="75.0,200.0,175.0,300.0" href="index.html?puzzle=AEA" alt="AEA">');
+    builder.addLocalMap('<area shape="rect" coords="0.0,0.0,100.0,100.0" href="index.html?puzzle=AEC" alt="AEC">');
+    builder.addLocalMap('<area shape="rect" coords="150.0,400.0,250.0,500.0" href="index.html?puzzle=AEE" alt="AEE">');
+    builder.addLocalMap('<area shape="rect" coords="150.0,0.0,250.0,100.0" href="index.html?puzzle=AES" alt="AES">');
+    builder.addLocalMap('</map>');
+
     return builder.getPuzzleData();
 }
 
@@ -7144,6 +8724,16 @@ function AEU()
 
     builder.addEasier('AEV');
     builder.addEasier('AEW');
+
+    builder.addHarder('AAP');
+
+    builder.addLocalMap('<image src="images/map_AEU.png" usemap="#localmap">');
+    builder.addLocalMap('<map name="localmap">');
+    builder.addLocalMap('<area shape="rect" coords="75.0,400.0,175.0,500.0" href="index.html?puzzle=AAP" alt="AAP">');
+    builder.addLocalMap('<area shape="rect" coords="75.0,200.0,175.0,300.0" href="index.html?puzzle=AEU" alt="AEU">');
+    builder.addLocalMap('<area shape="rect" coords="150.0,0.0,250.0,100.0" href="index.html?puzzle=AEV" alt="AEV">');
+    builder.addLocalMap('<area shape="rect" coords="0.0,0.0,100.0,100.0" href="index.html?puzzle=AEW" alt="AEW">');
+    builder.addLocalMap('</map>');
 
     return builder.getPuzzleData();
 }
@@ -7172,6 +8762,19 @@ function AIK()
     builder.recenter();
     builder.normalize();
 
+    builder.addEasier('AIJ');
+    builder.addEasier('AIM');
+
+    builder.addHarder('AII');
+
+    builder.addLocalMap('<image src="images/map_AIK.png" usemap="#localmap">');
+    builder.addLocalMap('<map name="localmap">');
+    builder.addLocalMap('<area shape="rect" coords="75.0,400.0,175.0,500.0" href="index.html?puzzle=AII" alt="AII">');
+    builder.addLocalMap('<area shape="rect" coords="150.0,0.0,250.0,100.0" href="index.html?puzzle=AIJ" alt="AIJ">');
+    builder.addLocalMap('<area shape="rect" coords="75.0,200.0,175.0,300.0" href="index.html?puzzle=AIK" alt="AIK">');
+    builder.addLocalMap('<area shape="rect" coords="0.0,0.0,100.0,100.0" href="index.html?puzzle=AIM" alt="AIM">');
+    builder.addLocalMap('</map>');
+
     return builder.getPuzzleData();
 }
 
@@ -7198,6 +8801,16 @@ function AFC()
     builder.addEasier('AEZ');
     builder.addEasier('AFH');
 
+    builder.addHarder('ABT');
+
+    builder.addLocalMap('<image src="images/map_AFC.png" usemap="#localmap">');
+    builder.addLocalMap('<map name="localmap">');
+    builder.addLocalMap('<area shape="rect" coords="75.0,400.0,175.0,500.0" href="index.html?puzzle=ABT" alt="ABT">');
+    builder.addLocalMap('<area shape="rect" coords="150.0,0.0,250.0,100.0" href="index.html?puzzle=AEZ" alt="AEZ">');
+    builder.addLocalMap('<area shape="rect" coords="75.0,200.0,175.0,300.0" href="index.html?puzzle=AFC" alt="AFC">');
+    builder.addLocalMap('<area shape="rect" coords="0.0,0.0,100.0,100.0" href="index.html?puzzle=AFH" alt="AFH">');
+    builder.addLocalMap('</map>');
+
     return builder.getPuzzleData();
 }
 
@@ -7222,6 +8835,17 @@ function AEM()
     builder.normalize();
 
     builder.addEasier('AAC');
+
+    builder.addHarder('AFE');
+    builder.addHarder('AFF');
+
+    builder.addLocalMap('<image src="images/map_AEM.png" usemap="#localmap">');
+    builder.addLocalMap('<map name="localmap">');
+    builder.addLocalMap('<area shape="rect" coords="75.0,0.0,175.0,100.0" href="index.html?puzzle=AAC" alt="AAC">');
+    builder.addLocalMap('<area shape="rect" coords="75.0,200.0,175.0,300.0" href="index.html?puzzle=AEM" alt="AEM">');
+    builder.addLocalMap('<area shape="rect" coords="0.0,400.0,100.0,500.0" href="index.html?puzzle=AFE" alt="AFE">');
+    builder.addLocalMap('<area shape="rect" coords="150.0,400.0,250.0,500.0" href="index.html?puzzle=AFF" alt="AFF">');
+    builder.addLocalMap('</map>');
 
     return builder.getPuzzleData();
 }
@@ -7255,6 +8879,12 @@ function AGQ()
 
     builder.addEasier('AGH');
 
+    builder.addLocalMap('<image src="images/map_AGQ.png" usemap="#localmap">');
+    builder.addLocalMap('<map name="localmap">');
+    builder.addLocalMap('<area shape="rect" coords="33.3333333333,33.3333333333,133.333333333,133.333333333" href="index.html?puzzle=AGH" alt="AGH">');
+    builder.addLocalMap('<area shape="rect" coords="33.3333333333,366.666666667,133.333333333,466.666666667" href="index.html?puzzle=AGQ" alt="AGQ">');
+    builder.addLocalMap('</map>');
+
     return builder.getPuzzleData();
 }
 
@@ -7284,6 +8914,15 @@ function AGG()
     builder.normalize();
 
     builder.addEasier('AGB');
+
+    builder.addHarder('AGI');
+
+    builder.addLocalMap('<image src="images/map_AGG.png" usemap="#localmap">');
+    builder.addLocalMap('<map name="localmap">');
+    builder.addLocalMap('<area shape="rect" coords="7.1054273576e-15,0.0,100.0,100.0" href="index.html?puzzle=AGB" alt="AGB">');
+    builder.addLocalMap('<area shape="rect" coords="7.1054273576e-15,200.0,100.0,300.0" href="index.html?puzzle=AGG" alt="AGG">');
+    builder.addLocalMap('<area shape="rect" coords="7.1054273576e-15,400.0,100.0,500.0" href="index.html?puzzle=AGI" alt="AGI">');
+    builder.addLocalMap('</map>');
 
     return builder.getPuzzleData();
 }
@@ -7339,6 +8978,14 @@ function ACM()
     builder.addEasier('ACW');
     builder.addEasier('ADM');
 
+    builder.addLocalMap('<image src="images/map_ACM.png" usemap="#localmap">');
+    builder.addLocalMap('<map name="localmap">');
+    builder.addLocalMap('<area shape="rect" coords="12.5,12.5,112.5,112.5" href="index.html?puzzle=ABB" alt="ABB">');
+    builder.addLocalMap('<area shape="rect" coords="200.0,262.5,300.0,362.5" href="index.html?puzzle=ACM" alt="ACM">');
+    builder.addLocalMap('<area shape="rect" coords="387.5,12.5,487.5,112.5" href="index.html?puzzle=ACW" alt="ACW">');
+    builder.addLocalMap('<area shape="rect" coords="200.0,12.5,300.0,112.5" href="index.html?puzzle=ADM" alt="ADM">');
+    builder.addLocalMap('</map>');
+
     return builder.getPuzzleData();
 }
 
@@ -7365,6 +9012,15 @@ function AAN()
     builder.normalize();
 
     builder.addEasier('AAH');
+
+    builder.addHarder('ACK');
+
+    builder.addLocalMap('<image src="images/map_AAN.png" usemap="#localmap">');
+    builder.addLocalMap('<map name="localmap">');
+    builder.addLocalMap('<area shape="rect" coords="7.1054273576e-15,0.0,100.0,100.0" href="index.html?puzzle=AAH" alt="AAH">');
+    builder.addLocalMap('<area shape="rect" coords="7.1054273576e-15,200.0,100.0,300.0" href="index.html?puzzle=AAN" alt="AAN">');
+    builder.addLocalMap('<area shape="rect" coords="7.1054273576e-15,400.0,100.0,500.0" href="index.html?puzzle=ACK" alt="ACK">');
+    builder.addLocalMap('</map>');
 
     return builder.getPuzzleData();
 }
@@ -7413,6 +9069,12 @@ function ACF()
 
     builder.addEasier('ACE');
 
+    builder.addLocalMap('<image src="images/map_ACF.png" usemap="#localmap">');
+    builder.addLocalMap('<map name="localmap">');
+    builder.addLocalMap('<area shape="rect" coords="33.3333333333,33.3333333333,133.333333333,133.333333333" href="index.html?puzzle=ACE" alt="ACE">');
+    builder.addLocalMap('<area shape="rect" coords="33.3333333333,366.666666667,133.333333333,466.666666667" href="index.html?puzzle=ACF" alt="ACF">');
+    builder.addLocalMap('</map>');
+
     return builder.getPuzzleData();
 }
 
@@ -7438,6 +9100,15 @@ function AEH()
     builder.normalize();
 
     builder.addEasier('ACU');
+
+    builder.addHarder('AEI');
+
+    builder.addLocalMap('<image src="images/map_AEH.png" usemap="#localmap">');
+    builder.addLocalMap('<map name="localmap">');
+    builder.addLocalMap('<area shape="rect" coords="7.1054273576e-15,0.0,100.0,100.0" href="index.html?puzzle=ACU" alt="ACU">');
+    builder.addLocalMap('<area shape="rect" coords="7.1054273576e-15,200.0,100.0,300.0" href="index.html?puzzle=AEH" alt="AEH">');
+    builder.addLocalMap('<area shape="rect" coords="7.1054273576e-15,400.0,100.0,500.0" href="index.html?puzzle=AEI" alt="AEI">');
+    builder.addLocalMap('</map>');
 
     return builder.getPuzzleData();
 }
@@ -7471,6 +9142,19 @@ function AAM()
 
     builder.addEasier('AAF');
 
+    builder.addHarder('AAQ');
+    builder.addHarder('AAX');
+    builder.addHarder('ABE');
+
+    builder.addLocalMap('<image src="images/map_AAM.png" usemap="#localmap">');
+    builder.addLocalMap('<map name="localmap">');
+    builder.addLocalMap('<area shape="rect" coords="150.0,0.0,250.0,100.0" href="index.html?puzzle=AAF" alt="AAF">');
+    builder.addLocalMap('<area shape="rect" coords="150.0,200.0,250.0,300.0" href="index.html?puzzle=AAM" alt="AAM">');
+    builder.addLocalMap('<area shape="rect" coords="7.1054273576e-15,400.0,100.0,500.0" href="index.html?puzzle=AAQ" alt="AAQ">');
+    builder.addLocalMap('<area shape="rect" coords="150.0,400.0,250.0,500.0" href="index.html?puzzle=AAX" alt="AAX">');
+    builder.addLocalMap('<area shape="rect" coords="300.0,400.0,400.0,500.0" href="index.html?puzzle=ABE" alt="ABE">');
+    builder.addLocalMap('</map>');
+
     return builder.getPuzzleData();
 }
 
@@ -7500,6 +9184,12 @@ function AGF()
     builder.normalize();
 
     builder.addEasier('AGC');
+
+    builder.addLocalMap('<image src="images/map_AGF.png" usemap="#localmap">');
+    builder.addLocalMap('<map name="localmap">');
+    builder.addLocalMap('<area shape="rect" coords="33.3333333333,33.3333333333,133.333333333,133.333333333" href="index.html?puzzle=AGC" alt="AGC">');
+    builder.addLocalMap('<area shape="rect" coords="33.3333333333,366.666666667,133.333333333,466.666666667" href="index.html?puzzle=AGF" alt="AGF">');
+    builder.addLocalMap('</map>');
 
     return builder.getPuzzleData();
 }
@@ -7534,6 +9224,15 @@ function AIC()
     builder.normalize();
 
     builder.addEasier('AIE');
+
+    builder.addHarder('AIA');
+
+    builder.addLocalMap('<image src="images/map_AIC.png" usemap="#localmap">');
+    builder.addLocalMap('<map name="localmap">');
+    builder.addLocalMap('<area shape="rect" coords="7.1054273576e-15,400.0,100.0,500.0" href="index.html?puzzle=AIA" alt="AIA">');
+    builder.addLocalMap('<area shape="rect" coords="7.1054273576e-15,200.0,100.0,300.0" href="index.html?puzzle=AIC" alt="AIC">');
+    builder.addLocalMap('<area shape="rect" coords="7.1054273576e-15,0.0,100.0,100.0" href="index.html?puzzle=AIE" alt="AIE">');
+    builder.addLocalMap('</map>');
 
     return builder.getPuzzleData();
 }
@@ -7632,6 +9331,12 @@ function AHH()
 
     builder.addEasier('AHY');
 
+    builder.addLocalMap('<image src="images/map_AHH.png" usemap="#localmap">');
+    builder.addLocalMap('<map name="localmap">');
+    builder.addLocalMap('<area shape="rect" coords="33.3333333333,366.666666667,133.333333333,466.666666667" href="index.html?puzzle=AHH" alt="AHH">');
+    builder.addLocalMap('<area shape="rect" coords="33.3333333333,33.3333333333,133.333333333,133.333333333" href="index.html?puzzle=AHY" alt="AHY">');
+    builder.addLocalMap('</map>');
+
     return builder.getPuzzleData();
 }
 
@@ -7656,10 +9361,24 @@ function AAP()
     builder.recenter();
     builder.normalize();
 
+    builder.addEasier('AAD');
     builder.addEasier('ACR');
     builder.addEasier('ADZ');
     builder.addEasier('AEN');
     builder.addEasier('AEU');
+
+    builder.addHarder('AAL');
+
+    builder.addLocalMap('<image src="images/map_AAP.png" usemap="#localmap">');
+    builder.addLocalMap('<map name="localmap">');
+    builder.addLocalMap('<area shape="rect" coords="-14.2857142857,-14.2857142857,85.7142857143,85.7142857143" href="index.html?puzzle=AAD" alt="AAD">');
+    builder.addLocalMap('<area shape="rect" coords="253.571428571,271.428571429,353.571428571,371.428571429" href="index.html?puzzle=AAL" alt="AAL">');
+    builder.addLocalMap('<area shape="rect" coords="253.571428571,128.571428571,353.571428571,228.571428571" href="index.html?puzzle=AAP" alt="AAP">');
+    builder.addLocalMap('<area shape="rect" coords="307.142857143,-14.2857142857,407.142857143,85.7142857143" href="index.html?puzzle=ACR" alt="ACR">');
+    builder.addLocalMap('<area shape="rect" coords="200.0,-14.2857142857,300.0,85.7142857143" href="index.html?puzzle=ADZ" alt="ADZ">');
+    builder.addLocalMap('<area shape="rect" coords="414.285714286,-14.2857142857,514.285714286,85.7142857143" href="index.html?puzzle=AEN" alt="AEN">');
+    builder.addLocalMap('<area shape="rect" coords="92.8571428571,-14.2857142857,192.857142857,85.7142857143" href="index.html?puzzle=AEU" alt="AEU">');
+    builder.addLocalMap('</map>');
 
     return builder.getPuzzleData();
 }
@@ -7690,6 +9409,20 @@ function AAF()
     builder.addEasier('ADA');
     builder.addEasier('AAB');
 
+    builder.addHarder('AAM');
+    builder.addHarder('ABK');
+    builder.addHarder('AIG');
+
+    builder.addLocalMap('<image src="images/map_AAF.png" usemap="#localmap">');
+    builder.addLocalMap('<map name="localmap">');
+    builder.addLocalMap('<area shape="rect" coords="75.0,0.0,175.0,100.0" href="index.html?puzzle=AAB" alt="AAB">');
+    builder.addLocalMap('<area shape="rect" coords="150.0,200.0,250.0,300.0" href="index.html?puzzle=AAF" alt="AAF">');
+    builder.addLocalMap('<area shape="rect" coords="7.1054273576e-15,400.0,100.0,500.0" href="index.html?puzzle=AAM" alt="AAM">');
+    builder.addLocalMap('<area shape="rect" coords="300.0,400.0,400.0,500.0" href="index.html?puzzle=ABK" alt="ABK">');
+    builder.addLocalMap('<area shape="rect" coords="225.0,0.0,325.0,100.0" href="index.html?puzzle=ADA" alt="ADA">');
+    builder.addLocalMap('<area shape="rect" coords="150.0,400.0,250.0,500.0" href="index.html?puzzle=AIG" alt="AIG">');
+    builder.addLocalMap('</map>');
+
     return builder.getPuzzleData();
 }
 
@@ -7716,6 +9449,17 @@ function AFK()
 
     builder.addEasier('AEO');
 
+    builder.addHarder('AEB');
+    builder.addHarder('AES');
+
+    builder.addLocalMap('<image src="images/map_AFK.png" usemap="#localmap">');
+    builder.addLocalMap('<map name="localmap">');
+    builder.addLocalMap('<area shape="rect" coords="150.0,400.0,250.0,500.0" href="index.html?puzzle=AEB" alt="AEB">');
+    builder.addLocalMap('<area shape="rect" coords="75.0,0.0,175.0,100.0" href="index.html?puzzle=AEO" alt="AEO">');
+    builder.addLocalMap('<area shape="rect" coords="0.0,400.0,100.0,500.0" href="index.html?puzzle=AES" alt="AES">');
+    builder.addLocalMap('<area shape="rect" coords="75.0,200.0,175.0,300.0" href="index.html?puzzle=AFK" alt="AFK">');
+    builder.addLocalMap('</map>');
+
     return builder.getPuzzleData();
 }
 
@@ -7740,6 +9484,13 @@ function AEE()
 
     builder.addEasier('AEA');
     builder.addEasier('AEG');
+
+    builder.addLocalMap('<image src="images/map_AEE.png" usemap="#localmap">');
+    builder.addLocalMap('<map name="localmap">');
+    builder.addLocalMap('<area shape="rect" coords="33.3333333333,33.3333333333,133.333333333,133.333333333" href="index.html?puzzle=AEA" alt="AEA">');
+    builder.addLocalMap('<area shape="rect" coords="158.333333333,366.666666667,258.333333333,466.666666667" href="index.html?puzzle=AEE" alt="AEE">');
+    builder.addLocalMap('<area shape="rect" coords="283.333333333,33.3333333333,383.333333333,133.333333333" href="index.html?puzzle=AEG" alt="AEG">');
+    builder.addLocalMap('</map>');
 
     return builder.getPuzzleData();
 }
@@ -7778,6 +9529,15 @@ function ADS()
 
     builder.addEasier('ADR');
 
+    builder.addHarder('AAZ');
+
+    builder.addLocalMap('<image src="images/map_ADS.png" usemap="#localmap">');
+    builder.addLocalMap('<map name="localmap">');
+    builder.addLocalMap('<area shape="rect" coords="7.1054273576e-15,400.0,100.0,500.0" href="index.html?puzzle=AAZ" alt="AAZ">');
+    builder.addLocalMap('<area shape="rect" coords="7.1054273576e-15,0.0,100.0,100.0" href="index.html?puzzle=ADR" alt="ADR">');
+    builder.addLocalMap('<area shape="rect" coords="7.1054273576e-15,200.0,100.0,300.0" href="index.html?puzzle=ADS" alt="ADS">');
+    builder.addLocalMap('</map>');
+
     return builder.getPuzzleData();
 }
 
@@ -7810,6 +9570,12 @@ function ACL()
     builder.normalize();
 
     builder.addEasier('ACK');
+
+    builder.addLocalMap('<image src="images/map_ACL.png" usemap="#localmap">');
+    builder.addLocalMap('<map name="localmap">');
+    builder.addLocalMap('<area shape="rect" coords="33.3333333333,33.3333333333,133.333333333,133.333333333" href="index.html?puzzle=ACK" alt="ACK">');
+    builder.addLocalMap('<area shape="rect" coords="33.3333333333,366.666666667,133.333333333,466.666666667" href="index.html?puzzle=ACL" alt="ACL">');
+    builder.addLocalMap('</map>');
 
     return builder.getPuzzleData();
 }
@@ -7848,6 +9614,17 @@ function AHM()
     builder.normalize();
 
     builder.addEasier('AHJ');
+
+    builder.addHarder('AHL');
+    builder.addHarder('AHP');
+
+    builder.addLocalMap('<image src="images/map_AHM.png" usemap="#localmap">');
+    builder.addLocalMap('<map name="localmap">');
+    builder.addLocalMap('<area shape="rect" coords="75.0,0.0,175.0,100.0" href="index.html?puzzle=AHJ" alt="AHJ">');
+    builder.addLocalMap('<area shape="rect" coords="150.0,400.0,250.0,500.0" href="index.html?puzzle=AHL" alt="AHL">');
+    builder.addLocalMap('<area shape="rect" coords="75.0,200.0,175.0,300.0" href="index.html?puzzle=AHM" alt="AHM">');
+    builder.addLocalMap('<area shape="rect" coords="0.0,400.0,100.0,500.0" href="index.html?puzzle=AHP" alt="AHP">');
+    builder.addLocalMap('</map>');
 
     return builder.getPuzzleData();
 }
@@ -7925,6 +9702,18 @@ function AHR()
     builder.addEasier('AHO');
     builder.addEasier('AHS');
 
+    builder.addHarder('AHQ');
+    builder.addHarder('AHU');
+
+    builder.addLocalMap('<image src="images/map_AHR.png" usemap="#localmap">');
+    builder.addLocalMap('<map name="localmap">');
+    builder.addLocalMap('<area shape="rect" coords="150.0,0.0,250.0,100.0" href="index.html?puzzle=AHO" alt="AHO">');
+    builder.addLocalMap('<area shape="rect" coords="0.0,400.0,100.0,500.0" href="index.html?puzzle=AHQ" alt="AHQ">');
+    builder.addLocalMap('<area shape="rect" coords="75.0,200.0,175.0,300.0" href="index.html?puzzle=AHR" alt="AHR">');
+    builder.addLocalMap('<area shape="rect" coords="0.0,0.0,100.0,100.0" href="index.html?puzzle=AHS" alt="AHS">');
+    builder.addLocalMap('<area shape="rect" coords="150.0,400.0,250.0,500.0" href="index.html?puzzle=AHU" alt="AHU">');
+    builder.addLocalMap('</map>');
+
     return builder.getPuzzleData();
 }
 
@@ -7970,6 +9759,15 @@ function ABO()
 
     builder.addEasier('ABN');
 
+    builder.addHarder('ABM');
+
+    builder.addLocalMap('<image src="images/map_ABO.png" usemap="#localmap">');
+    builder.addLocalMap('<map name="localmap">');
+    builder.addLocalMap('<area shape="rect" coords="7.1054273576e-15,400.0,100.0,500.0" href="index.html?puzzle=ABM" alt="ABM">');
+    builder.addLocalMap('<area shape="rect" coords="7.1054273576e-15,0.0,100.0,100.0" href="index.html?puzzle=ABN" alt="ABN">');
+    builder.addLocalMap('<area shape="rect" coords="7.1054273576e-15,200.0,100.0,300.0" href="index.html?puzzle=ABO" alt="ABO">');
+    builder.addLocalMap('</map>');
+
     return builder.getPuzzleData();
 }
 
@@ -8005,6 +9803,13 @@ function ACS()
 
     builder.addEasier('AEN');
     builder.addEasier('AFI');
+
+    builder.addLocalMap('<image src="images/map_ACS.png" usemap="#localmap">');
+    builder.addLocalMap('<map name="localmap">');
+    builder.addLocalMap('<area shape="rect" coords="158.333333333,366.666666667,258.333333333,466.666666667" href="index.html?puzzle=ACS" alt="ACS">');
+    builder.addLocalMap('<area shape="rect" coords="283.333333333,33.3333333333,383.333333333,133.333333333" href="index.html?puzzle=AEN" alt="AEN">');
+    builder.addLocalMap('<area shape="rect" coords="33.3333333333,33.3333333333,133.333333333,133.333333333" href="index.html?puzzle=AFI" alt="AFI">');
+    builder.addLocalMap('</map>');
 
     return builder.getPuzzleData();
 }
@@ -8060,6 +9865,12 @@ function ACD()
 
     builder.addEasier('ACC');
 
+    builder.addLocalMap('<image src="images/map_ACD.png" usemap="#localmap">');
+    builder.addLocalMap('<map name="localmap">');
+    builder.addLocalMap('<area shape="rect" coords="33.3333333333,33.3333333333,133.333333333,133.333333333" href="index.html?puzzle=ACC" alt="ACC">');
+    builder.addLocalMap('<area shape="rect" coords="33.3333333333,366.666666667,133.333333333,466.666666667" href="index.html?puzzle=ACD" alt="ACD">');
+    builder.addLocalMap('</map>');
+
     return builder.getPuzzleData();
 }
 
@@ -8091,6 +9902,15 @@ function AGR()
 
     builder.addEasier('AGP');
 
+    builder.addHarder('AGT');
+
+    builder.addLocalMap('<image src="images/map_AGR.png" usemap="#localmap">');
+    builder.addLocalMap('<map name="localmap">');
+    builder.addLocalMap('<area shape="rect" coords="7.1054273576e-15,0.0,100.0,100.0" href="index.html?puzzle=AGP" alt="AGP">');
+    builder.addLocalMap('<area shape="rect" coords="7.1054273576e-15,200.0,100.0,300.0" href="index.html?puzzle=AGR" alt="AGR">');
+    builder.addLocalMap('<area shape="rect" coords="7.1054273576e-15,400.0,100.0,500.0" href="index.html?puzzle=AGT" alt="AGT">');
+    builder.addLocalMap('</map>');
+
     return builder.getPuzzleData();
 }
 
@@ -8116,6 +9936,15 @@ function ABT()
     builder.normalize();
 
     builder.addEasier('AFC');
+
+    builder.addHarder('ACW');
+
+    builder.addLocalMap('<image src="images/map_ABT.png" usemap="#localmap">');
+    builder.addLocalMap('<map name="localmap">');
+    builder.addLocalMap('<area shape="rect" coords="7.1054273576e-15,200.0,100.0,300.0" href="index.html?puzzle=ABT" alt="ABT">');
+    builder.addLocalMap('<area shape="rect" coords="7.1054273576e-15,400.0,100.0,500.0" href="index.html?puzzle=ACW" alt="ACW">');
+    builder.addLocalMap('<area shape="rect" coords="7.1054273576e-15,0.0,100.0,100.0" href="index.html?puzzle=AFC" alt="AFC">');
+    builder.addLocalMap('</map>');
 
     return builder.getPuzzleData();
 }
@@ -8156,6 +9985,20 @@ function ABK()
 
     builder.addEasier('AAF');
     builder.addEasier('ADN');
+
+    builder.addHarder('ABL');
+    builder.addHarder('ABU');
+    builder.addHarder('ABX');
+
+    builder.addLocalMap('<image src="images/map_ABK.png" usemap="#localmap">');
+    builder.addLocalMap('<map name="localmap">');
+    builder.addLocalMap('<area shape="rect" coords="75.0,0.0,175.0,100.0" href="index.html?puzzle=AAF" alt="AAF">');
+    builder.addLocalMap('<area shape="rect" coords="150.0,200.0,250.0,300.0" href="index.html?puzzle=ABK" alt="ABK">');
+    builder.addLocalMap('<area shape="rect" coords="300.0,400.0,400.0,500.0" href="index.html?puzzle=ABL" alt="ABL">');
+    builder.addLocalMap('<area shape="rect" coords="150.0,400.0,250.0,500.0" href="index.html?puzzle=ABU" alt="ABU">');
+    builder.addLocalMap('<area shape="rect" coords="7.1054273576e-15,400.0,100.0,500.0" href="index.html?puzzle=ABX" alt="ABX">');
+    builder.addLocalMap('<area shape="rect" coords="225.0,0.0,325.0,100.0" href="index.html?puzzle=ADN" alt="ADN">');
+    builder.addLocalMap('</map>');
 
     return builder.getPuzzleData();
 }
@@ -8232,6 +10075,16 @@ function AHQ()
     builder.addEasier('AHN');
     builder.addEasier('AHR');
 
+    builder.addHarder('AHT');
+
+    builder.addLocalMap('<image src="images/map_AHQ.png" usemap="#localmap">');
+    builder.addLocalMap('<map name="localmap">');
+    builder.addLocalMap('<area shape="rect" coords="150.0,0.0,250.0,100.0" href="index.html?puzzle=AHN" alt="AHN">');
+    builder.addLocalMap('<area shape="rect" coords="75.0,200.0,175.0,300.0" href="index.html?puzzle=AHQ" alt="AHQ">');
+    builder.addLocalMap('<area shape="rect" coords="0.0,0.0,100.0,100.0" href="index.html?puzzle=AHR" alt="AHR">');
+    builder.addLocalMap('<area shape="rect" coords="75.0,400.0,175.0,500.0" href="index.html?puzzle=AHT" alt="AHT">');
+    builder.addLocalMap('</map>');
+
     return builder.getPuzzleData();
 }
 
@@ -8257,6 +10110,19 @@ function AFJ()
     builder.normalize();
 
     builder.addEasier('AEO');
+
+    builder.addHarder('AEB');
+    builder.addHarder('AEP');
+    builder.addHarder('AFL');
+
+    builder.addLocalMap('<image src="images/map_AFJ.png" usemap="#localmap">');
+    builder.addLocalMap('<map name="localmap">');
+    builder.addLocalMap('<area shape="rect" coords="300.0,400.0,400.0,500.0" href="index.html?puzzle=AEB" alt="AEB">');
+    builder.addLocalMap('<area shape="rect" coords="150.0,0.0,250.0,100.0" href="index.html?puzzle=AEO" alt="AEO">');
+    builder.addLocalMap('<area shape="rect" coords="150.0,400.0,250.0,500.0" href="index.html?puzzle=AEP" alt="AEP">');
+    builder.addLocalMap('<area shape="rect" coords="150.0,200.0,250.0,300.0" href="index.html?puzzle=AFJ" alt="AFJ">');
+    builder.addLocalMap('<area shape="rect" coords="7.1054273576e-15,400.0,100.0,500.0" href="index.html?puzzle=AFL" alt="AFL">');
+    builder.addLocalMap('</map>');
 
     return builder.getPuzzleData();
 }
@@ -8295,6 +10161,15 @@ function ABJ()
 
     builder.addEasier('ABG');
 
+    builder.addHarder('ABM');
+
+    builder.addLocalMap('<image src="images/map_ABJ.png" usemap="#localmap">');
+    builder.addLocalMap('<map name="localmap">');
+    builder.addLocalMap('<area shape="rect" coords="7.1054273576e-15,0.0,100.0,100.0" href="index.html?puzzle=ABG" alt="ABG">');
+    builder.addLocalMap('<area shape="rect" coords="7.1054273576e-15,200.0,100.0,300.0" href="index.html?puzzle=ABJ" alt="ABJ">');
+    builder.addLocalMap('<area shape="rect" coords="7.1054273576e-15,400.0,100.0,500.0" href="index.html?puzzle=ABM" alt="ABM">');
+    builder.addLocalMap('</map>');
+
     return builder.getPuzzleData();
 }
 
@@ -8322,6 +10197,12 @@ function AFF()
 
     builder.addEasier('AEM');
 
+    builder.addLocalMap('<image src="images/map_AFF.png" usemap="#localmap">');
+    builder.addLocalMap('<map name="localmap">');
+    builder.addLocalMap('<area shape="rect" coords="33.3333333333,33.3333333333,133.333333333,133.333333333" href="index.html?puzzle=AEM" alt="AEM">');
+    builder.addLocalMap('<area shape="rect" coords="33.3333333333,366.666666667,133.333333333,466.666666667" href="index.html?puzzle=AFF" alt="AFF">');
+    builder.addLocalMap('</map>');
+
     return builder.getPuzzleData();
 }
 
@@ -8346,6 +10227,15 @@ function ACV()
     builder.normalize();
 
     builder.addEasier('ACT');
+
+    builder.addHarder('ADC');
+
+    builder.addLocalMap('<image src="images/map_ACV.png" usemap="#localmap">');
+    builder.addLocalMap('<map name="localmap">');
+    builder.addLocalMap('<area shape="rect" coords="7.1054273576e-15,0.0,100.0,100.0" href="index.html?puzzle=ACT" alt="ACT">');
+    builder.addLocalMap('<area shape="rect" coords="7.1054273576e-15,200.0,100.0,300.0" href="index.html?puzzle=ACV" alt="ACV">');
+    builder.addLocalMap('<area shape="rect" coords="7.1054273576e-15,400.0,100.0,500.0" href="index.html?puzzle=ADC" alt="ADC">');
+    builder.addLocalMap('</map>');
 
     return builder.getPuzzleData();
 }
@@ -8389,6 +10279,16 @@ function ADX()
     builder.addEasier('ADW');
     builder.addEasier('ADQ');
 
+    builder.addHarder('AFQ');
+
+    builder.addLocalMap('<image src="images/map_ADX.png" usemap="#localmap">');
+    builder.addLocalMap('<map name="localmap">');
+    builder.addLocalMap('<area shape="rect" coords="150.0,0.0,250.0,100.0" href="index.html?puzzle=ADQ" alt="ADQ">');
+    builder.addLocalMap('<area shape="rect" coords="0.0,0.0,100.0,100.0" href="index.html?puzzle=ADW" alt="ADW">');
+    builder.addLocalMap('<area shape="rect" coords="75.0,200.0,175.0,300.0" href="index.html?puzzle=ADX" alt="ADX">');
+    builder.addLocalMap('<area shape="rect" coords="75.0,400.0,175.0,500.0" href="index.html?puzzle=AFQ" alt="AFQ">');
+    builder.addLocalMap('</map>');
+
     return builder.getPuzzleData();
 }
 
@@ -8410,6 +10310,19 @@ function AAE()
     builder.normalize();
 
     builder.addEasier('ACX');
+
+    builder.addHarder('ACU');
+    builder.addHarder('ACY');
+    builder.addHarder('AHG');
+
+    builder.addLocalMap('<image src="images/map_AAE.png" usemap="#localmap">');
+    builder.addLocalMap('<map name="localmap">');
+    builder.addLocalMap('<area shape="rect" coords="150.0,200.0,250.0,300.0" href="index.html?puzzle=AAE" alt="AAE">');
+    builder.addLocalMap('<area shape="rect" coords="300.0,400.0,400.0,500.0" href="index.html?puzzle=ACU" alt="ACU">');
+    builder.addLocalMap('<area shape="rect" coords="150.0,0.0,250.0,100.0" href="index.html?puzzle=ACX" alt="ACX">');
+    builder.addLocalMap('<area shape="rect" coords="7.1054273576e-15,400.0,100.0,500.0" href="index.html?puzzle=ACY" alt="ACY">');
+    builder.addLocalMap('<area shape="rect" coords="150.0,400.0,250.0,500.0" href="index.html?puzzle=AHG" alt="AHG">');
+    builder.addLocalMap('</map>');
 
     return builder.getPuzzleData();
 }
@@ -8461,6 +10374,18 @@ function AHO()
 
     builder.addEasier('AHL');
     builder.addEasier('AHP');
+
+    builder.addHarder('AHN');
+    builder.addHarder('AHR');
+
+    builder.addLocalMap('<image src="images/map_AHO.png" usemap="#localmap">');
+    builder.addLocalMap('<map name="localmap">');
+    builder.addLocalMap('<area shape="rect" coords="150.0,0.0,250.0,100.0" href="index.html?puzzle=AHL" alt="AHL">');
+    builder.addLocalMap('<area shape="rect" coords="150.0,400.0,250.0,500.0" href="index.html?puzzle=AHN" alt="AHN">');
+    builder.addLocalMap('<area shape="rect" coords="75.0,200.0,175.0,300.0" href="index.html?puzzle=AHO" alt="AHO">');
+    builder.addLocalMap('<area shape="rect" coords="0.0,0.0,100.0,100.0" href="index.html?puzzle=AHP" alt="AHP">');
+    builder.addLocalMap('<area shape="rect" coords="0.0,400.0,100.0,500.0" href="index.html?puzzle=AHR" alt="AHR">');
+    builder.addLocalMap('</map>');
 
     return builder.getPuzzleData();
 }
@@ -8522,6 +10447,15 @@ function ABB()
 
     builder.addEasier('AGK');
 
+    builder.addHarder('ACM');
+
+    builder.addLocalMap('<image src="images/map_ABB.png" usemap="#localmap">');
+    builder.addLocalMap('<map name="localmap">');
+    builder.addLocalMap('<area shape="rect" coords="7.1054273576e-15,200.0,100.0,300.0" href="index.html?puzzle=ABB" alt="ABB">');
+    builder.addLocalMap('<area shape="rect" coords="7.1054273576e-15,400.0,100.0,500.0" href="index.html?puzzle=ACM" alt="ACM">');
+    builder.addLocalMap('<area shape="rect" coords="7.1054273576e-15,0.0,100.0,100.0" href="index.html?puzzle=AGK" alt="AGK">');
+    builder.addLocalMap('</map>');
+
     return builder.getPuzzleData();
 }
 
@@ -8550,6 +10484,15 @@ function AFT()
     builder.normalize();
 
     builder.addEasier('AHI');
+
+    builder.addHarder('AHK');
+
+    builder.addLocalMap('<image src="images/map_AFT.png" usemap="#localmap">');
+    builder.addLocalMap('<map name="localmap">');
+    builder.addLocalMap('<area shape="rect" coords="7.1054273576e-15,200.0,100.0,300.0" href="index.html?puzzle=AFT" alt="AFT">');
+    builder.addLocalMap('<area shape="rect" coords="7.1054273576e-15,0.0,100.0,100.0" href="index.html?puzzle=AHI" alt="AHI">');
+    builder.addLocalMap('<area shape="rect" coords="7.1054273576e-15,400.0,100.0,500.0" href="index.html?puzzle=AHK" alt="AHK">');
+    builder.addLocalMap('</map>');
 
     return builder.getPuzzleData();
 }
@@ -8581,6 +10524,15 @@ function AGY()
     builder.normalize();
 
     builder.addEasier('AGX');
+
+    builder.addHarder('AGZ');
+
+    builder.addLocalMap('<image src="images/map_AGY.png" usemap="#localmap">');
+    builder.addLocalMap('<map name="localmap">');
+    builder.addLocalMap('<area shape="rect" coords="7.1054273576e-15,0.0,100.0,100.0" href="index.html?puzzle=AGX" alt="AGX">');
+    builder.addLocalMap('<area shape="rect" coords="7.1054273576e-15,200.0,100.0,300.0" href="index.html?puzzle=AGY" alt="AGY">');
+    builder.addLocalMap('<area shape="rect" coords="7.1054273576e-15,400.0,100.0,500.0" href="index.html?puzzle=AGZ" alt="AGZ">');
+    builder.addLocalMap('</map>');
 
     return builder.getPuzzleData();
 }
@@ -8614,6 +10566,17 @@ function AGK()
 
     builder.addEasier('AGI');
 
+    builder.addHarder('ABB');
+    builder.addHarder('AGL');
+
+    builder.addLocalMap('<image src="images/map_AGK.png" usemap="#localmap">');
+    builder.addLocalMap('<map name="localmap">');
+    builder.addLocalMap('<area shape="rect" coords="0.0,400.0,100.0,500.0" href="index.html?puzzle=ABB" alt="ABB">');
+    builder.addLocalMap('<area shape="rect" coords="75.0,0.0,175.0,100.0" href="index.html?puzzle=AGI" alt="AGI">');
+    builder.addLocalMap('<area shape="rect" coords="75.0,200.0,175.0,300.0" href="index.html?puzzle=AGK" alt="AGK">');
+    builder.addLocalMap('<area shape="rect" coords="150.0,400.0,250.0,500.0" href="index.html?puzzle=AGL" alt="AGL">');
+    builder.addLocalMap('</map>');
+
     return builder.getPuzzleData();
 }
 
@@ -8644,6 +10607,15 @@ function AGX()
     builder.normalize();
 
     builder.addEasier('AGT');
+
+    builder.addHarder('AGY');
+
+    builder.addLocalMap('<image src="images/map_AGX.png" usemap="#localmap">');
+    builder.addLocalMap('<map name="localmap">');
+    builder.addLocalMap('<area shape="rect" coords="7.1054273576e-15,0.0,100.0,100.0" href="index.html?puzzle=AGT" alt="AGT">');
+    builder.addLocalMap('<area shape="rect" coords="7.1054273576e-15,200.0,100.0,300.0" href="index.html?puzzle=AGX" alt="AGX">');
+    builder.addLocalMap('<area shape="rect" coords="7.1054273576e-15,400.0,100.0,500.0" href="index.html?puzzle=AGY" alt="AGY">');
+    builder.addLocalMap('</map>');
 
     return builder.getPuzzleData();
 }
@@ -8680,6 +10652,15 @@ function ADR()
 
     builder.addEasier('ADQ');
 
+    builder.addHarder('ADS');
+
+    builder.addLocalMap('<image src="images/map_ADR.png" usemap="#localmap">');
+    builder.addLocalMap('<map name="localmap">');
+    builder.addLocalMap('<area shape="rect" coords="7.1054273576e-15,0.0,100.0,100.0" href="index.html?puzzle=ADQ" alt="ADQ">');
+    builder.addLocalMap('<area shape="rect" coords="7.1054273576e-15,200.0,100.0,300.0" href="index.html?puzzle=ADR" alt="ADR">');
+    builder.addLocalMap('<area shape="rect" coords="7.1054273576e-15,400.0,100.0,500.0" href="index.html?puzzle=ADS" alt="ADS">');
+    builder.addLocalMap('</map>');
+
     return builder.getPuzzleData();
 }
 
@@ -8706,6 +10687,20 @@ function ADC()
 
     builder.addEasier('ACR');
     builder.addEasier('ACV');
+
+    builder.addHarder('ADD');
+    builder.addHarder('ADE');
+    builder.addHarder('ADF');
+
+    builder.addLocalMap('<image src="images/map_ADC.png" usemap="#localmap">');
+    builder.addLocalMap('<map name="localmap">');
+    builder.addLocalMap('<area shape="rect" coords="75.0,0.0,175.0,100.0" href="index.html?puzzle=ACR" alt="ACR">');
+    builder.addLocalMap('<area shape="rect" coords="225.0,0.0,325.0,100.0" href="index.html?puzzle=ACV" alt="ACV">');
+    builder.addLocalMap('<area shape="rect" coords="150.0,200.0,250.0,300.0" href="index.html?puzzle=ADC" alt="ADC">');
+    builder.addLocalMap('<area shape="rect" coords="150.0,400.0,250.0,500.0" href="index.html?puzzle=ADD" alt="ADD">');
+    builder.addLocalMap('<area shape="rect" coords="300.0,400.0,400.0,500.0" href="index.html?puzzle=ADE" alt="ADE">');
+    builder.addLocalMap('<area shape="rect" coords="7.1054273576e-15,400.0,100.0,500.0" href="index.html?puzzle=ADF" alt="ADF">');
+    builder.addLocalMap('</map>');
 
     return builder.getPuzzleData();
 }
@@ -8736,6 +10731,12 @@ function AGE()
 
     builder.addEasier('AGC');
 
+    builder.addLocalMap('<image src="images/map_AGE.png" usemap="#localmap">');
+    builder.addLocalMap('<map name="localmap">');
+    builder.addLocalMap('<area shape="rect" coords="33.3333333333,33.3333333333,133.333333333,133.333333333" href="index.html?puzzle=AGC" alt="AGC">');
+    builder.addLocalMap('<area shape="rect" coords="33.3333333333,366.666666667,133.333333333,466.666666667" href="index.html?puzzle=AGE" alt="AGE">');
+    builder.addLocalMap('</map>');
+
     return builder.getPuzzleData();
 }
 
@@ -8762,6 +10763,19 @@ function AFD()
     builder.normalize();
 
     builder.addEasier('AAD');
+
+    builder.addHarder('AEV');
+    builder.addHarder('AEW');
+    builder.addHarder('AEX');
+
+    builder.addLocalMap('<image src="images/map_AFD.png" usemap="#localmap">');
+    builder.addLocalMap('<map name="localmap">');
+    builder.addLocalMap('<area shape="rect" coords="150.0,0.0,250.0,100.0" href="index.html?puzzle=AAD" alt="AAD">');
+    builder.addLocalMap('<area shape="rect" coords="150.0,400.0,250.0,500.0" href="index.html?puzzle=AEV" alt="AEV">');
+    builder.addLocalMap('<area shape="rect" coords="7.1054273576e-15,400.0,100.0,500.0" href="index.html?puzzle=AEW" alt="AEW">');
+    builder.addLocalMap('<area shape="rect" coords="300.0,400.0,400.0,500.0" href="index.html?puzzle=AEX" alt="AEX">');
+    builder.addLocalMap('<area shape="rect" coords="150.0,200.0,250.0,300.0" href="index.html?puzzle=AFD" alt="AFD">');
+    builder.addLocalMap('</map>');
 
     return builder.getPuzzleData();
 }
@@ -8885,6 +10899,13 @@ function AHT()
     builder.addEasier('AHQ');
     builder.addEasier('AHU');
 
+    builder.addLocalMap('<image src="images/map_AHT.png" usemap="#localmap">');
+    builder.addLocalMap('<map name="localmap">');
+    builder.addLocalMap('<area shape="rect" coords="33.3333333333,33.3333333333,133.333333333,133.333333333" href="index.html?puzzle=AHQ" alt="AHQ">');
+    builder.addLocalMap('<area shape="rect" coords="158.333333333,366.666666667,258.333333333,466.666666667" href="index.html?puzzle=AHT" alt="AHT">');
+    builder.addLocalMap('<area shape="rect" coords="283.333333333,33.3333333333,383.333333333,133.333333333" href="index.html?puzzle=AHU" alt="AHU">');
+    builder.addLocalMap('</map>');
+
     return builder.getPuzzleData();
 }
 
@@ -8925,6 +10946,17 @@ function ABW()
 
     builder.addEasier('ABD');
 
+    builder.addHarder('ABV');
+    builder.addHarder('AHX');
+
+    builder.addLocalMap('<image src="images/map_ABW.png" usemap="#localmap">');
+    builder.addLocalMap('<map name="localmap">');
+    builder.addLocalMap('<area shape="rect" coords="75.0,0.0,175.0,100.0" href="index.html?puzzle=ABD" alt="ABD">');
+    builder.addLocalMap('<area shape="rect" coords="150.0,400.0,250.0,500.0" href="index.html?puzzle=ABV" alt="ABV">');
+    builder.addLocalMap('<area shape="rect" coords="75.0,200.0,175.0,300.0" href="index.html?puzzle=ABW" alt="ABW">');
+    builder.addLocalMap('<area shape="rect" coords="0.0,400.0,100.0,500.0" href="index.html?puzzle=AHX" alt="AHX">');
+    builder.addLocalMap('</map>');
+
     return builder.getPuzzleData();
 }
 
@@ -8944,6 +10976,15 @@ function AAA()
     builder.recenter();
     builder.normalize();
 
+    builder.addHarder('AAB');
+    builder.addHarder('ADA');
+
+    builder.addLocalMap('<image src="images/map_AAA.png" usemap="#localmap">');
+    builder.addLocalMap('<map name="localmap">');
+    builder.addLocalMap('<area shape="rect" coords="158.333333333,33.3333333333,258.333333333,133.333333333" href="index.html?puzzle=AAA" alt="AAA">');
+    builder.addLocalMap('<area shape="rect" coords="283.333333333,366.666666667,383.333333333,466.666666667" href="index.html?puzzle=AAB" alt="AAB">');
+    builder.addLocalMap('<area shape="rect" coords="33.3333333333,366.666666667,133.333333333,466.666666667" href="index.html?puzzle=ADA" alt="ADA">');
+    builder.addLocalMap('</map>');
 
     return builder.getPuzzleData();
 }
@@ -8980,6 +11021,13 @@ function ABQ()
     builder.addEasier('ABP');
     builder.addEasier('AAK');
 
+    builder.addLocalMap('<image src="images/map_ABQ.png" usemap="#localmap">');
+    builder.addLocalMap('<map name="localmap">');
+    builder.addLocalMap('<area shape="rect" coords="283.333333333,33.3333333333,383.333333333,133.333333333" href="index.html?puzzle=AAK" alt="AAK">');
+    builder.addLocalMap('<area shape="rect" coords="33.3333333333,33.3333333333,133.333333333,133.333333333" href="index.html?puzzle=ABP" alt="ABP">');
+    builder.addLocalMap('<area shape="rect" coords="158.333333333,366.666666667,258.333333333,466.666666667" href="index.html?puzzle=ABQ" alt="ABQ">');
+    builder.addLocalMap('</map>');
+
     return builder.getPuzzleData();
 }
 
@@ -9010,6 +11058,12 @@ function AHF()
     builder.normalize();
 
     builder.addEasier('AHE');
+
+    builder.addLocalMap('<image src="images/map_AHF.png" usemap="#localmap">');
+    builder.addLocalMap('<map name="localmap">');
+    builder.addLocalMap('<area shape="rect" coords="33.3333333333,33.3333333333,133.333333333,133.333333333" href="index.html?puzzle=AHE" alt="AHE">');
+    builder.addLocalMap('<area shape="rect" coords="33.3333333333,366.666666667,133.333333333,466.666666667" href="index.html?puzzle=AHF" alt="AHF">');
+    builder.addLocalMap('</map>');
 
     return builder.getPuzzleData();
 }
@@ -9046,6 +11100,19 @@ function ADW()
 
     builder.addEasier('ADN');
 
+    builder.addHarder('ABD');
+    builder.addHarder('ADX');
+    builder.addHarder('AEL');
+
+    builder.addLocalMap('<image src="images/map_ADW.png" usemap="#localmap">');
+    builder.addLocalMap('<map name="localmap">');
+    builder.addLocalMap('<area shape="rect" coords="7.1054273576e-15,400.0,100.0,500.0" href="index.html?puzzle=ABD" alt="ABD">');
+    builder.addLocalMap('<area shape="rect" coords="150.0,0.0,250.0,100.0" href="index.html?puzzle=ADN" alt="ADN">');
+    builder.addLocalMap('<area shape="rect" coords="150.0,200.0,250.0,300.0" href="index.html?puzzle=ADW" alt="ADW">');
+    builder.addLocalMap('<area shape="rect" coords="300.0,400.0,400.0,500.0" href="index.html?puzzle=ADX" alt="ADX">');
+    builder.addLocalMap('<area shape="rect" coords="150.0,400.0,250.0,500.0" href="index.html?puzzle=AEL" alt="AEL">');
+    builder.addLocalMap('</map>');
+
     return builder.getPuzzleData();
 }
 
@@ -9076,6 +11143,17 @@ function ADK()
     builder.addEasier('ADG');
     builder.addEasier('ADH');
     builder.addEasier('ADI');
+
+    builder.addHarder('ADL');
+
+    builder.addLocalMap('<image src="images/map_ADK.png" usemap="#localmap">');
+    builder.addLocalMap('<map name="localmap">');
+    builder.addLocalMap('<area shape="rect" coords="7.1054273576e-15,0.0,100.0,100.0" href="index.html?puzzle=ADG" alt="ADG">');
+    builder.addLocalMap('<area shape="rect" coords="150.0,0.0,250.0,100.0" href="index.html?puzzle=ADH" alt="ADH">');
+    builder.addLocalMap('<area shape="rect" coords="300.0,0.0,400.0,100.0" href="index.html?puzzle=ADI" alt="ADI">');
+    builder.addLocalMap('<area shape="rect" coords="150.0,200.0,250.0,300.0" href="index.html?puzzle=ADK" alt="ADK">');
+    builder.addLocalMap('<area shape="rect" coords="150.0,400.0,250.0,500.0" href="index.html?puzzle=ADL" alt="ADL">');
+    builder.addLocalMap('</map>');
 
     return builder.getPuzzleData();
 }
@@ -9120,6 +11198,17 @@ function AHY()
     builder.addEasier('AHW');
     builder.addEasier('AHX');
 
+    builder.addHarder('AHH');
+
+    builder.addLocalMap('<image src="images/map_AHY.png" usemap="#localmap">');
+    builder.addLocalMap('<map name="localmap">');
+    builder.addLocalMap('<area shape="rect" coords="150.0,0.0,250.0,100.0" href="index.html?puzzle=ABV" alt="ABV">');
+    builder.addLocalMap('<area shape="rect" coords="150.0,400.0,250.0,500.0" href="index.html?puzzle=AHH" alt="AHH">');
+    builder.addLocalMap('<area shape="rect" coords="7.1054273576e-15,0.0,100.0,100.0" href="index.html?puzzle=AHW" alt="AHW">');
+    builder.addLocalMap('<area shape="rect" coords="300.0,0.0,400.0,100.0" href="index.html?puzzle=AHX" alt="AHX">');
+    builder.addLocalMap('<area shape="rect" coords="150.0,200.0,250.0,300.0" href="index.html?puzzle=AHY" alt="AHY">');
+    builder.addLocalMap('</map>');
+
     return builder.getPuzzleData();
 }
 
@@ -9143,6 +11232,18 @@ function AEG()
 
     builder.addEasier('AAR');
     builder.addEasier('ADY');
+
+    builder.addHarder('ABP');
+    builder.addHarder('AEE');
+
+    builder.addLocalMap('<image src="images/map_AEG.png" usemap="#localmap">');
+    builder.addLocalMap('<map name="localmap">');
+    builder.addLocalMap('<area shape="rect" coords="0.0,0.0,100.0,100.0" href="index.html?puzzle=AAR" alt="AAR">');
+    builder.addLocalMap('<area shape="rect" coords="0.0,400.0,100.0,500.0" href="index.html?puzzle=ABP" alt="ABP">');
+    builder.addLocalMap('<area shape="rect" coords="150.0,0.0,250.0,100.0" href="index.html?puzzle=ADY" alt="ADY">');
+    builder.addLocalMap('<area shape="rect" coords="150.0,400.0,250.0,500.0" href="index.html?puzzle=AEE" alt="AEE">');
+    builder.addLocalMap('<area shape="rect" coords="75.0,200.0,175.0,300.0" href="index.html?puzzle=AEG" alt="AEG">');
+    builder.addLocalMap('</map>');
 
     return builder.getPuzzleData();
 }
@@ -9180,6 +11281,15 @@ function AGB()
 
     builder.addEasier('AFY');
 
+    builder.addHarder('AGG');
+
+    builder.addLocalMap('<image src="images/map_AGB.png" usemap="#localmap">');
+    builder.addLocalMap('<map name="localmap">');
+    builder.addLocalMap('<area shape="rect" coords="7.1054273576e-15,0.0,100.0,100.0" href="index.html?puzzle=AFY" alt="AFY">');
+    builder.addLocalMap('<area shape="rect" coords="7.1054273576e-15,200.0,100.0,300.0" href="index.html?puzzle=AGB" alt="AGB">');
+    builder.addLocalMap('<area shape="rect" coords="7.1054273576e-15,400.0,100.0,500.0" href="index.html?puzzle=AGG" alt="AGG">');
+    builder.addLocalMap('</map>');
+
     return builder.getPuzzleData();
 }
 
@@ -9206,6 +11316,21 @@ function AEO()
     builder.normalize();
 
     builder.addEasier('AAS');
+
+    builder.addHarder('AEQ');
+    builder.addHarder('AER');
+    builder.addHarder('AFJ');
+    builder.addHarder('AFK');
+
+    builder.addLocalMap('<image src="images/map_AEO.png" usemap="#localmap">');
+    builder.addLocalMap('<map name="localmap">');
+    builder.addLocalMap('<area shape="rect" coords="200.0,-4.54545454545,300.0,95.4545454545" href="index.html?puzzle=AAS" alt="AAS">');
+    builder.addLocalMap('<area shape="rect" coords="200.0,177.272727273,300.0,277.272727273" href="index.html?puzzle=AEO" alt="AEO">');
+    builder.addLocalMap('<area shape="rect" coords="-4.54545454545,359.090909091,95.4545454545,459.090909091" href="index.html?puzzle=AEQ" alt="AEQ">');
+    builder.addLocalMap('<area shape="rect" coords="131.818181818,359.090909091,231.818181818,459.090909091" href="index.html?puzzle=AER" alt="AER">');
+    builder.addLocalMap('<area shape="rect" coords="268.181818182,359.090909091,368.181818182,459.090909091" href="index.html?puzzle=AFJ" alt="AFJ">');
+    builder.addLocalMap('<area shape="rect" coords="404.545454545,359.090909091,504.545454545,459.090909091" href="index.html?puzzle=AFK" alt="AFK">');
+    builder.addLocalMap('</map>');
 
     return builder.getPuzzleData();
 }
@@ -9239,6 +11364,15 @@ function AGZ()
 
     builder.addEasier('AGY');
 
+    builder.addHarder('AHA');
+
+    builder.addLocalMap('<image src="images/map_AGZ.png" usemap="#localmap">');
+    builder.addLocalMap('<map name="localmap">');
+    builder.addLocalMap('<area shape="rect" coords="7.1054273576e-15,0.0,100.0,100.0" href="index.html?puzzle=AGY" alt="AGY">');
+    builder.addLocalMap('<area shape="rect" coords="7.1054273576e-15,200.0,100.0,300.0" href="index.html?puzzle=AGZ" alt="AGZ">');
+    builder.addLocalMap('<area shape="rect" coords="7.1054273576e-15,400.0,100.0,500.0" href="index.html?puzzle=AHA" alt="AHA">');
+    builder.addLocalMap('</map>');
+
     return builder.getPuzzleData();
 }
 
@@ -9269,6 +11403,19 @@ function AFZ()
 
     builder.addEasier('AFW');
 
+    builder.addHarder('AGA');
+    builder.addHarder('AGW');
+    builder.addHarder('AHJ');
+
+    builder.addLocalMap('<image src="images/map_AFZ.png" usemap="#localmap">');
+    builder.addLocalMap('<map name="localmap">');
+    builder.addLocalMap('<area shape="rect" coords="150.0,0.0,250.0,100.0" href="index.html?puzzle=AFW" alt="AFW">');
+    builder.addLocalMap('<area shape="rect" coords="150.0,200.0,250.0,300.0" href="index.html?puzzle=AFZ" alt="AFZ">');
+    builder.addLocalMap('<area shape="rect" coords="300.0,400.0,400.0,500.0" href="index.html?puzzle=AGA" alt="AGA">');
+    builder.addLocalMap('<area shape="rect" coords="7.1054273576e-15,400.0,100.0,500.0" href="index.html?puzzle=AGW" alt="AGW">');
+    builder.addLocalMap('<area shape="rect" coords="150.0,400.0,250.0,500.0" href="index.html?puzzle=AHJ" alt="AHJ">');
+    builder.addLocalMap('</map>');
+
     return builder.getPuzzleData();
 }
 
@@ -9292,6 +11439,19 @@ function ADZ()
     builder.normalize();
 
     builder.addEasier('AAS');
+
+    builder.addHarder('AAP');
+    builder.addHarder('ADT');
+    builder.addHarder('AEB');
+
+    builder.addLocalMap('<image src="images/map_ADZ.png" usemap="#localmap">');
+    builder.addLocalMap('<map name="localmap">');
+    builder.addLocalMap('<area shape="rect" coords="300.0,400.0,400.0,500.0" href="index.html?puzzle=AAP" alt="AAP">');
+    builder.addLocalMap('<area shape="rect" coords="150.0,0.0,250.0,100.0" href="index.html?puzzle=AAS" alt="AAS">');
+    builder.addLocalMap('<area shape="rect" coords="7.1054273576e-15,400.0,100.0,500.0" href="index.html?puzzle=ADT" alt="ADT">');
+    builder.addLocalMap('<area shape="rect" coords="150.0,200.0,250.0,300.0" href="index.html?puzzle=ADZ" alt="ADZ">');
+    builder.addLocalMap('<area shape="rect" coords="150.0,400.0,250.0,500.0" href="index.html?puzzle=AEB" alt="AEB">');
+    builder.addLocalMap('</map>');
 
     return builder.getPuzzleData();
 }
@@ -9324,6 +11484,21 @@ function AGH()
 
     builder.addEasier('AGC');
 
+    builder.addHarder('AGJ');
+    builder.addHarder('AGN');
+    builder.addHarder('AGO');
+    builder.addHarder('AGQ');
+
+    builder.addLocalMap('<image src="images/map_AGH.png" usemap="#localmap">');
+    builder.addLocalMap('<map name="localmap">');
+    builder.addLocalMap('<area shape="rect" coords="200.0,-4.54545454545,300.0,95.4545454545" href="index.html?puzzle=AGC" alt="AGC">');
+    builder.addLocalMap('<area shape="rect" coords="200.0,177.272727273,300.0,277.272727273" href="index.html?puzzle=AGH" alt="AGH">');
+    builder.addLocalMap('<area shape="rect" coords="268.181818182,359.090909091,368.181818182,459.090909091" href="index.html?puzzle=AGJ" alt="AGJ">');
+    builder.addLocalMap('<area shape="rect" coords="131.818181818,359.090909091,231.818181818,459.090909091" href="index.html?puzzle=AGN" alt="AGN">');
+    builder.addLocalMap('<area shape="rect" coords="-4.54545454545,359.090909091,95.4545454545,459.090909091" href="index.html?puzzle=AGO" alt="AGO">');
+    builder.addLocalMap('<area shape="rect" coords="404.545454545,359.090909091,504.545454545,459.090909091" href="index.html?puzzle=AGQ" alt="AGQ">');
+    builder.addLocalMap('</map>');
+
     return builder.getPuzzleData();
 }
 
@@ -9355,6 +11530,12 @@ function AGU()
 
     builder.addEasier('AGS');
 
+    builder.addLocalMap('<image src="images/map_AGU.png" usemap="#localmap">');
+    builder.addLocalMap('<map name="localmap">');
+    builder.addLocalMap('<area shape="rect" coords="33.3333333333,33.3333333333,133.333333333,133.333333333" href="index.html?puzzle=AGS" alt="AGS">');
+    builder.addLocalMap('<area shape="rect" coords="33.3333333333,366.666666667,133.333333333,466.666666667" href="index.html?puzzle=AGU" alt="AGU">');
+    builder.addLocalMap('</map>');
+
     return builder.getPuzzleData();
 }
 
@@ -9382,6 +11563,15 @@ function AEI()
 
     builder.addEasier('AEH');
 
+    builder.addHarder('AEJ');
+
+    builder.addLocalMap('<image src="images/map_AEI.png" usemap="#localmap">');
+    builder.addLocalMap('<map name="localmap">');
+    builder.addLocalMap('<area shape="rect" coords="7.1054273576e-15,0.0,100.0,100.0" href="index.html?puzzle=AEH" alt="AEH">');
+    builder.addLocalMap('<area shape="rect" coords="7.1054273576e-15,200.0,100.0,300.0" href="index.html?puzzle=AEI" alt="AEI">');
+    builder.addLocalMap('<area shape="rect" coords="7.1054273576e-15,400.0,100.0,500.0" href="index.html?puzzle=AEJ" alt="AEJ">');
+    builder.addLocalMap('</map>');
+
     return builder.getPuzzleData();
 }
 
@@ -9406,6 +11596,16 @@ function ACU()
 
     builder.addEasier('AAE');
     builder.addEasier('ACT');
+
+    builder.addHarder('AEH');
+
+    builder.addLocalMap('<image src="images/map_ACU.png" usemap="#localmap">');
+    builder.addLocalMap('<map name="localmap">');
+    builder.addLocalMap('<area shape="rect" coords="0.0,0.0,100.0,100.0" href="index.html?puzzle=AAE" alt="AAE">');
+    builder.addLocalMap('<area shape="rect" coords="150.0,0.0,250.0,100.0" href="index.html?puzzle=ACT" alt="ACT">');
+    builder.addLocalMap('<area shape="rect" coords="75.0,200.0,175.0,300.0" href="index.html?puzzle=ACU" alt="ACU">');
+    builder.addLocalMap('<area shape="rect" coords="75.0,400.0,175.0,500.0" href="index.html?puzzle=AEH" alt="AEH">');
+    builder.addLocalMap('</map>');
 
     return builder.getPuzzleData();
 }
@@ -9436,6 +11636,17 @@ function AAC()
 
     builder.addEasier('AAB');
 
+    builder.addHarder('AAD');
+    builder.addHarder('AEM');
+
+    builder.addLocalMap('<image src="images/map_AAC.png" usemap="#localmap">');
+    builder.addLocalMap('<map name="localmap">');
+    builder.addLocalMap('<area shape="rect" coords="75.0,0.0,175.0,100.0" href="index.html?puzzle=AAB" alt="AAB">');
+    builder.addLocalMap('<area shape="rect" coords="75.0,200.0,175.0,300.0" href="index.html?puzzle=AAC" alt="AAC">');
+    builder.addLocalMap('<area shape="rect" coords="0.0,400.0,100.0,500.0" href="index.html?puzzle=AAD" alt="AAD">');
+    builder.addLocalMap('<area shape="rect" coords="150.0,400.0,250.0,500.0" href="index.html?puzzle=AEM" alt="AEM">');
+    builder.addLocalMap('</map>');
+
     return builder.getPuzzleData();
 }
 
@@ -9463,6 +11674,18 @@ function ADF()
 
     builder.addEasier('ADC');
     builder.addEasier('AFP');
+
+    builder.addHarder('ADH');
+    builder.addHarder('ADI');
+
+    builder.addLocalMap('<image src="images/map_ADF.png" usemap="#localmap">');
+    builder.addLocalMap('<map name="localmap">');
+    builder.addLocalMap('<area shape="rect" coords="150.0,0.0,250.0,100.0" href="index.html?puzzle=ADC" alt="ADC">');
+    builder.addLocalMap('<area shape="rect" coords="75.0,200.0,175.0,300.0" href="index.html?puzzle=ADF" alt="ADF">');
+    builder.addLocalMap('<area shape="rect" coords="0.0,400.0,100.0,500.0" href="index.html?puzzle=ADH" alt="ADH">');
+    builder.addLocalMap('<area shape="rect" coords="150.0,400.0,250.0,500.0" href="index.html?puzzle=ADI" alt="ADI">');
+    builder.addLocalMap('<area shape="rect" coords="0.0,0.0,100.0,100.0" href="index.html?puzzle=AFP" alt="AFP">');
+    builder.addLocalMap('</map>');
 
     return builder.getPuzzleData();
 }
@@ -9496,6 +11719,15 @@ function AGS()
 
     builder.addEasier('AFU');
 
+    builder.addHarder('AGU');
+
+    builder.addLocalMap('<image src="images/map_AGS.png" usemap="#localmap">');
+    builder.addLocalMap('<map name="localmap">');
+    builder.addLocalMap('<area shape="rect" coords="7.1054273576e-15,0.0,100.0,100.0" href="index.html?puzzle=AFU" alt="AFU">');
+    builder.addLocalMap('<area shape="rect" coords="7.1054273576e-15,200.0,100.0,300.0" href="index.html?puzzle=AGS" alt="AGS">');
+    builder.addLocalMap('<area shape="rect" coords="7.1054273576e-15,400.0,100.0,500.0" href="index.html?puzzle=AGU" alt="AGU">');
+    builder.addLocalMap('</map>');
+
     return builder.getPuzzleData();
 }
 
@@ -9523,6 +11755,16 @@ function ADD()
 
     builder.addEasier('ACY');
     builder.addEasier('ADC');
+
+    builder.addHarder('ADI');
+
+    builder.addLocalMap('<image src="images/map_ADD.png" usemap="#localmap">');
+    builder.addLocalMap('<map name="localmap">');
+    builder.addLocalMap('<area shape="rect" coords="0.0,0.0,100.0,100.0" href="index.html?puzzle=ACY" alt="ACY">');
+    builder.addLocalMap('<area shape="rect" coords="150.0,0.0,250.0,100.0" href="index.html?puzzle=ADC" alt="ADC">');
+    builder.addLocalMap('<area shape="rect" coords="75.0,200.0,175.0,300.0" href="index.html?puzzle=ADD" alt="ADD">');
+    builder.addLocalMap('<area shape="rect" coords="75.0,400.0,175.0,500.0" href="index.html?puzzle=ADI" alt="ADI">');
+    builder.addLocalMap('</map>');
 
     return builder.getPuzzleData();
 }
@@ -9553,6 +11795,12 @@ function AGD()
     builder.normalize();
 
     builder.addEasier('AGC');
+
+    builder.addLocalMap('<image src="images/map_AGD.png" usemap="#localmap">');
+    builder.addLocalMap('<map name="localmap">');
+    builder.addLocalMap('<area shape="rect" coords="33.3333333333,33.3333333333,133.333333333,133.333333333" href="index.html?puzzle=AGC" alt="AGC">');
+    builder.addLocalMap('<area shape="rect" coords="33.3333333333,366.666666667,133.333333333,466.666666667" href="index.html?puzzle=AGD" alt="AGD">');
+    builder.addLocalMap('</map>');
 
     return builder.getPuzzleData();
 }
@@ -9627,6 +11875,15 @@ function ABS()
 
     builder.addEasier('ABN');
 
+    builder.addHarder('ABM');
+
+    builder.addLocalMap('<image src="images/map_ABS.png" usemap="#localmap">');
+    builder.addLocalMap('<map name="localmap">');
+    builder.addLocalMap('<area shape="rect" coords="7.1054273576e-15,400.0,100.0,500.0" href="index.html?puzzle=ABM" alt="ABM">');
+    builder.addLocalMap('<area shape="rect" coords="7.1054273576e-15,0.0,100.0,100.0" href="index.html?puzzle=ABN" alt="ABN">');
+    builder.addLocalMap('<area shape="rect" coords="7.1054273576e-15,200.0,100.0,300.0" href="index.html?puzzle=ABS" alt="ABS">');
+    builder.addLocalMap('</map>');
+
     return builder.getPuzzleData();
 }
 
@@ -9658,6 +11915,15 @@ function AGM()
     builder.normalize();
 
     builder.addEasier('AGL');
+
+    builder.addHarder('AGP');
+
+    builder.addLocalMap('<image src="images/map_AGM.png" usemap="#localmap">');
+    builder.addLocalMap('<map name="localmap">');
+    builder.addLocalMap('<area shape="rect" coords="7.1054273576e-15,0.0,100.0,100.0" href="index.html?puzzle=AGL" alt="AGL">');
+    builder.addLocalMap('<area shape="rect" coords="7.1054273576e-15,200.0,100.0,300.0" href="index.html?puzzle=AGM" alt="AGM">');
+    builder.addLocalMap('<area shape="rect" coords="7.1054273576e-15,400.0,100.0,500.0" href="index.html?puzzle=AGP" alt="AGP">');
+    builder.addLocalMap('</map>');
 
     return builder.getPuzzleData();
 }
